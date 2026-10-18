@@ -4,12 +4,12 @@
 
 | Field | Value |
 | --- | --- |
-| State | `OPEN` — exact conclusion candidate prepared for independent review |
+| State | `CONCLUDED` — C1 accepted by the owner after both independent reviews |
 | Need / issue | Owner requests conclusion of the adopted solution, clean reviewable code and a recruiter report explaining evidence, proofs, all three stages and recorded work time |
 | Owner | Project owner |
 | Conclusion candidate | `C1` — adopted algorithms plus bounded delivery promotion |
-| Concluded design revision | `None` — awaiting the existing exact-candidate owner acceptance gate |
-| Open owner decisions | Accept C1 and reviewed dispositions after two fresh independent conclusion reviews; algorithm selection is already owner-authorized |
+| Concluded design revision | `C1` — candidate commit `cb929ff0a5ca0569069920890b181b469487ab64`, SHA256 `764c31a8143fe90694ae5b39acbda62f60b3ed076baacfd5abe208497a706d4f` |
+| Open owner decisions | `None` for C1 — owner accepted the whiteboard and confirmed that the report belongs to implementation on 2026-10-18 |
 
 ## Conclusion candidate C1
 
@@ -192,8 +192,8 @@ reviewable-package outcome.
 | The current research import layout is review-ready | Rejected — runtime imports benchmark/run.py and changes sockets on import | Extract the adopted pure helpers and test a clean package; keep research snapshots intact. |
 | All observed tasks are already automatic regressions | Rejected —18freshStage3 maps are only retained/replayed so far | Include those18 with all previous task records and validate before reporting complete observed-task regression coverage. |
 
-Independent conclusion-review dispositions: pending exact C1 review.
-Owner disposition: pending exact C1 acceptance after both reviews.
+Independent conclusion-review dispositions: Reviewer A — APPROVE exact C1, findings None; Reviewer B — APPROVE exact C1 design, findings None. Validation inventory None — approved by both reviewers.
+Owner disposition: ACCEPTED on 2026-10-18 after both independent approvals. Owner: “The report would be part of the implementation” and “I accept the whiteboard. We can conclude.” Report completion remains an implementation outcome, not a separate design acceptance requirement.
 
 ## Historical research discussion and evidence
 
