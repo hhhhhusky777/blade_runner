@@ -10,8 +10,8 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 | Field | Value |
 | --- | --- |
 | State | `IMPLEMENTING` — plan accepted by the owner on 2026-10-18 |
-| Active tasks | `T01` |
-| Next ready task | `T02` after T01 review |
+| Active tasks | `T02` |
+| Next ready task | `T03` after T02 review |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge; Autopilot is not enabled |
 | Delivery branch | `codex/stage1-solver-design` in the existing managed worktree |
@@ -59,8 +59,8 @@ are not active implementation time.
 
 | ID | State / dependencies | Observable outcome and owned scope | Focused evidence before task review |
 | --- | --- | --- | --- |
-| T01 | IN_REVIEW / None | Pure `game_solver/solver/` foundation: Stage1 geometry/search, selected last-topology cache and investment DP, independent raw validators. Remove benchmark imports and temporary global configuration from the official path; keep Stage1 probe/bound semantics. | Stage1 fixed inputs and tiny raw-oracle/bound checks; selected-preset differential plans/work; import leaves sockets/environment unchanged. |
-| T02 | PLANNED / T01 | Package Stage2 typed search/guidance and Stage3 production/project ordering/on-demand DP. Preserve original-input replay, delegation preconditions and512/512/32 defaults. Add public solve boundary and readable state/function contracts; no algorithm changes. | Stage2/3 partial-production, impossible-bound, forced-DFS and projection controls; focused old/new outcome/plan comparisons. |
+| T01 | DONE / None | Pure `game_solver/solver/` foundation: Stage1 geometry/search, selected last-topology cache and investment DP, independent raw validators. Remove benchmark imports and temporary global configuration from the official path; keep Stage1 probe/bound semantics. | Stage1 fixed inputs and tiny raw-oracle/bound checks; selected-preset differential plans/work; import leaves sockets/environment unchanged. |
+| T02 | IN_REVIEW / T01 | Package Stage2 typed search/guidance and Stage3 production/project ordering/on-demand DP. Preserve original-input replay, delegation preconditions and512/512/32 defaults. Add public solve boundary and readable state/function contracts; no algorithm changes. | Stage2/3 partial-production, impossible-bound, forced-DFS and projection controls; focused old/new outcome/plan comparisons. |
 | T03 | PLANNED / T02 | Official runner and `submit.sh`, fixed packaged smoke example, portable corpus and task-to-input inventory. Add all93task records, including18fresh Stage3 maps, preserve92distinct inputs and stopped observations. Preserve the existing one-submission/reconciliation/deadline/progression behavior. | Fake-client recovery, ambiguous creation and no submission retry; child network denial/token removal; strict replay in both retained relay modes; targeted saved-map solves. |
 | T04 | PLANNED / T03 | Complete the recruiter report, three-stage chapters, diagrams/tables, sanitized time audit and issue links. Update review README and build an allowlisted local source ZIP with inventory/checksums. Retain historical source/timing attribution; no private conversation or credentials. | Report number/hash/link and visual checks; archive inventory and exclusion checks; preliminary clean-copy/offline CLI smoke. Final full corpus and ZIP validation remain the final gate below. |
 
@@ -145,8 +145,9 @@ check as passed.
 
 Owner accepted the implementation plan on 2026-10-18. Both retained reviewers
 approved plan SHA256 `7b0081f7405bbbf71e4b69bb59ac314d911632d97d27d5fc6c0689308ff3524f`.
-Normal mode remains in effect; no explicit Autopilot opt-in was given. T01 is in
-review; later tasks remain PLANNED. Focused T01 evidence: six tests passed;
+Normal mode remains in effect; no explicit Autopilot opt-in was given. Both
+retained reviewers approved T01 commit `0a89627ed7c41c4033674213f11fa9fc8d0dea2b`
+with findings None. T01 is DONE; T02 is in progress; T03/T04 remain PLANNED. Focused T01 evidence: six tests passed;
 24fixed-case differential solves produced identical verdicts, plans and semantic
 counters (10FEASIBLE/14INFEASIBLE). The20925independent threshold comparisons
 passed; consumed original source hashes are unchanged. See
@@ -166,3 +167,16 @@ intermediate PR merge, so Autopilot provides no extra merge authority. Ask the
 owner whether to enable it as required by the installed skill; silence does not
 enable it. The local package is the authorized deliverable; no remote action is
 needed to complete its preparation.
+
+
+T02 focused evidence:23tests passed, including the retained raw-action/oracle,
+partial-feed, typed funding and on-demand production checks. The67matching-preset
+basic cases plus38explicit unrestricted-premise configurations (105comparisons)
+produced identical old/new plans, verdicts and non-time counters:66FEASIBLE and
+39INFEASIBLE. Matching-preset wins replayed under both retained relay modes;
+unrestricted controls replayed under their declared premise. The initial harness
+applied an unrestricted fixture label to matching mode; this harness error was
+corrected without changing solver behavior. Unused copied imports/local setup
+were removed; the focused undefined-name/unused-import check passes. Original
+source hashes remain unchanged. See [typed migration evidence](../../docs/reports/evidence/migration-typed.json).
+Full93-task and307-configuration validation remains pending under T03/final.

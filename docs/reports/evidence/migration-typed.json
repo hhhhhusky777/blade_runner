@@ -1,0 +1,956 @@
+{
+  "scope": "Focused T02 typed basic corpora only;93live records and307configuration full migration remain pending final.",
+  "seconds_per_solve": 30,
+  "elapsed_seconds": 0.6897105829557404,
+  "truth_note": "Fixture labels apply only to their declared relay premise. The initial harness incorrectly applied the unrestricted relay-difference label to matching mode; no solver mismatch occurred. All explicitly declared unrestricted configurations were then compared separately.",
+  "comparison": "All result fields except fields whose name contains second; original adopted stage presets vs public official API. Every adopted matching-preset winning plan replayed under both retained modes; explicit unrestricted-only controls replayed under their declared premise.",
+  "count": 105,
+  "source_hashes_unchanged": true,
+  "rows": [
+    {
+      "stage": 2,
+      "id": "initial-mixed-goals",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "goal",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "initial-mixed-goals",
+      "status": "FEASIBLE",
+      "reason": "goal",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "zero-turns-met-goal",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "no_claim_turn",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "zero-turns-met-goal",
+      "status": "INFEASIBLE",
+      "reason": "no_claim_turn",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "ore-exact-construction-cash",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "ore-exact-construction-cash",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "ore-one-stone-short",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 2,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "ore-one-stone-short",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 2,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "ore-is-not-construction-cash",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "ore-is-not-construction-cash",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "ore-last-turn-harvest",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "ore-last-turn-harvest",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "initial-ore-plus-new-harvest",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "initial-ore-plus-new-harvest",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "stone-only-goal",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "one_quarry_completion",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "stone-only-goal",
+      "status": "FEASIBLE",
+      "reason": "one_quarry_completion",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "quarry-funds-delayed-ore",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "quarry-funds-delayed-ore",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "shared-road-mixed-goals-1",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "shared-road-mixed-goals-1",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "shared-road-mixed-goals-2",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "shared-road-mixed-goals-2",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "adjacent-quarry-stranded-stock",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 2,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "adjacent-quarry-stranded-stock",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 2,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "adjacent-ore-no-road-interior",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 6,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "adjacent-ore-no-road-interior",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 6,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "ore-through-quarry-unrestricted",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "ore-through-quarry-unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 5,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "ore-through-quarry-matching",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 5,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "planned-road-cash-15",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 2,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "planned-road-cash-15",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 2,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "planned-road-cash-16",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "planned-road-cash-16",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "long-150-turn-ore-harvest",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "long-150-turn-ore-harvest",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "max-board-24-mixed-nodes",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "max-board-24-mixed-nodes",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "mixed-goal-retained-stone-16",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 2,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "mixed-goal-retained-stone-16",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 2,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "mixed-goal-retained-stone-17",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "mixed-goal-retained-stone-17",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "ore-goal-no-ore-nodes",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "ore-goal-no-ore-nodes",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "empty-goal-subset",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "goal",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "empty-goal-subset",
+      "status": "FEASIBLE",
+      "reason": "goal",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "ore-overproduction-one-short",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "ore-overproduction-one-short",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "seeded-spine-0",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "seeded-spine-0",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "seeded-spine-1",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "seeded-spine-1",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "seeded-spine-2",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "seeded-spine-2",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "seeded-spine-3",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "seeded-spine-3",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "seeded-spine-4",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "seeded-spine-4",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "seeded-spine-5",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "seeded-spine-5",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "typed-capital-root-stone-5",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "typed-capital-root-stone-5",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "typed-capital-root-stone-6",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "typed-capital-root-stone-6",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "typed-capital-root-stone-7",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "typed-capital-root-stone-7",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "typed-capital-root-stone-8",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "typed-capital-root-stone-8",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "typed-capital-root-stone-9",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "typed-capital-root-stone-9",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "typed-iron-first-capital-trap-16",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "typed-iron-first-capital-trap-16",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "typed-iron-first-capital-trap-17",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "typed-iron-first-capital-trap-17",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "typed-iron-first-capital-trap-18",
+      "relay_mode": "unrestricted",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "typed-iron-first-capital-trap-18",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "stage": 2,
+      "id": "typed-capital-max-board-remote-quarries",
+      "relay_mode": "unrestricted",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 2,
+      "id": "typed-capital-max-board-remote-quarries",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "low-cash-growth",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "many-quarries-tight",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "many-smelters",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "mixed-reservation",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "initial-capital",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "late-factory",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "ore-bottleneck",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "production-bottleneck",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "max-grid-shared",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "odd-mixed",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "low-cash-growth-r90",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "many-quarries-tight-r90",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "many-smelters-r90",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "mixed-reservation-r90",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "already-met",
+      "status": "FEASIBLE",
+      "reason": "search",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "initial-ore-only",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "retain-ore-partial-feed",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "two-smelters-one-turn",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "capital-lock",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "no-ore",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "not-enough-capital",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 3,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "no-mining-capital",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "no-claim-turn",
+      "status": "INFEASIBLE",
+      "reason": "no_claim_turn",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "ore-conservation",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "one-cell-no-factory",
+      "status": "INFEASIBLE",
+      "reason": "initial_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "discovery-fallback-000",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "discovery-fallback-013",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "relay_mode": "matching",
+      "stage": 3,
+      "id": "discovery-fallback-027",
+      "status": "FEASIBLE",
+      "reason": "search",
+      "expanded": 117,
+      "same_plan_and_semantic_counters": true
+    }
+  ]
+}

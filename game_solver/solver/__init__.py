@@ -1,5 +1,5 @@
-"""Offline, deterministic logistics solver. Importing this package has no side effects.
+"""Pure offline logistics solver; imports leave networking and environment untouched."""
 
-Stage engines produce JSON action plans; independent validators replay them.
-Use the public solve function (added with the typed stage engines) or the CLI.
-"""
+from .api import solve, validate_plan
+
+__all__ = ["solve", "validate_plan"]
