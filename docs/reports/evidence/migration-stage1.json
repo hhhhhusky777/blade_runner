@@ -1,0 +1,191 @@
+{
+  "scope": "Focused T01 basic corpus only; full migration remains T03/final. Python3.13, five-second per solve, original adopted both vs official Stage1 preset.",
+  "formatter": "ruff0.14.1, line length100, formatting only",
+  "compared_keys": [
+    "status",
+    "reason",
+    "expanded",
+    "reached",
+    "insertions",
+    "bound_prunes",
+    "no_income_waits_removed",
+    "duplicate_attempts",
+    "ordered_states",
+    "probe_calls",
+    "probe_steps",
+    "probe_invalid",
+    "plan"
+  ],
+  "count": 24,
+  "source_hashes_unchanged": true,
+  "rows": [
+    {
+      "id": "tiny-00",
+      "status": "INFEASIBLE",
+      "reason": "combined_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tiny-01",
+      "status": "INFEASIBLE",
+      "reason": "combined_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tiny-02",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 3,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tiny-03",
+      "status": "INFEASIBLE",
+      "reason": "combined_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tiny-04",
+      "status": "INFEASIBLE",
+      "reason": "combined_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tiny-05",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 7,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tiny-06",
+      "status": "INFEASIBLE",
+      "reason": "combined_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tiny-07",
+      "status": "INFEASIBLE",
+      "reason": "combined_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tiny-08",
+      "status": "INFEASIBLE",
+      "reason": "combined_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tiny-09",
+      "status": "INFEASIBLE",
+      "reason": "combined_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tiny-10",
+      "status": "INFEASIBLE",
+      "reason": "combined_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tiny-11",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 29,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "prefix-funds",
+      "status": "INFEASIBLE",
+      "reason": "exhausted",
+      "expanded": 2,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "same-turn-reinvestment",
+      "status": "FEASIBLE",
+      "reason": "one_quarry_completion",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "shared-trunk",
+      "status": "FEASIBLE",
+      "reason": "one_quarry_completion",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "early-unconnected-quarry",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "tight-goal",
+      "status": "FEASIBLE",
+      "reason": "one_quarry_completion",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "no-transfer-path",
+      "status": "INFEASIBLE",
+      "reason": "combined_bound",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "stress-funded-8",
+      "status": "FEASIBLE",
+      "reason": "one_quarry_completion",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "stress-funded-12",
+      "status": "FEASIBLE",
+      "reason": "one_quarry_completion",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "stress-funded-25",
+      "status": "FEASIBLE",
+      "reason": "one_quarry_completion",
+      "expanded": 0,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "stress-constrained-8",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "stress-constrained-12",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "stress-constrained-25",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expanded": 1,
+      "same_plan_and_semantic_counters": true
+    }
+  ]
+}

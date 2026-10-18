@@ -1,0 +1,15 @@
+{
+  "description": "Original adopted sources; official migration does not modify these files.",
+  "sources": {
+    "experiments/stage1_poc/search.py": "b1eb4aa2f0901a7870ee95a228b15e076f39351bccf3a5d229c629f57fa7c528",
+    "experiments/stage1_poc/memory_benchmark.py": "09411f4db1c3b457de4e292cf5c5197d08df50569cc81f679b86f05a80d02266",
+    "experiments/stage1_poc/cache_benchmark.py": "5ad2596c8871cf14e63fcb497ed4d9a248b7a8425c31f6d05553cfd062321fd8",
+    "experiments/stage1_poc/reference.py": "65587babe33ffff786323e656844f4720d3d30d2f96c91c0a0ed5d0121887068",
+    "experiments/stage1_poc/stage2_reference.py": "8552dc26bb2631ad83cca22f9a4be2fd1a7727eecf268b9980c35606dbea3828",
+    "experiments/stage1_poc/stage3_reference.py": "8b0ee966c81ed7cc197484b7cbca38ae358911db96ee901d8848d5039d14c0ba",
+    "experiments/stage1_poc/stage2.py": "a344fe5457805b10cf5fd84250785650eee46682bf3312d00dba42b6ef873ad6",
+    "experiments/stage1_poc/stage2_resource_guidance.py": "6f0f688cb98405daf0e776e7c647775c068963d104a50940596c8ea7246ac639",
+    "experiments/stage1_poc/stage3.py": "2e28abd335d7d1f80534e2f691c546051c137c6c88ce622a48f2ef766e2a9d52",
+    "experiments/stage1_poc/live_attempt.py": "73de73b862776905ef13bf936f6c3a82b51c646e15ee42c85955e9da02299fc0"
+  }
+}
