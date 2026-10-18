@@ -9,9 +9,9 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `FINAL_AUDIT` — all tasks independently approved; full final checks pending |
-| Active tasks | `None` — awaiting implementation audit |
-| Next ready task | Final implementation audit, then full validation |
+| State | `LOCAL_DELIVERY_READY` — implementation and final checks passed; outcome-only reconciliation under review |
+| Active tasks | `None` |
+| Next ready task | Final outcome-only reviewer reconciliation and local handoff |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge; Autopilot is not enabled |
 | Delivery branch | `codex/stage1-solver-design` in the existing managed worktree |
@@ -238,7 +238,34 @@ The code is organized/documented for human review; report comparisons remain
 source-bound and conditional correctness/complexity limits are explicit.
 
 Implementation-code content digest (sorted path/SHA256 rows, compact JSON):
-`c65363bde5f03484b0f21fc9d477b3de0e426b62107b78871e0284754c205f95` across32Python source/test/build files.
-Both retained reviewer audits of this content are pending. No full final-gate
-test has run. Later outcome-only report/ledger/evidence reconciliation must not
+`c65363bde5f03484b0f21fc9d477b3de0e426b62107b78871e0284754c205f95` across 32 Python source/test/build files.
+Both retained reviewers approved the exact implementation audit at
+`00e402b0ffeafb7fff8d2b885c01805e1484ba36`, findings None, before final tests.
+Full final validation then passed as recorded below. Later outcome-only report/ledger/evidence reconciliation must not
 alter this implementation content; any code change repeats the audit.
+
+
+## Actual final outcome and cleanup boundary
+
+| Accepted outcome | Actual evidence / remaining obligation |
+| --- | --- |
+| C1 delivered / T01–T04 | All four tasks DONE after both retained reviews, findings None. Runtime code digest above unchanged. |
+| Complete regression migration | 658/658 matching verdicts/plans/non-time counters:93server records,108Stage1,150Stage2,307Stage3controls; zero UNKNOWN. Winning plans strictly replayed under applicable modes. |
+| Applicable suites | 115portable tests pass;367historical tests across42isolated modules pass. These overlapping suites are reported separately. |
+| Portable installation | Fresh extracted ZIP installs locked dependencies, runs115portable tests and allthreeoffline smokes, with research/.env absent and imports resolving inside the copy. |
+| Report/evidence | Recruiter report, three historical chapters, graphs,25:07:39.349ended-turn audit, issue links and full per-record migration results reconciled. Current open turn is excluded; human labor remains unavailable. |
+| Source preservation | All consumed original source and portable-corpus hashes checked unchanged; frozen whiteboard SHA256 remains446eaa688657df6497ad6e922ce93f3cf22a5c9284db1d973ccb913dac391aa4. |
+| Final package | Rebuild with outcome-only evidence; verify final manifest/checksum and the unchanged tested code digest before handoff. |
+| Remote lifecycle | No publication, PR creation, email, merge, target verification or post-merge cleanup is authorized/performed. This does not block the requested local package. |
+
+Actual checks are bound in [migration-full.json](../../docs/reports/evidence/migration-full.json).
+No missing test, failed check or material deviation remains. Outcome-only final
+report/evidence reconciliation returns to the retained reviewers; any code
+change would invalidate the implementation audit and repeat it.
+
+Keep official code, portable tests/evidence and reports. Keep the owner-held
+research, dirty authority/experience changes, historical script and credentials
+untouched. Retain this branch/worktree because it contains preserved unmerged
+research. No archive/reset/removal is performed: combined lifecycle archival and
+worktree retirement belong to an explicitly authorized PR/merge close, not this
+local handoff. The existing plan remains the active state authority until then.

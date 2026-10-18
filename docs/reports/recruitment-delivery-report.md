@@ -1,8 +1,8 @@
 # Blade Runner: from a puzzle model to a measured solver
 
-**Recruiter delivery candidate.** All three game stages are complete. The official
-application, regression corpus and submission helper are implemented; final
-migration and extracted-package checks are pending. Historical game/experiment
+**Ready for human review.** All three game stages are complete. The official
+application, regression corpus and submission helper passed local migration
+validation and fresh extracted-package checks. Historical game/experiment
 results below describe the versions that actually ran.
 
 ## Background and outcome
@@ -125,7 +125,7 @@ resource units are bounded by M=initial total+5 KT. A loose state bound is
 `T*12^V*(M+1)^(3V)`. Work includes state expansion, graph/order/bound calculations,
 DP, probes and raw-plan replay; memory includes states, caches and paths. No
 polynomial complexity, minimum-turn optimality or universal 30 s claim is made.
-The [conclusion candidate](../../.github/spec-driven-delivery/solution-whiteboard.md#mathematical-guarantees-and-limits)
+The [concluded design](../../.github/spec-driven-delivery/solution-whiteboard.md#mathematical-guarantees-and-limits)
 contains precise invariants, recurrences and links to the full derivations.
 
 ## How measurements changed the design
@@ -247,7 +247,7 @@ original inputs, source hashes, witnesses and counted/late outcomes.
 | Submission runner | 88 fake-client tests; no live task calls |
 | Package/process boundary | Four focused tests: saved witnesses, import/child boundary, token stripping, offline CLI |
 | Actual isolated child | Three stage smokes and the previously stopped Stage 3 map pass locally |
-| Complete corpus and clean ZIP | Pending final implementation audit and validation |
+| Complete corpus and clean ZIP | 658/658 adopted/official comparisons match; fresh locked install, 115 portable tests and all three offline smokes pass |
 
 `game_solver/solver/` separates the stage engines, pure helpers, independent
 validators and runner. Stage 1 no longer needs temporary global monkeypatches;
@@ -263,12 +263,40 @@ and requires explicit live modes to create/submit. It preserves one submission,
 bounded creation reconciliation, deadline accounting and numeric progression/
 reset verification. The original starter simulator is not our legality oracle.
 
-Before calling the package ready, compare promoted/adopted behavior across all
-93 task records and the retained local controls, strictly replay returned plans,
-and run the extracted archive with research absent. The allowlist excludes
-credentials, raw conversation, .git, venvs/caches and bulk lab output. Historical
-timings are not relabeled as refactored-code measurements. Final validation
-results will be reconciled here after they actually run.
+After both retained reviewers approved the exact implementation audit, the
+complete migration run passed. Every record below matched the adopted version's
+verdict, plan and non-time search counters. Winning plans were replayed against
+the original input; matching typed plans passed both retained relay modes.
+
+| Final local corpus | Records/configurations | FEASIBLE | INFEASIBLE | UNKNOWN |
+| --- | ---: | ---: | ---: | ---: |
+| All observed server task records | 93 | 93 | 0 | 0 |
+| Stage 1 controls | 108 | 66 | 42 | 0 |
+| Stage 2 controls | 150 | 126 | 24 | 0 |
+| Stage 3 controls, including forced search | 307 | 273 | 34 | 0 |
+| Total | 658 | 558 | 100 | 0 |
+
+The 93 task records include every passed case and the previously stopped maps;
+repeated inputs retain their separate task associations. The 115 portable tests
+passed, and all 367 historical tests passed again in 42 isolated modules. These
+suites overlap in assertions; their counts are not added as distinct coverage.
+
+A fresh extracted copy installed only the lockfile's dependencies, then passed
+all 115 portable tests and the three stage smoke paths. Its imports resolved
+inside the extracted application, with research and .env absent. The reviewed
+32-file implementation digest stayed unchanged throughout these checks.
+The slowest observed saved-task subprocess was 0.530 s; the slowest adversarial
+Stage 2 control was 16.482 s. These validation timings include startup/solve/JSON,
+exclude parent replay, and overlapped other checks; they are not a new controlled
+speedup benchmark or server creation-to-pass guarantee.
+
+[Final migration evidence](evidence/migration-full.json) records every outcome,
+input hash, plan hash, raw-replay modes, old/new equality and validation boundary.
+The source ZIP has an explicit file allowlist, content inventory and checksums.
+It excludes credentials, raw conversation, Git/venv/cache data and bulk lab
+output. Exported historical chapters retain their original measurements and
+identify compact evidence/source hashes; the frozen whiteboard is byte-identical.
+Historical timings have not been relabeled as refactored-code measurements.
 
 ## Time spent: the available measurement
 
@@ -323,7 +351,7 @@ All five issues were OPEN in the report's [GitHub readback](evidence/issues-read
 | [#5 Incomplete-probe reuse](https://github.com/hhhhhusky777/blade_runner/issues/5) | Reuse partial progress for ordering/calculation; a greedy miss must never become a dead-state proof. |
 
 Start with this report, then the three stage chapters for all task rows, the
-[conclusion candidate](../../.github/spec-driven-delivery/solution-whiteboard.md#conclusion-candidate-c1)
+[concluded design](../../.github/spec-driven-delivery/solution-whiteboard.md#conclusion-candidate-c1)
 for precise proofs, then [the review guide](../../README.md#review-the-code) for
 the official package and reproducible offline commands. Compact
 [delivery evidence](evidence/delivery-evidence.json) binds tables/figures to source

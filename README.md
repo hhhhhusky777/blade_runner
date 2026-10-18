@@ -5,8 +5,9 @@ game. It generates an ordered JSON action plan; the server receives the answer,
 not Python code. The adopted solver completed 31 levels and 81 required series
 positions: 93 submitted plans passed, 88 on time and five late.
 
-**Delivery candidate:** official code and portable regressions are implemented;
-final corpus/ZIP validation is pending. Historical game results refer to the
+**Ready for human review:** all 658 retained task/control records match the adopted
+versions, 115 portable tests and 367 historical tests pass, and a fresh extracted
+package installs and runs independently. Historical game results refer to the
 research versions that actually ran, not a new server run of the packaged code.
 
 Start with the [recruiter report](docs/reports/recruitment-delivery-report.md) for
