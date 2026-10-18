@@ -10,8 +10,8 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 | Field | Value |
 | --- | --- |
 | State | `IMPLEMENTING` — plan accepted by the owner on 2026-10-18 |
-| Active tasks | `T02` |
-| Next ready task | `T03` after T02 review |
+| Active tasks | `T03` |
+| Next ready task | `T04` after T03 review |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge; Autopilot is not enabled |
 | Delivery branch | `codex/stage1-solver-design` in the existing managed worktree |
@@ -60,8 +60,8 @@ are not active implementation time.
 | ID | State / dependencies | Observable outcome and owned scope | Focused evidence before task review |
 | --- | --- | --- | --- |
 | T01 | DONE / None | Pure `game_solver/solver/` foundation: Stage1 geometry/search, selected last-topology cache and investment DP, independent raw validators. Remove benchmark imports and temporary global configuration from the official path; keep Stage1 probe/bound semantics. | Stage1 fixed inputs and tiny raw-oracle/bound checks; selected-preset differential plans/work; import leaves sockets/environment unchanged. |
-| T02 | IN_REVIEW / T01 | Package Stage2 typed search/guidance and Stage3 production/project ordering/on-demand DP. Preserve original-input replay, delegation preconditions and512/512/32 defaults. Add public solve boundary and readable state/function contracts; no algorithm changes. | Stage2/3 partial-production, impossible-bound, forced-DFS and projection controls; focused old/new outcome/plan comparisons. |
-| T03 | PLANNED / T02 | Official runner and `submit.sh`, fixed packaged smoke example, portable corpus and task-to-input inventory. Add all93task records, including18fresh Stage3 maps, preserve92distinct inputs and stopped observations. Preserve the existing one-submission/reconciliation/deadline/progression behavior. | Fake-client recovery, ambiguous creation and no submission retry; child network denial/token removal; strict replay in both retained relay modes; targeted saved-map solves. |
+| T02 | DONE / T01 | Package Stage2 typed search/guidance and Stage3 production/project ordering/on-demand DP. Preserve original-input replay, delegation preconditions and512/512/32 defaults. Add public solve boundary and readable state/function contracts; no algorithm changes. | Stage2/3 partial-production, impossible-bound, forced-DFS and projection controls; focused old/new outcome/plan comparisons. |
+| T03 | IN_REVIEW / T02 | Official runner and `submit.sh`, fixed packaged smoke example, portable corpus and task-to-input inventory. Add all93task records, including18fresh Stage3 maps, preserve92distinct inputs and stopped observations. Preserve the existing one-submission/reconciliation/deadline/progression behavior. | Fake-client recovery, ambiguous creation and no submission retry; child network denial/token removal; strict replay in both retained relay modes; targeted saved-map solves. |
 | T04 | PLANNED / T03 | Complete the recruiter report, three-stage chapters, diagrams/tables, sanitized time audit and issue links. Update review README and build an allowlisted local source ZIP with inventory/checksums. Retain historical source/timing attribution; no private conversation or credentials. | Report number/hash/link and visual checks; archive inventory and exclusion checks; preliminary clean-copy/offline CLI smoke. Final full corpus and ZIP validation remain the final gate below. |
 
 T01 consumes the adopted `search.py`, selected `cache_benchmark.py` and
@@ -180,3 +180,24 @@ corrected without changing solver behavior. Unused copied imports/local setup
 were removed; the focused undefined-name/unused-import check passes. Original
 source hashes remain unchanged. See [typed migration evidence](../../docs/reports/evidence/migration-typed.json).
 Full93-task and307-configuration validation remains pending under T03/final.
+
+Both retained reviewers approved T02 commit `5375367e220e9a545f3d1980d6c0917c810cdd84`
+with findings None. T02 is DONE and T03 is in progress.
+
+
+T03 focused evidence:88retained fake-client runner tests passed; four package
+boundary tests passed, including all93saved witnesses (typed witnesses under
+both modes), stage/task/input identity, explicit-child network denial, token
+stripping and offline CLI input. The three official offline stage smokes passed.
+The portable comparison driver passed one retained task per stage, including the
+previous stopped Stage3 map, with identical old/new plans and semantic counters.
+The corpus retains93records/92inputs,19/36/38stage counts,88timely flags, three
+stopped observations and108/150/307local controls. See the
+[portable inventory](../../docs/reports/evidence/regression-inventory.json) and
+[focused runner comparison](../../docs/reports/evidence/migration-runner-focused.json).
+Existing client timeout/model-recipe changes are consumed unchanged from the
+pre-existing worktree, now bound in migration-sources.json. A corpus extraction
+script initially expected a Stage3 counted boolean; it was corrected to the
+actual Counted/Late schema before writing the corpus. Full solver validation
+remains pending the final implementation audit; these focused checks did not
+create server tasks or call live endpoints.

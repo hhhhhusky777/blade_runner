@@ -158,6 +158,7 @@ class StructureDetail(BaseModel):
     interfaces: list[str] = Field(default_factory=list)
     rate: int | None = None
     resource_allow: list[str] | None = None
+    recipe: dict[str, dict[str, int]] | None = None
 
 
 class StageCapabilities(BaseModel):

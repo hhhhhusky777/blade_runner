@@ -1,0 +1,69 @@
+{
+  "scope": "Local migration validation, not live progression or a universal timing guarantee.",
+  "seconds_per_solve": 30.0,
+  "reference_enabled": true,
+  "complete": true,
+  "rows": [
+    {
+      "id": "8596b928-561b-48a5-b193-75b831d3a7b6",
+      "suite": "server",
+      "stage": 1,
+      "input_sha256": "cfbb4d359712da457c8bce5fbb78ef54c801f9db847514fd73cd101945e0d73c",
+      "status": "FEASIBLE",
+      "reason": "one_quarry_completion",
+      "expected_status": "FEASIBLE",
+      "elapsed_seconds": 0.037734625046141446,
+      "replayed_modes": [
+        "stone"
+      ],
+      "expanded": 0,
+      "plan_sha256": "9a26f3f08c53200604dd57298908588b1887f259fca7eccb9a12502429615220",
+      "passed": true,
+      "reference_status": "FEASIBLE",
+      "reference_elapsed_seconds": 0.03596449992619455,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "3a5156a6-2c65-425b-bca7-ad3d26434007",
+      "suite": "server",
+      "stage": 2,
+      "input_sha256": "98d45f5ab7819be3cddeba4b46c82b6ea091bca10e5aa85aa690200b373a3545",
+      "status": "FEASIBLE",
+      "reason": "greedy_probe",
+      "expected_status": "FEASIBLE",
+      "elapsed_seconds": 0.04058625001925975,
+      "replayed_modes": [
+        "matching",
+        "unrestricted"
+      ],
+      "expanded": 1,
+      "plan_sha256": "012d9532c0fce071d690fc06cb4d986167a8da1d3b789ac938b026dd1abe3741",
+      "passed": true,
+      "reference_status": "FEASIBLE",
+      "reference_elapsed_seconds": 0.03508841595612466,
+      "same_plan_and_semantic_counters": true
+    },
+    {
+      "id": "3f0d26c4-a6c0-4cd1-8deb-554e0772f8a5",
+      "suite": "server",
+      "stage": 3,
+      "input_sha256": "549021ac477ae82be98fcf133d564467dd4e6ae1b944596382ab7152aadf541e",
+      "status": "FEASIBLE",
+      "reason": "probe",
+      "expected_status": "FEASIBLE",
+      "elapsed_seconds": 0.4874441670253873,
+      "replayed_modes": [
+        "matching",
+        "unrestricted"
+      ],
+      "expanded": 1,
+      "plan_sha256": "e09cb06f137930fa0ae2fdb90584312612398377d53abe0466ce3007d4bfae8e",
+      "passed": true,
+      "reference_status": "FEASIBLE",
+      "reference_elapsed_seconds": 0.4896555420709774,
+      "same_plan_and_semantic_counters": true
+    }
+  ],
+  "passed": 3,
+  "total": 3
+}

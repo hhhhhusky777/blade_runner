@@ -35,11 +35,15 @@ class GameClient:
             raise RuntimeError("Bearer token not set. Set GameClient.token first.")
         return {"Authorization": f"Bearer {self._token}"}
 
-    def _get(self, path: str, *, params: dict[str, Any] | None = None) -> httpx.Response:
-        return self._client.get(path, headers=self._auth_headers(), params=params)
+    def _get(self, path: str, *, params: dict[str, Any] | None = None,
+             timeout: float | None = None) -> httpx.Response:
+        options = {"timeout": timeout} if timeout is not None else {}
+        return self._client.get(path, headers=self._auth_headers(), params=params, **options)
 
-    def _post(self, path: str, *, json: dict[str, Any] | None = None) -> httpx.Response:
-        return self._client.post(path, headers=self._auth_headers(), json=json)
+    def _post(self, path: str, *, json: dict[str, Any] | None = None,
+              timeout: httpx.Timeout | None = None) -> httpx.Response:
+        options = {"timeout": timeout} if timeout is not None else {}
+        return self._client.post(path, headers=self._auth_headers(), json=json, **options)
 
     # --- Public API methods ---
     def get_stages(self) -> m.StagesResponse:
@@ -57,13 +61,22 @@ class GameClient:
         r.raise_for_status()
         return m.StageProgress.model_validate(r.json())
 
-    def get_tasks(self, stage: int) -> m.TasksResponse:
-        r = self._get(f"/api/stage/{stage}/tasks")
+    def get_tasks(self, stage: int, *, timeout: float | None = None) -> m.TasksResponse:
+        r = self._get(f"/api/stage/{stage}/tasks", timeout=timeout)
         r.raise_for_status()
         return m.TasksResponse.model_validate(r.json())
 
-    def request_next_task(self, stage: int) -> m.RequestTaskResponse:
-        r = self._post(f"/api/stage/{stage}/tasks/request")
+    def request_next_task(self, stage: int, *, read_timeout: float | None = None) -> m.RequestTaskResponse:
+        # Copy per-request settings so longer creation reads do not affect submit.
+        timeout = None
+        if read_timeout is not None:
+            timeout = httpx.Timeout(self._client.timeout)
+            timeout.read = read_timeout
+            # Short remaining windows must also bound connect/write/pool waits.
+            for phase in ("connect", "write", "pool"):
+                current = getattr(timeout, phase)
+                setattr(timeout, phase, min(current, read_timeout) if current is not None else read_timeout)
+        r = self._post(f"/api/stage/{stage}/tasks/request", timeout=timeout)
         if r.status_code == 409:
             # likely {"ok": False, "error": "unfinished_task"}
             try:
