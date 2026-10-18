@@ -9,9 +9,9 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `LOCAL_DELIVERY_READY` — implementation and final checks passed; outcome-only reconciliation under review |
+| State | `LOCAL_DELIVERY_READY` — all reviews and final package verification passed |
 | Active tasks | `None` |
-| Next ready task | Final outcome-only reviewer reconciliation and local handoff |
+| Next ready task | `None` for the authorized local delivery |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge; Autopilot is not enabled |
 | Delivery branch | `codex/stage1-solver-design` in the existing managed worktree |
@@ -143,6 +143,8 @@ check as passed.
 | Broad testing is mistaken for exhaustive input coverage | Report tested corpora and conditional proof limits; no universal30s or full coverage claim. |
 | Staging5.5GB of research or credentials accidentally | Stage explicit owned paths only; package by allowlist; inspect archive before delivery. |
 
+## Task-boundary evidence (historical snapshots)
+
 Owner accepted the implementation plan on 2026-10-18. Both retained reviewers
 approved plan SHA256 `7b0081f7405bbbf71e4b69bb59ac314d911632d97d27d5fc6c0689308ff3524f`.
 Normal mode remains in effect; no explicit Autopilot opt-in was given. Both
@@ -160,12 +162,10 @@ improvements remain outside this migration; existing issues retain future work.
 
 ## Human review brief
 
-Approve this four-task local implementation plan. Recommended mode: **human
-review before merge**, with automatic progression through dependency-ready local
-tasks after required reviewer checks. There is one final review unit and no
-intermediate PR merge, so Autopilot provides no extra merge authority. Ask the
-owner whether to enable it as required by the installed skill; silence does not
-enable it. The local package is the authorized deliverable; no remote action is
+The owner approved this four-task implementation plan on2026-10-18. Mode remained
+**human review before merge**, with automatic progression through dependency-ready
+local tasks after required reviewer checks. There is one final review unit and no
+intermediate PR merge, so Autopilot provides no extra merge authority. The mode question was presented; no explicit Autopilot opt-in was given. The local package is the authorized deliverable; no remote action is
 needed to complete its preparation.
 
 
@@ -256,12 +256,13 @@ alter this implementation content; any code change repeats the audit.
 | Report/evidence | Recruiter report, three historical chapters, graphs,25:07:39.349ended-turn audit, issue links and full per-record migration results reconciled. Current open turn is excluded; human labor remains unavailable. |
 | Source preservation | All bound research/runtime and immutable receipt/control hashes checked unchanged;
 portable input/task/witness/stop data unchanged (derived-document snapshot metadata clarified); frozen whiteboard SHA256 remains446eaa688657df6497ad6e922ce93f3cf22a5c9284db1d973ccb913dac391aa4. |
-| Final package | Rebuild with outcome-only evidence; verify final manifest/checksum and the unchanged tested code digest before handoff. |
+| Final package | PASS:70allowlisted files,72ZIP entries,1,287,812bytes; all manifest/checksum/CRC entries valid; same tested implementation digest, no research/credentials/Git/caches; helper executable. |
 | Remote lifecycle | No publication, PR creation, email, merge, target verification or post-merge cleanup is authorized/performed. This does not block the requested local package. |
 
 Actual checks are bound in [migration-full.json](../../docs/reports/evidence/migration-full.json).
 No missing test, failed check or material deviation remains. Outcome-only final
-report/evidence reconciliation returns to the retained reviewers; any code
+report/evidence reconciliation was approved by both retained reviewers at
+`d0151301d1de1ee7d0b35ede2060ad581c2edb01`, B-P2 resolved; any code
 change would invalidate the implementation audit and repeat it.
 
 Keep official code, portable tests/evidence and reports. Keep the owner-held
@@ -283,3 +284,14 @@ subtrees are asserted identical. Corpus checksum updated for this metadata-only
 change. This is a necessary C1-11 attribution correction, not an algorithm change;
 no solver test is rerun or represented as newly executed. Both retained reviewers
 receive the exact corrected candidate. Remaining finding disposition: fixed.
+
+
+Final handoff verification passed after both final reconciliation approvals.
+ZIP SHA256: `b2f4486d2472b42929bcbc2366f0f04298ca5b1a4b8306fd7417998deddbf54d`.
+The archive includes the complete658-record evidence and corrected provenance;
+its32-file implementation digest is identical to the fresh-install tested copy.
+See [local verification proof](../../artifacts/final-verification.json).
+Final reviewer dispositions: A — APPROVE corrected final reconciliation,
+findings None; B — APPROVE final reconciliation, B-P2 resolved, remaining
+findings None. No authorized local task or validation remains open. Remote
+publication/merge remains outside this delivery authority.
