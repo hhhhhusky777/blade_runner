@@ -43,19 +43,45 @@ Your program reads a map, starting resources, goal, and turn limit, then generat
 | Term | Meaning |
 | --- | --- |
 | Stage | One of three groups of levels; later stages add capabilities. |
-| Level | A step in the fixed progression. Stage 1 has 17 levels. |
+| Level | A step within a stage; completing its required series unlocks the next level. |
 | Series | Tasks required to complete a level; they may have different types. |
 | Task | One input: map, starting resources, goal, and turn limit. |
 | Plan | A JSON list of turns, each containing ordered actions. |
 | Capabilities | Available resources, terrain, structures, actions, costs, and restrictions. |
 
-Finish every level to unlock the next stage. After Stage 3, the organizers email information about next steps.
+Finish every level to unlock the next stage. Capabilities accumulate: Stage 3
+includes the structures and actions from Stages 1 and 2.
+
+| Stage | Levels / required series positions | New decision |
+| --- | --- | --- |
+| 1 | 17 / 17 | Spend stone to grow stone production, then retain enough to meet the goal. |
+| 2 | 7 / 30 | Balance stone investment against ore production; ore cannot pay building costs. |
+| 3 | 7 / 34 | Supply ore to smelters and schedule iron production before turns run out. |
+
+The goal is the task's `level_goal`, not a fixed resource for the whole stage.
+Stone remains construction money and can also be a goal. Ore can be a goal or
+smelter input; iron is manufactured. Only the required stock **at the base**
+counts toward victory. Local tests also cover goals requiring several resources.
+
+```mermaid
+flowchart LR
+    Q[Stone quarry] -->|MINE| S[Stone]
+    S -->|BUILD| B[Roads, quarries, mines and smelters]
+    M[Iron mine] -->|MINE| O[Iron ore]
+    O -->|TRANSFER to smelter, then PRODUCE| I[Iron]
+    S --> G[TRANSFER required resources to BASE, then CLAIM_WIN]
+    O --> G
+    I --> G
+```
+
+After Stage 3, the organizers provide the recruitment next steps. Game-plan
+submission and handing over this source package are separate activities.
 
 ## Timing and progression
 
 There are **two separate limits**:
 
-- **Game turns:** achieve `level_goal` within `max_turns`. Each task starts with one `BASE`, no other structures, and a goal requiring an amount of one resource at that base.
+- **Game turns:** achieve `level_goal` within `max_turns`. Each task starts with one `BASE`, no other structures, and a resource goal at that base.
 - **30 seconds:** each task in a series must succeed on its **first submission within 30 seconds of creation** to count toward advancement.
 
 Creating a task starts the clock. Viewing stages, listing existing tasks, or fetching an existing task does not create one or restart its clock. Only one unfinished task is allowed at a time.
@@ -82,30 +108,47 @@ flowchart TD
     G --> A
 ```
 
-## Stage 1 rules
+## Shared rules and stage additions
 
-| Structure | Cost | Purpose |
-| --- | --- | --- |
-| `BASE` | Already present | Stores resources; its inventory pays for construction. |
-| `ROAD` | 1 stone | Carries transfers between storage structures. |
-| `STONE_QUARRY` | 10 stone | Stores output; mines up to 5 stone per turn on a stone node. |
+| Available from | Structure | Cost in stone | Purpose |
+| --- | --- | --- | --- |
+| Stage 1 | `BASE` | Already present | Stores resources; its inventory pays for construction. |
+| Stage 1 | `ROAD` | 1 | Carries transfers between storage structures. |
+| Stage 1 | `STONE_QUARRY` | 10 | Mines up to 5 stone per turn on a stone node. |
+| Stage 2 | `IRON_MINE` | 15 | Mines up to 5 ore per turn on an ore node. |
+| Stage 3 | `SMELTER` | 20 | Converts up to 2 ore into 2 iron per turn on ordinary terrain. |
 
-Capability **interfaces** describe abilities: `Buildable` permits construction; `Storage` holds resources; `Transport` forms routes; `Extraction` permits mining; `BaseOnly` makes inventory spendable for building. Action fields specify required inputs and types.
+Capability **interfaces** describe abilities: `Buildable` permits construction; `Storage` holds resources; `Transport` forms routes; `Extraction` permits mining; `Production` permits recipe processing; `BaseOnly` makes inventory spendable for building. Action fields specify required inputs and types.
 
 | Action | Inputs | Rule |
 | --- | --- | --- |
 | `BUILD` | `x`, `y`, `type` | Pay from base; build adjacent to an existing structure. |
 | `MINE` | `x`, `y` | Mine each extractor at most once per turn; output stays there. |
 | `TRANSFER` | `path`, `resource`, `amount` | Positive amount; storage endpoints, transport-only intermediate tiles, at least three coordinates. |
+| `PRODUCE` (Stage 3) | `x`, `y` | Activate each smelter at most once per turn; consume its stored ore and store the iron there. |
 | `CLAIM_WIN` | `x`, `y` | Claim at the base after its inventory meets the goal. |
 
-Extractors must match the node's `resource_allow`; other structures cannot occupy resource nodes. Transfers require a connected route. Mining income must reach the base before it can fund construction.
+Extractors must match the node's `resource_allow`; other structures cannot occupy
+resource nodes. Construction uses an empty tile next to an existing structure;
+our supported model uses up/down/left/right adjacency. A legal transfer needs
+road tiles between storage endpoints: two adjacent storage buildings alone are
+not a route. Mining income must reach the base before it can fund construction.
+
+In Stage 3, transfer ore into a smelter **before** `PRODUCE`, then transfer its iron
+to the base. Production automatically runs as many complete cycles as the stored
+ore allows, up to two. One ore produces one iron; no ore makes the action fail.
+To preserve ore for an ore goal, feed only what you want to consume. All buildings
+share the stone budget; a useful project includes both its producer and the roads
+needed to connect it. Shared roads can make several producers cheaper.
 
 A turn can contain many actions **executed in order**; each sees earlier results. Actions may repeat unless restricted. Storage is unbounded. Every submission starts from the original task state: previous submissions leave no buildings or resources behind.
 
-Maps are at most 25×25 with at most 24 resource nodes. `PLANNED_ROAD` tiles suggest routes; they are not built roads. Alternative routes are allowed. Building everything can waste resources and turns; practical heuristics usually suffice. Turn limits are usually single or low double digits.
+The documented map bounds are 25×25 with at most 24 resource nodes.
+`PLANNED_ROAD` tiles suggest routes; they are not built roads. Alternative routes
+are allowed. More production can help, but spending too much stone or building
+it too late can leave no winning continuation.
 
-### A three-turn example
+### Stage 1: a three-turn example
 
 Assume a base with 11 stone, a stone node two tiles away, and a goal of 15 stone within three turns. This is an illustration, not a fetched task.
 
@@ -120,6 +163,33 @@ Assume a base with 11 stone, a stone node two tiles away, and a goal of 15 stone
 | 3 | Mine 5, transfer 5, `CLAIM_WIN` at `(0,0)`. | 15 |
 
 All transfers use `[(2,0), (1,0), (0,0)]`. Four actions in turn 1 still use only one game turn.
+
+### Stages 2 and 3: ore and iron examples
+
+For an ore goal, start with 16 stone and place an ore node at `(2,0)`.
+Build the same road at `(1,0)`, build an `IRON_MINE` for 15 stone, mine 5 ore,
+transfer it to the base, then claim a goal of 5 ore. All of this fits in one turn.
+Stone is now zero; it cannot be replaced by the ore you collected.
+
+For an iron goal, use this layout and start with 36 stone:
+
+```text
+BASE (0,0) — ROAD (1,0) — IRON_MINE (2,0)
+                  |
+             SMELTER (1,1)
+```
+
+| Same turn, in order | Result |
+| --- | --- |
+| Build road, mine and smelter (1 + 15 + 20 stone). | Base stone becomes 0. |
+| `MINE` at `(2,0)`. | Mine holds 5 ore. |
+| Transfer 2 ore along `[(2,0),(1,0),(1,1)]`. | Smelter has its input; mine retains 3 ore. |
+| `PRODUCE` at `(1,1)`. | Smelter holds 2 iron. |
+| Transfer 2 iron along `[(1,1),(1,0),(0,0)]`, then `CLAIM_WIN`. | Base meets a goal of 2 iron in one turn. |
+
+These are illustrative local examples. A fresh server map may need more roads,
+stone investment or several producers; the solver must choose from its actual
+input rather than copy these plans.
 
 ## Setup and commands
 
@@ -182,18 +252,6 @@ New failure, lateness, ambiguous credit or inconsistent progression stops it.
 Creation retries/reconciliation are bounded; submissions are never retried.
 A completed stage makes no writes. Private temporary receipts retain original
 inputs, plans, timing and GET verification. An accepted POST alone proves no credit.
-
-## Later-stage rules
-
-| Stage | Added structure | Cost | Output |
-| --- | --- | --- | --- |
-| 2 | IRON_MINE on ore | 15 STONE | 5 IRON_ORE per turn |
-| 3 | SMELTER on ordinary terrain | 20 STONE | Up to 2 IRON_ORE converted to IRON per turn |
-
-Stone pays for construction in every stage and can itself be a goal. Ore can be
-a goal or manufacturing input; iron is produced by smelters. Typed storage,
-ordered transfers and partial production matter when goals compete for resources.
-The solver reuses earlier engines when the existing projection proof applies.
 
 ## Code limits and delivery
 

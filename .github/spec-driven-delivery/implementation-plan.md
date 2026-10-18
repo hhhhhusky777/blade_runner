@@ -256,7 +256,7 @@ alter this implementation content; any code change repeats the audit.
 | Report/evidence | Recruiter report, three historical chapters, graphs,25:07:39.349ended-turn audit, issue links and full per-record migration results reconciled. Current open turn is excluded; human labor remains unavailable. |
 | Source preservation | All bound research/runtime and immutable receipt/control hashes checked unchanged;
 portable input/task/witness/stop data unchanged (derived-document snapshot metadata clarified); frozen whiteboard SHA256 remains446eaa688657df6497ad6e922ce93f3cf22a5c9284db1d973ccb913dac391aa4. |
-| Final package | PASS:70allowlisted files,72ZIP entries,1,287,812bytes; all manifest/checksum/CRC entries valid; same tested implementation digest, no research/credentials/Git/caches; helper executable. |
+| Final package | PASS:70allowlisted files,72ZIP entries,1,288,795bytes; all manifest/checksum/CRC entries valid; same tested implementation digest, no research/credentials/Git/caches; helper executable. |
 | Remote lifecycle | No publication, PR creation, email, merge, target verification or post-merge cleanup is authorized/performed. This does not block the requested local package. |
 
 Actual checks are bound in [migration-full.json](../../docs/reports/evidence/migration-full.json).
@@ -287,7 +287,7 @@ receive the exact corrected candidate. Remaining finding disposition: fixed.
 
 
 Final handoff verification passed after both final reconciliation approvals.
-ZIP SHA256: `b2f4486d2472b42929bcbc2366f0f04298ca5b1a4b8306fd7417998deddbf54d`.
+ZIP SHA256: `e53c178cb5e56eda3786d949ebe413560f51ddf06d8610796b8388c0355bdb98`.
 The archive includes the complete658-record evidence and corrected provenance;
 its32-file implementation digest is identical to the fresh-install tested copy.
 See [local verification proof](../../artifacts/final-verification.json).
@@ -295,3 +295,16 @@ Final reviewer dispositions: A — APPROVE corrected final reconciliation,
 findings None; B — APPROVE final reconciliation, B-P2 resolved, remaining
 findings None. No authorized local task or validation remains open. Remote
 publication/merge remains outside this delivery authority.
+
+
+Owner-requested README completion (C1-09 / C1-11): the review guide now gives the
+full three-stage game picture, cumulative structures/costs, resource-chain graph,
+shared actions and ordered examples for stone, ore and iron. All three examples
+pass independent raw replay. README SHA256:
+`d585c5f2365170ef3272c72642ba004388fe9e735c2c0ef29127b6739bdb5e0c`.
+Reviewer A: APPROVE README update. Findings: None.
+Reviewer B: APPROVE README SHA256 above. Findings: None.
+The rebuilt package's manifest/checksums/CRC and exclusions pass; its code digest
+and frozen whiteboard remain identical to the tested delivery. Existing solver
+validation remains applicable; no full suite or server operation was repeated.
+The current archive size/hash above and local verification proof are refreshed.
