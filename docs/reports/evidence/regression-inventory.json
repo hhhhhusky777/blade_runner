@@ -64,7 +64,6 @@
     "experiments/stage3_research/live-probe512/4dd4cd60-3867-4eb4-bd53-cded00f67e69.json": "357ec85227d26e6b9eb1593b32a15394bd7222524aea729d8a240512e668bf96",
     "experiments/stage3_research/live-probe512/67b098cf-ea2e-4394-b181-b27346a1c429.json": "b42cedc88248e0790342e39b08a6ba6807c21700d38d97fd92266f4420c4c73e",
     "experiments/stage3_research/live-probe512/8fe54b32-0b21-4cb0-82b7-3acc54372501.json": "0b7c8b3050a1f08feaa90cc9325be62547673606df783b113d64c946bd585876",
-    "docs/reports/evidence/delivery-evidence.json": "3d6cd30bdff6c63dab12f7ac851c09a5471253055b854f3a0333a3aad8e52066",
     "experiments/stage1_poc/probe-results.json": "9167cc2b9e8d842254ce989ec85309f25bbb16715c8c3313bae86c71ca8921e7",
     "experiments/stage1_poc/fixtures.json": "2730e0dba31b43dee6eb557e02cd48b19ddfc6fac1ca70bb60391560f3656aee",
     "experiments/stage1_poc/validation-fixtures.json": "6f02ead5a8050eef69087fc3c39d6416d25a05931ec4242b3b642d3dbf6da94a",
@@ -78,7 +77,27 @@
     "game_solver/tests/fixtures/stage2-controls.json": "298ab22092551f91f41d6177ebb268cd6955582abfa8c11a8fe77cd05267126d",
     "game_solver/tests/fixtures/stage1-controls.json": "82ff53da525293867aeb1b2d6a0db12a59e72f9d72969e478da0ddde6ac1403a",
     "game_solver/tests/fixtures/stage3-controls.json": "b5b0df068567cd81e942ceaf698f7f84bf5d0902169a1c35afa8bf7ba13d9f96",
-    "game_solver/tests/fixtures/server-regressions.json": "b0f501a6b0350c1fd8803859673d668d114f654aad3ce0e8b46f407464fd819f"
+    "game_solver/tests/fixtures/server-regressions.json": "b7f2e0e16e59dbad291b3d1f534d43237329d79f6223ce80dd08d8581e00cfc0"
   },
-  "note": "Fixture extraction only; all full solver regression/differential runs remain pending final."
+  "note": "Fixture extraction only; all full solver regression/differential runs remain pending final.",
+  "historical_derived_document_snapshots": [
+    {
+      "file": "docs/reports/evidence/delivery-evidence.json",
+      "sha256_at_extraction": "3d6cd30bdff6c63dab12f7ac851c09a5471253055b854f3a0333a3aad8e52066",
+      "current_document_sha256": "bc68c939fd36962b0a4ba55cdcba97cf2bc1507942a5be046a7c6bfbce895ad6",
+      "role": "Historical derived-document extraction snapshot, not an immutable input-source binding.",
+      "changes_since_snapshot": "Status, time-audit cutoff, figure provenance and completed-migration metadata were updated; the93task/input inventory is unchanged.",
+      "current_task_inventory_sha256": "7f19098d7eed04dc806e8d2de27a378886549359ef7213994f444baff34c52d3"
+    }
+  ],
+  "metadata_correction": {
+    "before_corpus_sha256": "b0f501a6b0350c1fd8803859673d668d114f654aad3ce0e8b46f407464fd819f",
+    "after_corpus_sha256": "b7f2e0e16e59dbad291b3d1f534d43237329d79f6223ce80dd08d8581e00cfc0",
+    "unchanged_subtrees": {
+      "inputs": "ee56544fe129aa7b6e1c0f22ad958452d783a67b09f39eddfc5e70383fa9df31",
+      "tasks": "7bc7cd3cb451cddf15293f6976021ab0b600af5c7c6e59477b6f98f55c5a933c",
+      "historical_stops": "5c24abc995c342aa5d7783597d40e72fd8b38d7c183a1c95c2e249ebba1f2472"
+    },
+    "reason": "Clarify reviewer B P2: a mutable derived report hash is historical provenance, not a promise of current byte identity. Input/witness/task/stop data are unchanged; no solver/test rerun needed."
+  }
 }

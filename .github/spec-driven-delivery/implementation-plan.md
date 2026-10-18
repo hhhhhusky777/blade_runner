@@ -254,7 +254,8 @@ alter this implementation content; any code change repeats the audit.
 | Applicable suites | 115portable tests pass;367historical tests across42isolated modules pass. These overlapping suites are reported separately. |
 | Portable installation | Fresh extracted ZIP installs locked dependencies, runs115portable tests and allthreeoffline smokes, with research/.env absent and imports resolving inside the copy. |
 | Report/evidence | Recruiter report, three historical chapters, graphs,25:07:39.349ended-turn audit, issue links and full per-record migration results reconciled. Current open turn is excluded; human labor remains unavailable. |
-| Source preservation | All consumed original source and portable-corpus hashes checked unchanged; frozen whiteboard SHA256 remains446eaa688657df6497ad6e922ce93f3cf22a5c9284db1d973ccb913dac391aa4. |
+| Source preservation | All bound research/runtime and immutable receipt/control hashes checked unchanged;
+portable input/task/witness/stop data unchanged (derived-document snapshot metadata clarified); frozen whiteboard SHA256 remains446eaa688657df6497ad6e922ce93f3cf22a5c9284db1d973ccb913dac391aa4. |
 | Final package | Rebuild with outcome-only evidence; verify final manifest/checksum and the unchanged tested code digest before handoff. |
 | Remote lifecycle | No publication, PR creation, email, merge, target verification or post-merge cleanup is authorized/performed. This does not block the requested local package. |
 
@@ -269,3 +270,16 @@ untouched. Retain this branch/worktree because it contains preserved unmerged
 research. No archive/reset/removal is performed: combined lifecycle archival and
 worktree retirement belong to an explicitly authorized PR/merge close, not this
 local handoff. The existing plan remains the active state authority until then.
+
+
+Final reviewer finding B-P2 (blocking attribution, now fixed): the extraction
+inventory listed the mutable delivery-evidence.json draft hash among immutable
+sources. A reviewer checking all hashes would see a failure after legitimate
+report metadata updates. The original hash is retained as a labeled historical
+snapshot, current document hash/task-inventory binding recorded, and the
+unchanged receipt/runtime sources verified separately. The same clarification
+is applied inside the portable server corpus; its input/task/witness/stop
+subtrees are asserted identical. Corpus checksum updated for this metadata-only
+change. This is a necessary C1-11 attribution correction, not an algorithm change;
+no solver test is rerun or represented as newly executed. Both retained reviewers
+receive the exact corrected candidate. Remaining finding disposition: fixed.

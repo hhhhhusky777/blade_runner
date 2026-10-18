@@ -13102,6 +13102,17 @@
     },
     "original_source_hashes_unchanged": true,
     "frozen_whiteboard_sha256": "446eaa688657df6497ad6e922ce93f3cf22a5c9284db1d973ccb913dac391aa4",
-    "timing_note": "Actual validation subprocess wall includes spawn/import/solve/JSON, excludes parent replay. Other local tests overlapped; these timings do not establish a new controlled optimization benchmark or live task-clock latency."
+    "timing_note": "Actual validation subprocess wall includes spawn/import/solve/JSON, excludes parent replay. Other local tests overlapped; these timings do not establish a new controlled optimization benchmark or live task-clock latency.",
+    "preservation_scope": "All migration-sources.json research/runtime dependencies and immutable receipt/control sources are unchanged. The derived delivery-evidence.json extraction hash is explicitly historical. Portable corpus input/task/witness/stop subtrees are unchanged; only provenance metadata was clarified.",
+    "provenance_metadata_correction": {
+      "before_corpus_sha256": "b0f501a6b0350c1fd8803859673d668d114f654aad3ce0e8b46f407464fd819f",
+      "after_corpus_sha256": "b7f2e0e16e59dbad291b3d1f534d43237329d79f6223ce80dd08d8581e00cfc0",
+      "unchanged_subtrees": {
+        "inputs": "ee56544fe129aa7b6e1c0f22ad958452d783a67b09f39eddfc5e70383fa9df31",
+        "tasks": "7bc7cd3cb451cddf15293f6976021ab0b600af5c7c6e59477b6f98f55c5a933c",
+        "historical_stops": "5c24abc995c342aa5d7783597d40e72fd8b38d7c183a1c95c2e249ebba1f2472"
+      },
+      "reason": "Clarify reviewer B P2: a mutable derived report hash is historical provenance, not a promise of current byte identity. Input/witness/task/stop data are unchanged; no solver/test rerun needed."
+    }
   }
 }
