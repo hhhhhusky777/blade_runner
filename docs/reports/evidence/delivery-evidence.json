@@ -1,0 +1,660 @@
+{
+  "schema": 1,
+  "status": "DELIVERY CANDIDATE: C1 and plan accepted; official code and corpus implemented; full final migration/ZIP checks pending.",
+  "recorded_utc": "2026-10-18T10:22:43.166784+00:00",
+  "executed_source": "from pathlib import Path\nfrom datetime import datetime,timezone\nimport hashlib,json,csv,io,shutil,statistics\nroot=Path('/Users/hhhhhusky/.codex/worktrees/stage1-solver-design/blade_runner');out=root/'docs/reports/evidence';out.mkdir(exist_ok=True)\nsha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()\nbind={}\ndef read(name):\n p=root/name;bind[name]=sha(p);return json.loads(p.read_text())\ndef digest(v):return hashlib.sha256(json.dumps(v,sort_keys=True,separators=(',',':')).encode()).hexdigest()\ns1=read('experiments/stage1_poc/stage1-completion-results.json');m1=read('experiments/stage1_poc/stage1-task-metrics.json');m2=read('experiments/stage2_research/stage2-task-metrics.json');m3=read('experiments/stage3_research/stage3-task-metrics.json');idx2=read('experiments/stage1_poc/stage2-live-regressions.json')\ninput_rows=[dict(stage=1,task_id=c['task_id'],level_sha256=digest(c['level'])) for c in s1['cases']]\nfor c in idx2['cases']:\n p=root/'experiments/stage2_research'/c['source']['file'];r=json.loads(p.read_text())\n assert sha(p)==c['source']['file_sha256']\n for k in filter(None,c['source']['json_pointer'].strip('/').split('/')):r=r[int(k)] if isinstance(r,list) else r[k]\n assert digest(r['level'])==c['level_sha256'];input_rows.append(dict(stage=2,task_id=c['task_id'],level_sha256=c['level_sha256']))\nfor c in m3['tasks']:\n r=json.loads((root/c['source']).read_text());assert sha(root/c['source'])==c['source_sha256'];input_rows.append(dict(stage=3,task_id=c['task_id'],level_sha256=digest(r['level'])))\nassert len(input_rows)==93 and len({r['task_id'] for r in input_rows})==93\ns1b=read('experiments/stage1_poc/probe-results.json');s2b=read('experiments/stage2_research/economic-analysis.json');s3dp=read('experiments/stage3_research/production-activation-analysis.json');s3r=read('experiments/stage3_research/root512-analysis.json')\naudit=json.loads(Path('/private/tmp/blade-time-audit.json').read_text());audit['source']='Private root-conversation export; not distributed. Reproduction may verify the recorded complete-byte prefix and event line references against the owner-held export.'\n(out/'conversation-time-audit.json').write_text(json.dumps(audit,indent=2)+'\\n')\nwith (out/'conversation-turn-times.csv').open('w',newline='') as f:\n writer=csv.writer(f);writer.writerow(['turn','status','start_UTC','end_UTC','recorded_elapsed_ms','recorded_elapsed_hms','source_start_line','source_end_line','request_topic_tags_NOT_activity_allocation'])\n for r in audit['turns']:\n  writer.writerow([r['ordinal'],r['status'],r['start_utc'],r.get('end_utc',''),r.get('duration_ms',''),r.get('duration_hms',''),r['start_line'],r.get('end_line',''),';'.join(r.get('topic_tags',[]))])\nissues=json.loads(Path('/private/tmp/blade-issue-readback.json').read_text());(out/'issues-readback.json').write_text(json.dumps(dict(checked_utc=datetime.fromtimestamp(Path('/private/tmp/blade-issue-readback.json').stat().st_mtime,timezone.utc).isoformat(),issues=issues),indent=2)+'\\n')\nsummary=[dict(stage=1,levels=17,required_positions=17,tasks=19,timely=17,late=2,solver_median_ms=statistics.median(r['solver_search_ms'] for r in m1['tasks'] if r['counted']),server_median_seconds=statistics.median(r['server_creation_to_pass_seconds'] for r in m1['tasks'] if r['counted']),note='Historical in-process Stage1 timer.'),dict(stage=2,levels=7,required_positions=30,tasks=36,timely=34,late=2,solver_median_ms=statistics.median(r['solver_ms'] for r in m2['tasks'] if r['counted']),server_median_seconds=statistics.median(r['server_seconds'] for r in m2['tasks'] if r['counted']),note='Historical Stage2 wrapper timer.'),dict(stage=3,levels=7,required_positions=34,tasks=38,timely=37,late=1,solver_median_ms=1000*m3['summary']['counted']['solver_seconds']['median'],server_median_seconds=m3['summary']['counted']['server_seconds']['median'],note='Final successful observations; originalUNKNOWN retained separately.')]\nrecord=dict(schema=1,status='REPORT DRAFT: official package and final regression validation not yet implemented; C1 owner acceptance pending.',recorded_utc=datetime.now(timezone.utc).isoformat(),executed_source=Path(__file__).read_text(),sources=bind,stage_outcomes=summary,total=dict(levels=31,required_positions=81,tasks=93,timely=88,late=5,lost_series_credits=7,unique_input_hashes=len({r['level_sha256'] for r in input_rows}),unique_stage_input_hashes=len({(r['stage'],r['level_sha256']) for r in input_rows})),server_input_inventory=input_rows,comparisons=dict(stage1=dict(source='experiments/stage1_poc/probe-results.json',boundary='Median of31aligned warm rounds; each round sums106commoncase solve times, excludes startup and2slowcoldcontrols. All108coldcases have66F/42I/0UNKNOWN for allfourarms.',rows=[dict(variant=v,warm_suite_median_ms=s1b['warm']['totals'][v]['solve']['median_ms']) for v in ('baseline','cache','dp','both')]),stage2=dict(source='experiments/stage2_research/economic-analysis.json',boundary='One cold observation per150maps; total observed full-pipeline time includes actual deadlineUNKNOWNs.912runstudy includes additionalpreselected repeats. Samecorpusfourarms; notmeanwinninglatency.',rows=[dict(variant=v,wins=s2b['cold'][v]['outcomes'].get('FEASIBLE',0),proofs=s2b['cold'][v]['outcomes'].get('INFEASIBLE',0),unknowns=s2b['cold'][v]['outcomes'].get('UNKNOWN',0),pipeline_sum_seconds=s2b['cold'][v]['pipeline_sum_seconds']) for v in ('baseline','saving','relaxed','both')]),stage3_dp=dict(source='experiments/stage3_research/production-activation-analysis.json',boundary='227configurations/225maps,3coldrounds; compare same205positiveconfigurations. Interval512/root192/later32fixed. OneDP-offnegativeUNKNOWNretained.',rows=[dict(variant=v,reliable=s3dp['reliable_cases'][v],mean_win_ms=1000*s3dp['variants'][v]['common']['winning_metrics']['seconds']['mean']) for v in ('project_order','project_both','project_adaptive')]),stage3_root=dict(source='experiments/stage3_research/root512-analysis.json',boundary='307configurations/293maps,3coldroundsperarm; interval512/later32fixed; same272positiveconfigurationsforwinmeans.1842actualruns.',rows=[dict(variant=v['variant'],reliable=v['reliable_cases'],mean_win_ms=1000*v['common_winning_seconds']['mean'],peak_rss_mib=v['max_rss_bytes']/2**20) for v in s3r['summary']])),time_audit=dict(source='conversation-time-audit.json',cutoff_utc=audit['timing']['last_end_utc'],ended_turns=160,ended_duration_ms=audit['timing']['ended_duration_ms'],calendar_span_ms=audit['timing']['calendar_span_ms'],wait_ms_included=audit['direct_wait_tool_intervals']['elapsed_ms_sum'],note='Elapsed root assistant-turn time only; tools/tests/waitsincluded, nohuman/tracker/childhours. Currentdeliverypreparationturnexcluded. Topic tagsareheuristicandnotatimesheet.'),known_delivery_work=dict(official_package='pending C1 acceptance and implementation',remaining_stage3_solver_regressions=18,total_observed_task_records=93,full_input_coverage='not claimed',universal_30s_guarantee='not claimed'))\nrecord['figures']=dict(source=Path('/private/tmp/plot_recruitment_report.py').read_text(),export_commands=['sips -s format png /private/tmp/recruitment-comparisons.pdf --out docs/reports/recruitment-comparisons.png','sips -s format png /private/tmp/recruitment-work-time.pdf --out docs/reports/recruitment-work-time.png'],assets={name:sha(root/'docs/reports'/name) for name in ('recruitment-comparisons.png','recruitment-work-time.png')})\nrecord['presentation_rounding']='Human report uses3decimal server seconds with conventional half-up rounding; exact median values remain in data.'\n(out/'delivery-evidence.json').write_text(json.dumps(record,indent=2)+'\\n')\nprint('Total',record['total']);print('comparisons',json.dumps(record['comparisons'],indent=2))\n",
+  "sources": {
+    "experiments/stage1_poc/stage1-completion-results.json": "b4532b9d93c10e61f2bfc61da4cecbe27a59b3fcfa03ea16b6e1b1e8f1c9f44f",
+    "experiments/stage1_poc/stage1-task-metrics.json": "2c0ddbd48e08732c07279e80a5e790073099c8e8cca328214dc36d91c407b751",
+    "experiments/stage2_research/stage2-task-metrics.json": "e05825d8a6c4997929127112da0e37124263f23d9357a9f7f735ebb1423a0847",
+    "experiments/stage3_research/stage3-task-metrics.json": "b5d9e6ef4623e416e389c932fa0bc2213e54bd77d087fb2fa25fbe1b29f2bfb1",
+    "experiments/stage1_poc/stage2-live-regressions.json": "8c519245c7e3988105a9a48c76a489af0a0af4fbecdba91cf853aad7af927093",
+    "experiments/stage1_poc/probe-results.json": "9167cc2b9e8d842254ce989ec85309f25bbb16715c8c3313bae86c71ca8921e7",
+    "experiments/stage2_research/economic-analysis.json": "37e0823d13d1dd9056cb3894cdc8985330a620243b764db9df35650ab9ff4582",
+    "experiments/stage3_research/production-activation-analysis.json": "b48b22b89fbbc6cd8253b1f5ea3fd84212773fe1ac216e86cca6266d731b3243",
+    "experiments/stage3_research/root512-analysis.json": "a0aee4021301d9c95b2d8cc36dec99aca696d4dae7af0c2d31c02099e53a9b44"
+  },
+  "stage_outcomes": [
+    {
+      "stage": 1,
+      "levels": 17,
+      "required_positions": 17,
+      "tasks": 19,
+      "timely": 17,
+      "late": 2,
+      "solver_median_ms": 0.6484999903477728,
+      "server_median_seconds": 1.481,
+      "note": "Historical in-process Stage1 timer."
+    },
+    {
+      "stage": 2,
+      "levels": 7,
+      "required_positions": 30,
+      "tasks": 36,
+      "timely": 34,
+      "late": 2,
+      "solver_median_ms": 20.248895976692438,
+      "server_median_seconds": 1.4985,
+      "note": "Historical Stage2 wrapper timer."
+    },
+    {
+      "stage": 3,
+      "levels": 7,
+      "required_positions": 34,
+      "tasks": 38,
+      "timely": 37,
+      "late": 1,
+      "solver_median_ms": 127.15554202441126,
+      "server_median_seconds": 1.799,
+      "note": "Final successful observations; originalUNKNOWN retained separately."
+    }
+  ],
+  "total": {
+    "levels": 31,
+    "required_positions": 81,
+    "tasks": 93,
+    "timely": 88,
+    "late": 5,
+    "lost_series_credits": 7,
+    "unique_input_hashes": 92,
+    "unique_stage_input_hashes": 92
+  },
+  "server_input_inventory": [
+    {
+      "stage": 1,
+      "task_id": "8596b928-561b-48a5-b193-75b831d3a7b6",
+      "level_sha256": "cfbb4d359712da457c8bce5fbb78ef54c801f9db847514fd73cd101945e0d73c"
+    },
+    {
+      "stage": 1,
+      "task_id": "809fb61f-0d4a-4fd1-966e-34a274a88f8d",
+      "level_sha256": "cfbb4d359712da457c8bce5fbb78ef54c801f9db847514fd73cd101945e0d73c"
+    },
+    {
+      "stage": 1,
+      "task_id": "75ea6a19-1150-45c9-89a4-0d2545d7a14f",
+      "level_sha256": "49f5d2e8ed0f8a1db9016e88192487e2e1b4aa5f7d8f714f5fbfeab58177def4"
+    },
+    {
+      "stage": 1,
+      "task_id": "dad7aca4-6d5d-4989-96c1-340af550ff77",
+      "level_sha256": "bff9b178747b7b1a3a5dabe9b909fc682f9151ef804b2647898a00f3726d39f5"
+    },
+    {
+      "stage": 1,
+      "task_id": "1c220f5c-c62b-47ad-9cd8-fed3d0456d52",
+      "level_sha256": "7c65694ece02f566cd3a05f6410881d825774f0735886ba68c57463ed72be758"
+    },
+    {
+      "stage": 1,
+      "task_id": "76acc9c7-d217-44f3-a2e7-dadd7603a843",
+      "level_sha256": "b2c103d7a07651eb62555c58830bea16086528e6cd2acceffbd914820bfce64b"
+    },
+    {
+      "stage": 1,
+      "task_id": "eb1c91fd-4e40-4181-a335-2570531df28f",
+      "level_sha256": "7799eb5bb8f4370f413aa7ffa605fd1b5a17c85793b3afd600f0920a8232a0d6"
+    },
+    {
+      "stage": 1,
+      "task_id": "a3fb2259-cd0c-47d7-929c-b9a5d0b10b38",
+      "level_sha256": "6967d5ea22cff7b6d84530652bf5e32741ebd7107bc4ae47d0db972be225125d"
+    },
+    {
+      "stage": 1,
+      "task_id": "6de5f7b4-daa7-407d-bf12-5bf0648c09da",
+      "level_sha256": "a4aa164eb4585d0b67a1e2d3808a6d911ed33639840b0063c9c74c7394fdb7ce"
+    },
+    {
+      "stage": 1,
+      "task_id": "5357bacc-dddb-4a98-a495-73bb05b2f08a",
+      "level_sha256": "b62a2c894ff78e51e42fda6500074c18665600af7c59723c0b74f7b535ff8e64"
+    },
+    {
+      "stage": 1,
+      "task_id": "25e14733-51f0-4106-a8a4-55a89eb3ce70",
+      "level_sha256": "5fca3ba7f7cbb929fb47cf8bdee9df917d6cae1c23849f1d9a449d3d9beaec21"
+    },
+    {
+      "stage": 1,
+      "task_id": "0cd780d3-f16c-4679-abfa-1f196d3e65e7",
+      "level_sha256": "f967036cb6075ed02801dc67bd89af3af6f0878c9161ef651a4912f787da509e"
+    },
+    {
+      "stage": 1,
+      "task_id": "9e241d12-955e-4d13-878e-99cd976a445b",
+      "level_sha256": "4962abf28fcda9343b1a9589c272d294f0252dc5c1779a225ec45ce21c44cd10"
+    },
+    {
+      "stage": 1,
+      "task_id": "ac29c919-a469-4921-a49b-16ed9bd04a23",
+      "level_sha256": "121bf826197c7398ef34676c7c02fea3b93ab4357667864b5ecd03d4849c3930"
+    },
+    {
+      "stage": 1,
+      "task_id": "cb5d8aa0-2e06-4ef3-9bb8-62f2be37fd5b",
+      "level_sha256": "596b33549365ad3435edbdfe645c5b16c660daf447974491834cc497cfd832e8"
+    },
+    {
+      "stage": 1,
+      "task_id": "3fdae01a-2d23-4d34-8844-b22ebc418f6d",
+      "level_sha256": "90937956665a1648a7cc812ad2a514b96ab4c4f1fb0f4f466a41b32e3c067a44"
+    },
+    {
+      "stage": 1,
+      "task_id": "6ad9e29b-66d5-4fbb-8897-809133e05108",
+      "level_sha256": "cddc9afe216d9e20e2f50949fa850e445eb337e346b7dd77a604f40ca5b62132"
+    },
+    {
+      "stage": 1,
+      "task_id": "1d1c8e70-11c2-4c3d-82d2-32e31ab21557",
+      "level_sha256": "57d69b9989750fdbd52dee3f86f3952987a12b758416a837760668a18098f11c"
+    },
+    {
+      "stage": 1,
+      "task_id": "4b4e133d-63cd-4ab1-97da-d3706dc48537",
+      "level_sha256": "b22dc62bbbfff7aa7226ab1906857fd070774fd22e5a51d922d47ae57417102c"
+    },
+    {
+      "stage": 2,
+      "task_id": "3a5156a6-2c65-425b-bca7-ad3d26434007",
+      "level_sha256": "98d45f5ab7819be3cddeba4b46c82b6ea091bca10e5aa85aa690200b373a3545"
+    },
+    {
+      "stage": 2,
+      "task_id": "5a92dc59-21d1-490a-9059-ccfe5b180e02",
+      "level_sha256": "3c0853e98fb4d043972521eda51054f68795f589a29231c3a2cbe2c4b9f5c7eb"
+    },
+    {
+      "stage": 2,
+      "task_id": "d1f340b6-5539-449b-bac5-ef43b1e2844e",
+      "level_sha256": "ec5ee0cfe2ab4ee7177efa1f237a98a8de8de6c91b4bdcdb15bc1799f9f1d1e9"
+    },
+    {
+      "stage": 2,
+      "task_id": "e8efefa0-b399-482e-9bd8-cee3f8a6384e",
+      "level_sha256": "1f1bc5627af9f8787580ff31e3d459a99f8de8c04284d185836f180094b7e4ec"
+    },
+    {
+      "stage": 2,
+      "task_id": "6de39d3b-cf78-4c1e-bb9b-d2330f53e6f9",
+      "level_sha256": "284c544642ce063ddd327a54edc92c1a0eec5cde98b6885689885aa1529b8507"
+    },
+    {
+      "stage": 2,
+      "task_id": "e08425c4-65df-4132-8075-37a792df7781",
+      "level_sha256": "1c7092d82827a1263d9fa6e34eaebfb36556dcb688372bc485cd8a60bd4e4c10"
+    },
+    {
+      "stage": 2,
+      "task_id": "8086d0d8-567d-4cb2-bf92-fec6312a72c5",
+      "level_sha256": "c54d2694d89699dd0a06ac5ad06745783c0b6211474f017868635fb7d723ca1d"
+    },
+    {
+      "stage": 2,
+      "task_id": "33d85abc-a2ff-4304-b2b0-946680cdd9a7",
+      "level_sha256": "0ba3c2f346c567c44157d604145066f7207e683c828d9e9e2d3b0d4b1a68ef0b"
+    },
+    {
+      "stage": 2,
+      "task_id": "1a148135-11a7-41b8-9760-44a03b685705",
+      "level_sha256": "2316eb575408bd2ee33683196dc9c0ec46198eff8a9754cd69377c507faa1653"
+    },
+    {
+      "stage": 2,
+      "task_id": "dd98201c-b300-4682-8172-3953e798cb8a",
+      "level_sha256": "ce7ab855ea6804b209c7b8941fd41d68ef1ea615d862ffd00afe9b1ddf570a87"
+    },
+    {
+      "stage": 2,
+      "task_id": "8c8e7ca1-6207-4f0f-a0fa-453abf9ffe8e",
+      "level_sha256": "b1beedf4ff14a8405ebd8b7c625e40cda7c163a21e5e9e0565dc959cfa133c76"
+    },
+    {
+      "stage": 2,
+      "task_id": "6bbac837-7b93-407a-9268-40e8976b93c1",
+      "level_sha256": "4e1d6e099e53a3e114fcaa1a658695c9d00963d61cb611696be78c6c57bce140"
+    },
+    {
+      "stage": 2,
+      "task_id": "80d3a113-56b7-43b6-b93e-83f113ea7da0",
+      "level_sha256": "bddf7055cdc0d1b83217e2eb4bb38bd2f92ea85a832840dce02ea94f122ebcd5"
+    },
+    {
+      "stage": 2,
+      "task_id": "5e508463-f0a7-4fbe-8dcb-977bb7e49003",
+      "level_sha256": "7b878b305e1afb97c9496ca8da6e5489a419bb2895042e291b0cd362ae90e417"
+    },
+    {
+      "stage": 2,
+      "task_id": "936ff6e7-76c2-4ea7-ae2d-b764f9c5814b",
+      "level_sha256": "00b05d4cf5484f3bb503ac755e6897fa7e686933216de0782924de0eb4ca932c"
+    },
+    {
+      "stage": 2,
+      "task_id": "3cd00f89-c455-4843-b7b3-b82da3c769ba",
+      "level_sha256": "30eb824710a120458ac979a7969a70d12555bceb482928f2d3de79c8ea32aa6a"
+    },
+    {
+      "stage": 2,
+      "task_id": "d77fef6a-e299-4266-ae55-9e1be611f736",
+      "level_sha256": "7181cc0e4b628d61d891ed19d70abf4ce0cfd4c2c27d6531d4a287521852eeb8"
+    },
+    {
+      "stage": 2,
+      "task_id": "1fd4d746-9979-401a-91c5-1a304a2e5baf",
+      "level_sha256": "5e4e52228c5a6a9f0b6a247cb67c261db286f959fedc2c2a027c3bff2ace8386"
+    },
+    {
+      "stage": 2,
+      "task_id": "84c109a2-c093-453e-a5ce-3c22d8594c39",
+      "level_sha256": "4a1698db0b5d0d6626b244b4ad1c464b9c5b527bbef9812e9137783be29934c9"
+    },
+    {
+      "stage": 2,
+      "task_id": "c542bf09-20b0-4785-9251-d2e8dd515a57",
+      "level_sha256": "44313bfc30e70944fe59c47facc2e24e13e89b35b797d274472660f3b890887b"
+    },
+    {
+      "stage": 2,
+      "task_id": "3f7d3976-f962-46d8-9295-9b5c84a49c6d",
+      "level_sha256": "e5409fca08cb24cf2e7cff91131b1d70ecce99061398a358d20d4dd3aa801709"
+    },
+    {
+      "stage": 2,
+      "task_id": "fc441739-a54e-4b2a-b108-6c48fe68c484",
+      "level_sha256": "3f88154f62a2f3f4f6535533517b3eef77c4ba53df0c0371739ab5468da39982"
+    },
+    {
+      "stage": 2,
+      "task_id": "4df36a5a-caa4-4e88-b9aa-c974bae9544a",
+      "level_sha256": "d34470785bc28649f6db4b18fa7e881e9dd4e7cd509aedb61b5914ffdc21abdc"
+    },
+    {
+      "stage": 2,
+      "task_id": "b6701755-e050-4888-bb41-72318e17864c",
+      "level_sha256": "efe59e1c655e626c18a08c0da9448324981d4e80caa3a7650a8a05245d47996f"
+    },
+    {
+      "stage": 2,
+      "task_id": "1b047e1c-46c1-4669-a613-2490b2b1e93d",
+      "level_sha256": "99e76a1006ded63d43359a8b93c4f24f6c48df19fb7c37db98ac00425bd2b234"
+    },
+    {
+      "stage": 2,
+      "task_id": "201513a5-ff25-4c75-9cd0-f6b787609be7",
+      "level_sha256": "623b2c1349f0fa1f9002071ba0bad2e2eacaf1667a5a74d93710641954fdd752"
+    },
+    {
+      "stage": 2,
+      "task_id": "82364dcc-1a41-4e06-a504-b29a036baaac",
+      "level_sha256": "77d3feb24a631e9f9f054ed1b0cba64add21f20845cc66ac7c10967bc1ad239a"
+    },
+    {
+      "stage": 2,
+      "task_id": "a351d232-b8c4-4435-b009-86a714bc586b",
+      "level_sha256": "1e08a95e58357d0fd1b848f58bfbff78f773450b20f6f52e4c7b2810776855f5"
+    },
+    {
+      "stage": 2,
+      "task_id": "2c093702-6811-4f09-a990-462549dbe24f",
+      "level_sha256": "f980d088d9e792151ecf3b564ef1d7c5fe9a908dd69b4396170b31adfae394bd"
+    },
+    {
+      "stage": 2,
+      "task_id": "f46f40bb-b5a6-46f0-8a90-644ec7445d60",
+      "level_sha256": "efa3e5350888306618c0bbfeabc3a5ab2af2d4a70b662d20aebc204d6eaf8b51"
+    },
+    {
+      "stage": 2,
+      "task_id": "3c38aee4-aba5-4523-b9a9-16dc9f468905",
+      "level_sha256": "7229da67670736c4ff5333c2536ef8b080b4f0bb89a021aa868575f1f8d40a8c"
+    },
+    {
+      "stage": 2,
+      "task_id": "1877bb7b-0118-419e-baa0-05a187933825",
+      "level_sha256": "9ca8083e2897986378e268aac9ee2d55a3af572146800d8b4a363c54642d4d00"
+    },
+    {
+      "stage": 2,
+      "task_id": "fd0ffd28-26f2-45cb-82be-465317e9ae2c",
+      "level_sha256": "5f09585bb28e7f367e40ffd6dcda938e6f64f83d14e21799973088f77a3bbe4e"
+    },
+    {
+      "stage": 2,
+      "task_id": "506d4406-564c-4e45-a098-9beb8b85624c",
+      "level_sha256": "6aad84f9c407a283b0f3782fc156f7f16059fb26b81b457b9072b0c585e89056"
+    },
+    {
+      "stage": 2,
+      "task_id": "c0cfbfb0-70f1-4d53-bf01-c8659a865c14",
+      "level_sha256": "e98f2e7493c9c135d16facfb5642f64ca72df35629982fb7228987b7a90ed677"
+    },
+    {
+      "stage": 2,
+      "task_id": "f06405b9-4f5d-42b0-8242-e67771dbf5de",
+      "level_sha256": "d0fe54b453034b80b189a8f6132d3c8258738b30ed498dbd9bba0f03ab074373"
+    },
+    {
+      "stage": 3,
+      "task_id": "f4e3e56a-2b4e-4957-8d5e-fecd08eca0a8",
+      "level_sha256": "48e2f48b85d3bd7e2efcd320f0cf7587fe7bbfac99ad6e1a9ea557b080bc07a7"
+    },
+    {
+      "stage": 3,
+      "task_id": "7971372b-5dc3-443f-a880-36f1ab2f2e3b",
+      "level_sha256": "bf4f4e566e0e01ed237e233d21122fc7854872161fcb0b78d23c8bbce43df8ae"
+    },
+    {
+      "stage": 3,
+      "task_id": "bbea0c3c-b550-4450-aec6-be9c5aea8556",
+      "level_sha256": "6c1df040c151faf282c368699873649ab9dd0c7649bb6e9ab9e0e99531052110"
+    },
+    {
+      "stage": 3,
+      "task_id": "c1798d18-c211-4e1b-bf24-f429d1458a62",
+      "level_sha256": "36ffe9f657e6fa5ff6d8bb120b7036488228f03646f199ce4c3e9c8471921ac4"
+    },
+    {
+      "stage": 3,
+      "task_id": "da4e75f6-28d3-4620-8cc5-70c1c8f75fca",
+      "level_sha256": "06ddddfa8e2cc9d6249b3919ecc496cce909ff1adae8288bcd8c7fc6cb4b5749"
+    },
+    {
+      "stage": 3,
+      "task_id": "938260b2-733c-4add-95e9-131ccec8fe84",
+      "level_sha256": "39b5799a4b09256008ee9ad7e1d2bd709d697f63c497828eba4d9aa7cee89190"
+    },
+    {
+      "stage": 3,
+      "task_id": "cac1da90-e804-4c22-8c47-83f586dd191d",
+      "level_sha256": "fdde97dc6f8e0a467a4b6e869d640c8144d960d2f3f6eb50f760962c106f1320"
+    },
+    {
+      "stage": 3,
+      "task_id": "90ea9be9-fbc2-4931-b9a0-5dfd0144ee48",
+      "level_sha256": "4a9088459cb0867e7c52ed3b51adcfd1c79f311b8962d3c3ab8eec0a821cb907"
+    },
+    {
+      "stage": 3,
+      "task_id": "1bb42b33-7bdd-4d25-af3f-e3a9bba0d877",
+      "level_sha256": "9a5582af87e06c5cbaf729f7ddaadc5bf2f48aea577cf21df0e1d7d84e300f09"
+    },
+    {
+      "stage": 3,
+      "task_id": "09f38bea-6963-419a-9fff-889af97bfbe9",
+      "level_sha256": "d581ca1e53f963825ddfdc16fdc4ca648274cbab8d62ee27eb57f7883df6ff25"
+    },
+    {
+      "stage": 3,
+      "task_id": "5af0cfaa-6ec3-4940-bfb2-eab9464aab53",
+      "level_sha256": "f8832291ec5629b179cca53fd3dc1afa2474b86d07c38cfc43a755397354a5fa"
+    },
+    {
+      "stage": 3,
+      "task_id": "243268f7-8597-4a1d-a67a-b6dbd9c2caf1",
+      "level_sha256": "9c436175b0cc943529963ce6ea225232ef65984094b80e1c272ea2ba146f979a"
+    },
+    {
+      "stage": 3,
+      "task_id": "95ecb1b6-0fd4-4540-a51c-0e33019c8826",
+      "level_sha256": "0e164156aecf4586011eea3b62f0f512f16e40c4ca71d3c43efc5d78a3340254"
+    },
+    {
+      "stage": 3,
+      "task_id": "4a10c2e3-9a3c-4336-b17c-e29442c4ff29",
+      "level_sha256": "39d047fc2e9f57703af9c5486e271eea6b64dee6d2e7e18bca8b0d4ad0c5d604"
+    },
+    {
+      "stage": 3,
+      "task_id": "4769ae3f-3e90-4f79-8eb9-da17b74ca18b",
+      "level_sha256": "add15e81f137a015271de55e14c8303bbb1c4ff6eb2d902fe80e8510f3426fa0"
+    },
+    {
+      "stage": 3,
+      "task_id": "3fbf4469-8dc5-41a9-8baa-7e6169257c52",
+      "level_sha256": "1f2934a6eea3c613771a1d2dd6f590d6a014ae9612eb22d987bdf47b3b1c1187"
+    },
+    {
+      "stage": 3,
+      "task_id": "a861a2c8-4db8-4a59-b4ea-01cf1aaa82ea",
+      "level_sha256": "e9642e46dcb4f28f2b5d7c2ef84b2af9253980cb69977e4e7019d8c8419ef768"
+    },
+    {
+      "stage": 3,
+      "task_id": "af43ce79-ff08-4fca-841a-bbf9027213d2",
+      "level_sha256": "31d57c0a8a9f6d634caac85e1abc61b33356eef9147bce625f281f7c87200b15"
+    },
+    {
+      "stage": 3,
+      "task_id": "4400fc5c-998e-45ef-9346-c40ff62bc8a3",
+      "level_sha256": "1d489fcd989d8529690cf6321361f24fee16375f10b47a6f813c96e5315125f9"
+    },
+    {
+      "stage": 3,
+      "task_id": "3f0d26c4-a6c0-4cd1-8deb-554e0772f8a5",
+      "level_sha256": "549021ac477ae82be98fcf133d564467dd4e6ae1b944596382ab7152aadf541e"
+    },
+    {
+      "stage": 3,
+      "task_id": "619b18e4-6c01-449a-86a2-98786007d7d5",
+      "level_sha256": "7bd3f595ed6801b5f09dc59ad23120224548f51f5f398b95c2f09a093cff9105"
+    },
+    {
+      "stage": 3,
+      "task_id": "9a740494-47dc-44fa-936f-7c417b0de97f",
+      "level_sha256": "1bcf8ce5c7307efc7036a79a0a3e0392db665975fd92b4030a22926f5f575482"
+    },
+    {
+      "stage": 3,
+      "task_id": "c41a55ef-228d-4d4a-9615-c1ca90c435aa",
+      "level_sha256": "5022fcc82e4a37f92bd38f22cccabee306cec271c4625fb44dee812c2522cee3"
+    },
+    {
+      "stage": 3,
+      "task_id": "6cc5f85a-110c-4835-8ff6-f521ba9567ed",
+      "level_sha256": "f46dfe728fe5c828117a371dc14197772a41f6b001911336c6eee1c28f63c72f"
+    },
+    {
+      "stage": 3,
+      "task_id": "25be1d20-c4a5-405c-88e7-f95969fc3c66",
+      "level_sha256": "25d843fc34092a14275edca5a7b7e820347e1598048c9e20219c4a452763fb8e"
+    },
+    {
+      "stage": 3,
+      "task_id": "f6eadbf2-23b7-4e94-9255-b47d5088767a",
+      "level_sha256": "8e8c0a366dc8a36e6e46b8eafa4a1e80b15f013ff05e42686652b098c60331a1"
+    },
+    {
+      "stage": 3,
+      "task_id": "c4f0e92d-32c6-4a5b-9951-5cecc8440b6b",
+      "level_sha256": "f8372466b3167b44d2ce7b3791abf1fdb0178079bbaf80895b212b08325ab917"
+    },
+    {
+      "stage": 3,
+      "task_id": "6f1465d8-d488-4488-ba9d-fb5dbcf3a0cb",
+      "level_sha256": "f6fa20fb7c869022adc1514f37a2276abb55a13c357a5914af1fd900391ca4b7"
+    },
+    {
+      "stage": 3,
+      "task_id": "8b87c9a9-1f59-4d14-b193-fa2900d707d2",
+      "level_sha256": "e0223e7e374375597e34dddbf791b378f65e6107520415cb07b661c69ef7bcf7"
+    },
+    {
+      "stage": 3,
+      "task_id": "3a9d316b-16bf-4b9d-938d-343db4e51351",
+      "level_sha256": "b916ee697bee7772edc2bb48769cc2de3020187bf19e6edf85f18e4fff28dee9"
+    },
+    {
+      "stage": 3,
+      "task_id": "94f3997d-f215-444c-be8b-8ddd7d0044fd",
+      "level_sha256": "26fc6f292edfe915c8b936c0b430b59ef1f97b0fddbbe0751677dcd43f3613f9"
+    },
+    {
+      "stage": 3,
+      "task_id": "525297e5-6be8-4f24-a6b4-5e037b2d5270",
+      "level_sha256": "a69bfd2632795959a4cbbfcc88df27d7121cb4f21f73f2da0271f1cfa9c931ce"
+    },
+    {
+      "stage": 3,
+      "task_id": "506c277f-d312-43f3-b6c8-a89e0b32b113",
+      "level_sha256": "38db4e38297cd067f1cb32aee4f7e17b3a4afeafdb840fb9c7c4eca17a63fbd3"
+    },
+    {
+      "stage": 3,
+      "task_id": "e0247a12-3f40-4cec-b9fd-ca43155d743b",
+      "level_sha256": "73eeae0d579f7f339784b902432c7e010524ff887ec52b834b30e3395ed95bc2"
+    },
+    {
+      "stage": 3,
+      "task_id": "36f3734e-fbcf-4646-9003-fa3addeb6470",
+      "level_sha256": "f285af71a2ebf85ec4e961872e8d5f7c974e6e3d2e02a0ee595acc825a9c7af0"
+    },
+    {
+      "stage": 3,
+      "task_id": "4dd4cd60-3867-4eb4-bd53-cded00f67e69",
+      "level_sha256": "db172279dae1b31c8938447b4050c34d78eeb14dfbbca2ff3c3c08bbc4a44806"
+    },
+    {
+      "stage": 3,
+      "task_id": "67b098cf-ea2e-4394-b181-b27346a1c429",
+      "level_sha256": "cf321c746dec7187398be72e08487778e9589e94cbf4e16c76fc9140987f75a3"
+    },
+    {
+      "stage": 3,
+      "task_id": "8fe54b32-0b21-4cb0-82b7-3acc54372501",
+      "level_sha256": "e500fa6111d2bf55da714920bc5f3555a3609f4cfb728a14650c7fcb77b37d03"
+    }
+  ],
+  "comparisons": {
+    "stage1": {
+      "source": "experiments/stage1_poc/probe-results.json",
+      "boundary": "Median of31aligned warm rounds; each round sums106commoncase solve times, excludes startup and2slowcoldcontrols. All108coldcases have66F/42I/0UNKNOWN for allfourarms.",
+      "rows": [
+        {
+          "variant": "baseline",
+          "warm_suite_median_ms": 262.1785349911079
+        },
+        {
+          "variant": "cache",
+          "warm_suite_median_ms": 231.2779175117612
+        },
+        {
+          "variant": "dp",
+          "warm_suite_median_ms": 67.87070468999445
+        },
+        {
+          "variant": "both",
+          "warm_suite_median_ms": 63.41766600962728
+        }
+      ]
+    },
+    "stage2": {
+      "source": "experiments/stage2_research/economic-analysis.json",
+      "boundary": "One cold observation per150maps; total observed full-pipeline time includes actual deadlineUNKNOWNs.912runstudy includes additionalpreselected repeats. Samecorpusfourarms; notmeanwinninglatency.",
+      "rows": [
+        {
+          "variant": "baseline",
+          "wins": 120,
+          "proofs": 24,
+          "unknowns": 6,
+          "pipeline_sum_seconds": 216.8539026688086
+        },
+        {
+          "variant": "saving",
+          "wins": 126,
+          "proofs": 24,
+          "unknowns": 0,
+          "pipeline_sum_seconds": 39.22764495923184
+        },
+        {
+          "variant": "relaxed",
+          "wins": 120,
+          "proofs": 24,
+          "unknowns": 6,
+          "pipeline_sum_seconds": 202.8662756989943
+        },
+        {
+          "variant": "both",
+          "wins": 126,
+          "proofs": 24,
+          "unknowns": 0,
+          "pipeline_sum_seconds": 25.48264691478107
+        }
+      ]
+    },
+    "stage3_dp": {
+      "source": "experiments/stage3_research/production-activation-analysis.json",
+      "boundary": "227configurations/225maps,3coldrounds; compare same205positiveconfigurations. Interval512/root192/later32fixed. OneDP-offnegativeUNKNOWNretained.",
+      "rows": [
+        {
+          "variant": "project_order",
+          "reliable": 226,
+          "mean_win_ms": 47.07107299397419
+        },
+        {
+          "variant": "project_both",
+          "reliable": 227,
+          "mean_win_ms": 50.56341150775552
+        },
+        {
+          "variant": "project_adaptive",
+          "reliable": 227,
+          "mean_win_ms": 47.67717676941396
+        }
+      ]
+    },
+    "stage3_root": {
+      "source": "experiments/stage3_research/root512-analysis.json",
+      "boundary": "307configurations/293maps,3coldroundsperarm; interval512/later32fixed; same272positiveconfigurationsforwinmeans.1842actualruns.",
+      "rows": [
+        {
+          "variant": "root192-interval512-later32",
+          "reliable": 306,
+          "mean_win_ms": 84.27194256364601,
+          "peak_rss_mib": 54.6875
+        },
+        {
+          "variant": "root512-interval512-later32",
+          "reliable": 307,
+          "mean_win_ms": 57.184551842938696,
+          "peak_rss_mib": 52.6875
+        }
+      ]
+    }
+  },
+  "time_audit": {
+    "source": "conversation-time-audit.json",
+    "cutoff_utc": "2026-10-18T11:47:18.978Z",
+    "ended_turns": 164,
+    "ended_duration_ms": 90459349,
+    "calendar_span_ms": 506030569,
+    "wait_ms_included": 2850484,
+    "note": "Refreshed sanitized audit independently reconciled; current open turn excluded; not human labor."
+  },
+  "known_delivery_work": {
+    "official_package": "Implemented; final migration/extracted-copy validation pending.",
+    "remaining_stage3_solver_regressions": 0,
+    "total_observed_task_records": 93,
+    "full_input_coverage": "not claimed",
+    "universal_30s_guarantee": "not claimed",
+    "coverage_note": "All93task records are now in the automatic corpus. Full adopted-vs-official solver validation is pending final."
+  },
+  "figures": {
+    "source": "from pathlib import Path\nimport json\nfrom reportlab.graphics.shapes import Drawing,String,Rect\nfrom reportlab.graphics.charts.barcharts import HorizontalBarChart\nfrom reportlab.graphics import renderPDF\nfrom reportlab.lib import colors\nroot=Path('/Users/hhhhhusky/.codex/worktrees/stage1-solver-design/blade_runner');e=json.loads((root/'docs/reports/evidence/delivery-evidence.json').read_text());a=json.loads((root/'docs/reports/evidence/conversation-time-audit.json').read_text())\nd=Drawing(1150,760);d.add(Rect(0,0,1150,760,fillColor=colors.white,strokeColor=None));d.add(String(35,723,'Measured candidate comparisons',fontName='Helvetica-Bold',fontSize=23))\npanels=[(35,420,'Stage 1: cache and investment DP','106-case warm suite sum, median of 31 rounds (ms)',e['comparisons']['stage1']['rows'],'warm_suite_median_ms',['Baseline','Cache','DP','Cache + DP'],320,100),(600,420,'Stage 2: resource guidance','150-case cold pipeline sum, including timeouts (s)',e['comparisons']['stage2']['rows'],'pipeline_sum_seconds',['Baseline:120F/24I/6U','Saving:126F/24I/0U','Relaxed:120F/24I/6U','Both:126F/24I/0U'],270,50),(35,105,'Stage 3: production DP','Same 205 positive configs, mean validated-win time (ms)',e['comparisons']['stage3_dp']['rows'],'mean_win_ms',['Off:226/227','Always:227/227','On demand:227/227'],70,20),(600,105,'Stage 3: initial probe allowance','Same 272 positive configs, mean validated-win time (ms)',e['comparisons']['stage3_root']['rows'],'mean_win_ms',['192:306/307','512:307/307'],110,25)]\nfor x,y,title,subtitle,rows,key,labels,maximum,step in panels:\n d.add(String(x,y+230,title,fontName='Helvetica-Bold',fontSize=15));d.add(String(x,y+208,subtitle,fontName='Helvetica',fontSize=10))\n c=HorizontalBarChart();c.x=x+160;c.y=y+35;c.width=320;c.height=150;c.data=[[r[key] for r in rows[::-1]]];c.categoryAxis.categoryNames=labels[::-1];c.categoryAxis.labels.fontName='Helvetica';c.categoryAxis.labels.fontSize=10;c.valueAxis.valueMin=0;c.valueAxis.valueMax=maximum;c.valueAxis.valueStep=step;c.valueAxis.labels.fontName='Helvetica';c.valueAxis.labels.fontSize=9;c.bars.strokeColor=None\n for i in range(len(rows)):c.bars[(0,i)].fillColor=colors.HexColor('#16a34a' if i==0 else '#2563eb')\n d.add(c)\n for i,r in enumerate(rows[::-1]):d.add(String(c.x+c.width*r[key]/maximum+5,c.y+c.height*(i+.5)/len(rows)-3,f'{r[key]:.2f}',fontName='Helvetica',fontSize=10))\nd.add(String(35,50,'Lower time is better. Green marks the adopted option. F=feasible, I=proved impossible, U=UNKNOWN.',fontName='Helvetica',fontSize=11));d.add(String(35,28,'Compare within a panel only: corpora, repeats and timer boundaries differ; coverage precedes speed.',fontName='Helvetica',fontSize=11));renderPDF.drawToFile(d,'/private/tmp/recruitment-comparisons.pdf')\nt=Drawing(1050,480);t.add(Rect(0,0,1050,480,fillColor=colors.white,strokeColor=None));t.add(String(35,440,'Recorded assistant-turn elapsed time',fontName='Helvetica-Bold',fontSize=23));t.add(String(35,414,'164 ended root turns: 25 h 07 m 39.349 s; current implementation turn excluded',fontName='Helvetica',fontSize=12))\nvalues=list(a['daily_by_turn_start_date_CST'].items())[::-1];c=HorizontalBarChart();c.x=160;c.y=140;c.width=780;c.height=235;c.data=[[v['duration_ms_by_start_date']/3600000 for _,v in values]];c.categoryAxis.categoryNames=[k for k,_ in values];c.categoryAxis.labels.fontName='Helvetica';c.categoryAxis.labels.fontSize=12;c.valueAxis.valueMin=0;c.valueAxis.valueMax=16;c.valueAxis.valueStep=4;c.valueAxis.labels.fontSize=11;c.bars[0].fillColor=colors.HexColor('#2563eb');c.bars.strokeColor=None;t.add(c)\nfor i,(_,v) in enumerate(values):\n h=v['duration_ms_by_start_date']/3600000;t.add(String(c.x+c.width*h/16+6,c.y+c.height*(i+.5)/len(values)-4,f'{h:.2f}h',fontName='Helvetica',fontSize=11))\nt.add(String(160,105,'Elapsed hours, assigned to turn start date (UTC+8)',fontName='Helvetica',fontSize=11));t.add(String(35,70,'Includes tools, tests and waits. Excludes gaps between turns; parallel-agent durations are not added.',fontName='Helvetica',fontSize=11));t.add(String(35,45,'This is not human labor, approved tracker time, CPU time or a per-feature effort allocation.',fontName='Helvetica',fontSize=11));renderPDF.drawToFile(t,'/private/tmp/recruitment-work-time.pdf')\n",
+    "export_commands": [
+      "sips -s format png /private/tmp/recruitment-comparisons.pdf --out docs/reports/recruitment-comparisons.png",
+      "sips -s format png /private/tmp/recruitment-work-time.pdf --out docs/reports/recruitment-work-time.png"
+    ],
+    "assets": {
+      "recruitment-comparisons.png": "56882893011fb6c77d0afa116d9f9a9cc67f9b6cd86a43ccc273afac3c27c58e",
+      "recruitment-work-time.png": "0ba9914291a14bf0130276f2fea200c880929596b93bb3f3f2b70f290cb96ff5"
+    }
+  },
+  "presentation_rounding": "Human report uses3decimal server seconds with conventional half-up rounding; exact median values remain in data.",
+  "report_refresh": {
+    "audit_prefix_sha256": "7a03abc0d038192a4d1ce69d4ef64672444e965bfdcbca0e31e97204ee4d1f2b",
+    "audit_method": "Same paired root-turn method; independent second streaming reconciliation passed.",
+    "note": "Original executed_source above retains the historical aggregation execution. Current status/audit/asset metadata are subsequent delivery updates, not a rerun of that original builder."
+  }
+}

@@ -1,8 +1,39 @@
-# Blade Runner recruitment game
+# Blade Runner recruitment solver
 
-Build a Python solver for the [recruitment game](https://bladerunner.reef.pl/), complete all three stages, then send the source code for review. This is a deterministic logistics puzzle: the same map and plan produce the same result. You play through an API, rather than by clicking on the board.
+One Python 3.13 application solves all three stages of a deterministic logistics
+game. It generates an ordered JSON action plan; the server receives the answer,
+not Python code. The adopted solver completed 31 levels and 81 required series
+positions: 93 submitted plans passed, 88 on time and five late.
 
-**Current state:** the starter package is extracted. Its `ramp_up` strategy only solves the introductory level. No tasks have been requested or submitted during this project setup.
+**Delivery candidate:** official code and portable regressions are implemented;
+final corpus/ZIP validation is pending. Historical game results refer to the
+research versions that actually ran, not a new server run of the packaged code.
+
+Start with the [recruiter report](docs/reports/recruitment-delivery-report.md) for
+the problem, conditional proofs, measured progression, all three stage chapters,
+work-time accounting and remaining issues. The
+[concluded whiteboard](.github/spec-driven-delivery/solution-whiteboard.md#final-adopted-solution)
+contains the detailed adopted design and retained research history.
+
+## Review the code
+
+The solver tries validated shortcuts, then memoized DFS. Whole production
+projects order choices. Optimistic bounds and DP reject proven dead branches;
+failed greedy probes never reject a state. Time exhaustion returns UNKNOWN.
+
+| Responsibility | Read first |
+| --- | --- |
+| Public solve/replay contract | [api.py](game_solver/solver/api.py) |
+| Stage 1 geometry, search, selected cache and DP | [stage1.py](game_solver/solver/stage1.py), [stage1_preset.py](game_solver/solver/stage1_preset.py), [capital.py](game_solver/solver/capital.py) |
+| Stage 2 typed resources and additional probes | [stage2.py](game_solver/solver/stage2.py), [resource_guidance.py](game_solver/solver/resource_guidance.py) |
+| Stage 3 manufacturing, project ordering and on-demand DP | [stage3.py](game_solver/solver/stage3.py) |
+| Independent raw-action legality | [reference.py](game_solver/solver/reference.py), [stage2_reference.py](game_solver/solver/stage2_reference.py), [stage3_reference.py](game_solver/solver/stage3_reference.py) |
+| Single submission, recovery and verified progression | [runner.py](game_solver/solver/runner.py), [child.py](game_solver/solver/child.py) |
+| Regressions and old/new comparison | [tests](game_solver/tests), [run_regressions.py](game_solver/tests/run_regressions.py) |
+
+Stage 3's adopted probe settings are 512 initial decisions per policy, 512 DFS-state
+interval and 32 later decisions per policy. These limit optional rollouts, not the
+full search. Earlier stage presets retain their own measured settings.
 
 ## What you are building
 
@@ -73,9 +104,9 @@ A turn can contain many actions **executed in order**; each sees earlier results
 
 Maps are at most 25×25 with at most 24 resource nodes. `PLANNED_ROAD` tiles suggest routes; they are not built roads. Alternative routes are allowed. Building everything can waste resources and turns; practical heuristics usually suffice. Turn limits are usually single or low double digits.
 
-### A two-turn example
+### A three-turn example
 
-Assume a base with 11 stone, a stone node two tiles away, and a goal of 10 stone within two turns. This is an illustration, not a fetched task.
+Assume a base with 11 stone, a stone node two tiles away, and a goal of 15 stone within three turns. This is an illustration, not a fetched task.
 
 ```text
 [BASE (0,0)] — [build ROAD (1,0)] — [build QUARRY on stone (2,0)]
@@ -84,75 +115,103 @@ Assume a base with 11 stone, a stone node two tiles away, and a goal of 10 stone
 | Turn | Ordered actions | Base stone afterward |
 | --- | --- | --- |
 | 1 | Build road (−1), build quarry (−10), mine 5, transfer 5. | 5 |
-| 2 | Mine 5, transfer 5, `CLAIM_WIN` at `(0,0)`. | 10 |
+| 2 | Mine 5, transfer 5. | 10 |
+| 3 | Mine 5, transfer 5, `CLAIM_WIN` at `(0,0)`. | 15 |
 
-Both transfers use `[(2,0), (1,0), (0,0)]`. Four actions in turn 1 still use only one game turn.
+All transfers use `[(2,0), (1,0), (0,0)]`. Four actions in turn 1 still use only one game turn.
 
 ## Setup and commands
 
-Use Python 3.13 and [uv](https://docs.astral.sh/uv/). From the project root:
+Install [uv](https://docs.astral.sh/uv/) and Python 3.13. From the project root:
 
 ```bash
 cd game_solver
-cp .env.example .env
-uv sync
+uv sync --frozen
 ```
 
-Set `.env` as follows, replacing the example's server address. Keep `.env` and the token out of Git and the final ZIP. Install dependencies before timed attempts.
+No credentials are needed for offline work. From the project root, run a fixed
+sample through the real isolated child and strict replay:
+
+```bash
+./submit.sh --stage 3 --offline-smoke
+```
+
+To solve a task JSON locally or import the API:
+
+```bash
+cd game_solver
+uv run --frozen python -m solver --stage 3 task.json > answer.json
+uv run --frozen python -m unittest discover -s tests -t .
+uv run --frozen python -m tests.run_regressions --suite all --output regression-results.json
+```
+
+```python
+from solver import solve
+result = solve(level, stage=3, seconds=24.0)
+# result["plan"] is present only for a validated FEASIBLE answer.
+```
+
+The full portable corpus has 93 task records / 92 distinct inputs, plus 108 Stage 1,
+150 Stage 2 and 307 Stage 3 control configurations. Those include impossible cases,
+relay-premise differences and forced-search controls. Tests carry truth/witnesses;
+the runtime solver receives only the task and its budget.
+
+### Explicit live commands
+
+Copy `game_solver/.env.example` to `game_solver/.env` and configure privately:
 
 ```dotenv
 GAME_SERVER_BASE_URL=https://bladerunner.reef.pl/
 GAME_SERVER_TOKEN=<your token from the game webpage>
 ```
 
-**List existing tasks** without creating or submitting one:
+Install dependencies before timed attempts. From the project root:
 
 ```bash
-uv run python main.py tasks
+./submit.sh --stage 3 --check             # GET-only readiness check
+./submit.sh --stage 3 --verify TASK_ID    # GET-only result verification
+./submit.sh --stage 3 --submit-one        # create/solve/submit one fresh task
+./submit.sh --stage 3 --loop              # recover pending task, then verified loop
 ```
 
-**Debug an existing task:** replace `TASK_ID`. This shows the simulated plan, then asks `Submit plan?`; answer **`n`** to avoid submission. Its original deadline continues.
+Choose stage 1, 2 or 3 explicitly; the loop never enters another stage. Use one loop
+at a time. Startup recovery keeps the pending task's original clock, submits at
+most one validated answer, verifies the resulting series/reset, then continues.
+New failure, lateness, ambiguous credit or inconsistent progression stops it.
+Creation retries/reconciliation are bounded; submissions are never retried.
+A completed stage makes no writes. Private temporary receipts retain original
+inputs, plans, timing and GET verification. An accepted POST alone proves no credit.
 
-```bash
-uv run python main.py solve-task ramp_up --stage 1 --task-id TASK_ID --show-board --show-plan --plan-step
-```
+## Later-stage rules
 
-**Attempt advancement:** first implement `strategies/my_strategy.py`; that name is a placeholder below.
+| Stage | Added structure | Cost | Output |
+| --- | --- | --- | --- |
+| 2 | IRON_MINE on ore | 15 STONE | 5 IRON_ORE per turn |
+| 3 | SMELTER on ordinary terrain | 20 STONE | Up to 2 IRON_ORE converted to IRON per turn |
 
-```bash
-uv run python main.py advance my_strategy --no-visualize
-```
+Stone pays for construction in every stage and can itself be a goal. Ore can be
+a goal or manufacturing input; iron is produced by smelters. Typed storage,
+ordered transfers and partial production matter when goals compete for resources.
+The solver reuses earlier engines when the existing projection proof applies.
 
-`advance` reuses a suitable unfinished task or creates a new one, generates the plan, and **submits automatically without confirmation**. `--loop` repeats advancement. For existing tasks, `solve-task ... --auto-submit` also submits automatically. `solve-interactive` browses existing tasks, pauses by default, and asks before submission unless `--auto-submit` is set. Use step-through views for debugging, not timed attempts.
+## Code limits and delivery
 
-The API uses bearer-token authentication:
+The proofs assume the documented local model: cardinal adjacency, renewable
+exact-five extraction, unlimited storage, ordered free legal transfers and
+BASE-funded construction. Independent raw replay checks plans; neither local
+replay nor observed server acceptance proves every unseen contract variant.
+Finite search is complete without limits, but worst-case time/space are
+exponential. No minimum-turn optimum or universal 30-second guarantee is claimed.
 
-```text
-POST /api/stage/{stage}/tasks/request                 create next task
-GET  /api/stage/{stage}/tasks/{task_id}                read input
-POST /api/stage/{stage}/tasks/{task_id}/submit         send {"plan": [[actions...], ...]}
-GET  /api/stage/{stage}/progress                      check advancement
-```
+The original starter simulator is permissive and remains separate; it is not the
+legality oracle. The official runtime imports no research/benchmark modules and
+changes no sockets/environment on import. Only the explicit offline child denies
+networking. Original research sources, receipts and prior reports stay preserved
+in the owner-held workspace; they are not required to run the release.
 
-Stages, capabilities, task lists, and a level schema are also available. Check the submission result **and stage progress**; an HTTP response alone does not prove advancement.
-
-## Code, limits, and delivery
-
-| Location | Purpose |
-| --- | --- |
-| [main.py](game_solver/main.py) | CLI: fetch, simulate, display, submit. |
-| [strategies/](game_solver/strategies/) | Your solving logic; extend `BaseStrategy`. |
-| [game_simulation/](game_solver/game_simulation/) | Local board, structures, inventory, actions. |
-| [api_client/](game_solver/api_client/) | Requests and input/output models. |
-| [visualizers/](game_solver/visualizers/) | Board, inventory, plan views. |
-| [Starter README](game_solver/README.md) | Framework and command details. |
-
-Strategies yield actions, which immediately update shared local state. Mining flags reset each turn. Emit `ClaimWinAction` when the goal is met. A default 100-iteration guard prevents endless action-generation loops.
-
-**The starter simulator is not a complete validator.** It permits negative build balances, lacks full placement and transfer-route checks, does not reject repeated mining, and does not validate the goal when applying `CLAIM_WIN`. Add checks or enforce these rules in your strategy. Local success does not guarantee server acceptance.
-
-Remaining work: build and test a general solver, complete every series under its limits, and deliver readable source code. Later stages may require extending models and simulation as well as strategies; inspect their capabilities when unlocked. LLM assistance is allowed.
-
-After completing the game, email a source-code ZIP to **hiring2@reef.pl** with subject **`Code Solution - [Your Name and Surname]`**. Game submissions contain plans; the final ZIP contains code.
-
-Rules here come from the game page and supplied starter package. This README describes Stage 1 capabilities; later stages must be checked when available.
+The local source ZIP contains the official application, tests/fixtures, reports,
+graphs, concluded design, compact evidence and checksums. It excludes credentials,
+Git data, virtual environments, caches, raw conversation and bulk research. The
+three exported historical chapters identify original source hashes and portable
+evidence locations; some historical whiteboard links refer to the unbundled lab.
+Nothing is published, emailed or merged by building the package.

@@ -1,0 +1,3741 @@
+{
+  "schema": 1,
+  "scope": "All36 actual Stage2 tasks;34counted/two late legal completions. Historical stopped calls and offline diagnostics are separate, not extra tasks.",
+  "recorded_at": "2026-10-17T06:59:17.979055+00:00",
+  "source_sha256": {
+    "first-submit.json": "528f29c6833f9faed196e1c433c68820c4883dec84a5803da8a74b9cab29562d",
+    "loop-results.json": "78b3123d7e7b6100ffecbee061268fbed0aa0d401fab000772ca5aabdb19929b",
+    "guidance-live-results.json": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+    "creation-retry-live-results.json": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+    "guidance-pending-recovery.json": "97e4a610043113923aa8a5f8358cfae7165f7190efbe59bd64a492659959588e",
+    "creation-timeout-pending-recovery.json": "78f8ecc421685ae546c86111f63c4d1e70dfa55e619ef8ce5d70295592fde122",
+    "state-cap-and-routing-triage.json": "5cba2478148918cf8f1dbc1065cd8bb7cb0523fa4ec68153ee12362907a7f0a6",
+    "latency_budget_diagnostic.json": "0f786f970f04296a0e3f0a98955463f76302427d0e4edd8e849c284d8044f7f4",
+    "profile_stage2_fallback.json": "3f04adcf404ba2a5fc4a756f16998c9e9ea8e985d7aded4542e13c7698c4b442"
+  },
+  "timing_definitions": {
+    "solver_ms": "Recorded original in-process Stage2 solve() wall timer, including model/search/plan/replay; Stage1 delegation wrapped by same outer timer. Excludes child startup/outer replay/encoding/network; not a new benchmark.",
+    "server_seconds": "Server task creation to successful pass; eligibility authority. Late cleanup includes intervening investigation/manual waiting, not CPU time.",
+    "client_seconds": "Monotonic start before create to final GET verification. Comparable n=34 fresh successes. Two cleanup receipts do not have comparable complete client durations; null is unmeasured.",
+    "creation_post_seconds": "Older20 fresh counted receipts measure only creation POST wall duration, excluding subsequent ID lookup. Do not pool with latest acquisition duration.",
+    "acquisition_seconds": "Latest14 fresh counted receipts measure full acquisition helper: creation POST, GET ID reconciliation and pauses. Do not pool with older POST-only duration."
+  },
+  "summary": {
+    "tasks": 36,
+    "passed": 36,
+    "counted": 34,
+    "late": 2,
+    "required_series_tasks": 30,
+    "levels": 7,
+    "completed_levels": 7,
+    "counted_server_seconds": {
+      "count": 34,
+      "sum": 56.47,
+      "mean": 1.6608823529411765,
+      "median": 1.4985,
+      "min": 1.283,
+      "max": 3.201
+    },
+    "counted_client_seconds": {
+      "count": 34,
+      "sum": 228.59840591292595,
+      "mean": 6.723482526850764,
+      "median": 4.662414645485114,
+      "min": 2.7890486249816604,
+      "max": 24.671575416927226
+    },
+    "counted_solver_ms": {
+      "count": 34,
+      "sum": 1062.485333706718,
+      "mean": 31.24956863843288,
+      "median": 20.248895976692438,
+      "min": 3.3868749160319567,
+      "max": 203.2499589258805
+    },
+    "all_successful_solver_ms": {
+      "count": 36,
+      "sum": 1167.290291574318,
+      "mean": 32.42473032150883,
+      "median": 21.175208559725434,
+      "min": 3.3868749160319567,
+      "max": 203.2499589258805
+    },
+    "older_creation_post_seconds": {
+      "count": 20,
+      "sum": 36.814587501226924,
+      "mean": 1.8407293750613463,
+      "median": 1.473543958447408,
+      "min": 0.6475512920296751,
+      "max": 7.111269708024338
+    },
+    "latest_acquisition_seconds": {
+      "count": 14,
+      "sum": 114.80414483288769,
+      "mean": 8.200296059491977,
+      "median": 5.116260916518513,
+      "min": 1.043737041996792,
+      "max": 21.92251291696448
+    },
+    "solver_reasons": {
+      "greedy_probe": 35,
+      "guidance_probe": 1
+    },
+    "solver_engines": {
+      "typed": 34,
+      "stage1": 2
+    },
+    "counted_per_level": {
+      "1": 1,
+      "2": 3,
+      "3": 5,
+      "4": 6,
+      "5": 3,
+      "6": 8,
+      "7": 8
+    },
+    "late_per_level": {
+      "3": 1,
+      "6": 1
+    },
+    "goals": {
+      "ore": 32,
+      "stone": 4
+    },
+    "coverage": {
+      "width": {
+        "min": 12,
+        "max": 25
+      },
+      "height": {
+        "min": 9,
+        "max": 25
+      },
+      "stone_sites": {
+        "min": 3,
+        "max": 20
+      },
+      "ore_sites": {
+        "min": 0,
+        "max": 7
+      },
+      "planned_road_tiles": {
+        "min": 15,
+        "max": 100
+      },
+      "turn_limit": {
+        "min": 6,
+        "max": 18
+      },
+      "turns_used": {
+        "min": 4,
+        "max": 18
+      },
+      "actions": {
+        "min": 11,
+        "max": 444
+      }
+    },
+    "initial_stone": {
+      "count": 36,
+      "sum": 583,
+      "mean": 16.194444444444443,
+      "median": 15.0,
+      "min": 12,
+      "max": 23
+    },
+    "initial_ore": {
+      "count": 36,
+      "sum": 0,
+      "mean": 0,
+      "median": 0.0,
+      "min": 0,
+      "max": 0
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "3a5156a6-2c65-425b-bca7-ad3d26434007",
+      "level": 1,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "initial",
+      "created_at": "2026-10-16T16:34:23.659605+00:00",
+      "width": 12,
+      "height": 9,
+      "stone_sites": 3,
+      "ore_sites": 1,
+      "planned_road_tiles": 15,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 5
+      },
+      "turn_limit": 6,
+      "turns_used": 6,
+      "actions": 67,
+      "roads_built": 30,
+      "quarries_built": 3,
+      "mines_built": 1,
+      "solver_ms": 3.963832976296544,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": null,
+      "server_seconds": 1.283,
+      "client_seconds": 2.7890486249816604,
+      "elapsed_before_submit": 1.584157207980752,
+      "creation_post_seconds": 0.7020468749688007,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 6,
+          "base_stone": 5,
+          "base_iron_ore": 15,
+          "base_inventory": {
+            "STONE": 5,
+            "IRON_ORE": 15
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 6,
+          "base_stone": 5,
+          "base_iron_ore": 15,
+          "base_inventory": {
+            "STONE": 5,
+            "IRON_ORE": 15
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "first-submit.json",
+        "json_pointer": "/case",
+        "file_sha256": "528f29c6833f9faed196e1c433c68820c4883dec84a5803da8a74b9cab29562d",
+        "original_receipt_sha256": "b676e152211818c3bffabad0589bb7c5c679408c4f0f3029337836c7f77b430a"
+      }
+    },
+    {
+      "task_id": "5a92dc59-21d1-490a-9059-ccfe5b180e02",
+      "level": 2,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "initial",
+      "created_at": "2026-10-16T16:41:04.222406+00:00",
+      "width": 17,
+      "height": 13,
+      "stone_sites": 3,
+      "ore_sites": 2,
+      "planned_road_tiles": 20,
+      "initial_resources": {
+        "STONE": 17,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 5
+      },
+      "turn_limit": 7,
+      "turns_used": 6,
+      "actions": 40,
+      "roads_built": 18,
+      "quarries_built": 2,
+      "mines_built": 1,
+      "solver_ms": 4.227166005875915,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": null,
+      "server_seconds": 1.357,
+      "client_seconds": 2.9073694170219824,
+      "elapsed_before_submit": 1.665024292015005,
+      "creation_post_seconds": 0.7245853750500828,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 6,
+          "base_stone": 4,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 4,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 6,
+          "base_stone": 4,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 4,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "loop-results.json",
+        "json_pointer": "/cases/0",
+        "file_sha256": "78b3123d7e7b6100ffecbee061268fbed0aa0d401fab000772ca5aabdb19929b",
+        "original_receipt_sha256": "edfbe304ac15d76b31ca17750f9ab275b7d116afd026d1b2810aa3759beed457"
+      }
+    },
+    {
+      "task_id": "d1f340b6-5539-449b-bac5-ef43b1e2844e",
+      "level": 2,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "initial",
+      "created_at": "2026-10-16T16:43:52.907437+00:00",
+      "width": 12,
+      "height": 10,
+      "stone_sites": 5,
+      "ore_sites": 2,
+      "planned_road_tiles": 25,
+      "initial_resources": {
+        "STONE": 16,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 100
+      },
+      "turn_limit": 16,
+      "turns_used": 16,
+      "actions": 258,
+      "roads_built": 94,
+      "quarries_built": 5,
+      "mines_built": 2,
+      "solver_ms": 20.16683400142938,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": null,
+      "server_seconds": 1.629,
+      "client_seconds": 3.114330958982464,
+      "elapsed_before_submit": 1.5821021249867044,
+      "creation_post_seconds": 0.6477571669965982,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 16,
+          "base_stone": 137,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 137,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 16,
+          "base_stone": 137,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 137,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "loop-results.json",
+        "json_pointer": "/cases/1",
+        "file_sha256": "78b3123d7e7b6100ffecbee061268fbed0aa0d401fab000772ca5aabdb19929b",
+        "original_receipt_sha256": "4ea4d7ff5fcd1bd7b1d1d5d000a2c591beb1ec1b7fcd221f1f1209592cf66bbb"
+      }
+    },
+    {
+      "task_id": "e8efefa0-b399-482e-9bd8-cee3f8a6384e",
+      "level": 2,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "initial",
+      "created_at": "2026-10-16T16:43:57.562974+00:00",
+      "width": 18,
+      "height": 10,
+      "stone_sites": 4,
+      "ore_sites": 3,
+      "planned_road_tiles": 28,
+      "initial_resources": {
+        "STONE": 19,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 40
+      },
+      "turn_limit": 9,
+      "turns_used": 9,
+      "actions": 139,
+      "roads_built": 40,
+      "quarries_built": 4,
+      "mines_built": 2,
+      "solver_ms": 16.892499988898635,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": null,
+      "server_seconds": 2.016,
+      "client_seconds": 3.657276207988616,
+      "elapsed_before_submit": 2.3660070410114713,
+      "creation_post_seconds": 1.4488371670013294,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 9,
+          "base_stone": 54,
+          "base_iron_ore": 50,
+          "base_inventory": {
+            "STONE": 54,
+            "IRON_ORE": 50
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 9,
+          "base_stone": 54,
+          "base_iron_ore": 50,
+          "base_inventory": {
+            "STONE": 54,
+            "IRON_ORE": 50
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "loop-results.json",
+        "json_pointer": "/cases/2",
+        "file_sha256": "78b3123d7e7b6100ffecbee061268fbed0aa0d401fab000772ca5aabdb19929b",
+        "original_receipt_sha256": "96ea62f63ae8cbd2f197ecfffcb73554f15ab73cb655dfa65b74f3494b4705ac"
+      }
+    },
+    {
+      "task_id": "6de39d3b-cf78-4c1e-bb9b-d2330f53e6f9",
+      "level": 3,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "initial",
+      "created_at": "2026-10-16T16:44:02.325189+00:00",
+      "width": 20,
+      "height": 14,
+      "stone_sites": 4,
+      "ore_sites": 2,
+      "planned_road_tiles": 26,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 100
+      },
+      "turn_limit": 17,
+      "turns_used": 15,
+      "actions": 145,
+      "roads_built": 17,
+      "quarries_built": 3,
+      "mines_built": 2,
+      "solver_ms": 6.835624983068556,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": null,
+      "server_seconds": 1.358,
+      "client_seconds": 2.862364540982526,
+      "elapsed_before_submit": 1.559610333002638,
+      "creation_post_seconds": 0.6475512920296751,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 15,
+          "base_stone": 138,
+          "base_iron_ore": 105,
+          "base_inventory": {
+            "STONE": 138,
+            "IRON_ORE": 105
+          },
+          "min_prefix_cash": 1
+        },
+        "unrestricted": {
+          "turns": 15,
+          "base_stone": 138,
+          "base_iron_ore": 105,
+          "base_inventory": {
+            "STONE": 138,
+            "IRON_ORE": 105
+          },
+          "min_prefix_cash": 1
+        }
+      },
+      "source": {
+        "file": "loop-results.json",
+        "json_pointer": "/cases/3",
+        "file_sha256": "78b3123d7e7b6100ffecbee061268fbed0aa0d401fab000772ca5aabdb19929b",
+        "original_receipt_sha256": "d30c9a708ef927214f6b2700b1f35c3dd95b3f6cf364a670f1e3b3678b17a9e0"
+      }
+    },
+    {
+      "task_id": "e08425c4-65df-4132-8075-37a792df7781",
+      "level": 3,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "initial",
+      "created_at": "2026-10-16T16:44:06.512772+00:00",
+      "width": 18,
+      "height": 12,
+      "stone_sites": 5,
+      "ore_sites": 3,
+      "planned_road_tiles": 27,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 28
+      },
+      "turn_limit": 10,
+      "turns_used": 10,
+      "actions": 77,
+      "roads_built": 23,
+      "quarries_built": 3,
+      "mines_built": 2,
+      "solver_ms": 6.312375015113503,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": null,
+      "server_seconds": 1.417,
+      "client_seconds": 2.9779053750098683,
+      "elapsed_before_submit": 1.734660166024696,
+      "creation_post_seconds": 0.7547781249741092,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 10,
+          "base_stone": 22,
+          "base_iron_ore": 30,
+          "base_inventory": {
+            "STONE": 22,
+            "IRON_ORE": 30
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 10,
+          "base_stone": 22,
+          "base_iron_ore": 30,
+          "base_inventory": {
+            "STONE": 22,
+            "IRON_ORE": 30
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "loop-results.json",
+        "json_pointer": "/cases/4",
+        "file_sha256": "78b3123d7e7b6100ffecbee061268fbed0aa0d401fab000772ca5aabdb19929b",
+        "original_receipt_sha256": "b5e7a87750f964a776dd20ac1d9383c6b890f88e1d1be1f1867d5f3a3c9cefad"
+      }
+    },
+    {
+      "task_id": "8086d0d8-567d-4cb2-bf92-fec6312a72c5",
+      "level": 3,
+      "counted": false,
+      "outcome": "LATE",
+      "cohort": "late-recovery",
+      "created_at": "2026-10-16T16:44:12.032827+00:00",
+      "width": 23,
+      "height": 16,
+      "stone_sites": 5,
+      "ore_sites": 6,
+      "planned_road_tiles": 41,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 175
+      },
+      "turn_limit": 14,
+      "turns_used": 14,
+      "actions": 204,
+      "roads_built": 43,
+      "quarries_built": 3,
+      "mines_built": 6,
+      "solver_ms": 45.764457900077105,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 46248.142,
+      "client_seconds": null,
+      "elapsed_before_submit": null,
+      "creation_post_seconds": null,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 14,
+          "base_stone": 17,
+          "base_iron_ore": 180,
+          "base_inventory": {
+            "STONE": 17,
+            "IRON_ORE": 180
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 14,
+          "base_stone": 17,
+          "base_iron_ore": 180,
+          "base_inventory": {
+            "STONE": 17,
+            "IRON_ORE": 180
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "guidance-pending-recovery.json",
+        "json_pointer": "",
+        "file_sha256": "97e4a610043113923aa8a5f8358cfae7165f7190efbe59bd64a492659959588e",
+        "original_receipt_sha256": null
+      }
+    },
+    {
+      "task_id": "33d85abc-a2ff-4304-b2b0-946680cdd9a7",
+      "level": 3,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:35:32.429673+00:00",
+      "width": 18,
+      "height": 17,
+      "stone_sites": 4,
+      "ore_sites": 5,
+      "planned_road_tiles": 31,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 10
+      },
+      "turn_limit": 7,
+      "turns_used": 5,
+      "actions": 34,
+      "roads_built": 8,
+      "quarries_built": 2,
+      "mines_built": 1,
+      "solver_ms": 16.941625042818487,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.37,
+      "client_seconds": 3.32208674994763,
+      "elapsed_before_submit": 1.9833588749170303,
+      "creation_post_seconds": 1.041217333986424,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 5,
+          "base_stone": 17,
+          "base_iron_ore": 10,
+          "base_inventory": {
+            "STONE": 17,
+            "IRON_ORE": 10
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 5,
+          "base_stone": 17,
+          "base_iron_ore": 10,
+          "base_inventory": {
+            "STONE": 17,
+            "IRON_ORE": 10
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/0/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "ab14713f414907c7aba407ad41ffd551225dfeba1a6e4a85e7bb83d79f81c13d"
+      }
+    },
+    {
+      "task_id": "1a148135-11a7-41b8-9760-44a03b685705",
+      "level": 3,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:35:37.022418+00:00",
+      "width": 22,
+      "height": 12,
+      "stone_sites": 6,
+      "ore_sites": 2,
+      "planned_road_tiles": 39,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 10
+      },
+      "turn_limit": 9,
+      "turns_used": 4,
+      "actions": 20,
+      "roads_built": 5,
+      "quarries_built": 1,
+      "mines_built": 1,
+      "solver_ms": 5.5498749716207385,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.409,
+      "client_seconds": 3.372499041026458,
+      "elapsed_before_submit": 2.0056715410901234,
+      "creation_post_seconds": 1.0148235000669956,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 4,
+          "base_stone": 5,
+          "base_iron_ore": 10,
+          "base_inventory": {
+            "STONE": 5,
+            "IRON_ORE": 10
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 4,
+          "base_stone": 5,
+          "base_iron_ore": 10,
+          "base_inventory": {
+            "STONE": 5,
+            "IRON_ORE": 10
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/1/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "75de0f6ca23f104aff6593ffffc1dfa5ce178c09d78d55e1582a96203a199951"
+      }
+    },
+    {
+      "task_id": "dd98201c-b300-4682-8172-3953e798cb8a",
+      "level": 3,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:35:41.588883+00:00",
+      "width": 17,
+      "height": 14,
+      "stone_sites": 5,
+      "ore_sites": 5,
+      "planned_road_tiles": 32,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 76
+      },
+      "turn_limit": 11,
+      "turns_used": 11,
+      "actions": 178,
+      "roads_built": 30,
+      "quarries_built": 5,
+      "mines_built": 3,
+      "solver_ms": 35.95670801587403,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.469,
+      "client_seconds": 3.380640957970172,
+      "elapsed_before_submit": 1.8594635829795152,
+      "creation_post_seconds": 0.8903826249297708,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 11,
+          "base_stone": 100,
+          "base_iron_ore": 80,
+          "base_inventory": {
+            "STONE": 100,
+            "IRON_ORE": 80
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 11,
+          "base_stone": 100,
+          "base_iron_ore": 80,
+          "base_inventory": {
+            "STONE": 100,
+            "IRON_ORE": 80
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/2/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "283db815783c5457487517849e7e3fbb29020fd52ffb4172f2254be06db08f8d"
+      }
+    },
+    {
+      "task_id": "8c8e7ca1-6207-4f0f-a0fa-453abf9ffe8e",
+      "level": 4,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:35:46.788538+00:00",
+      "width": 16,
+      "height": 12,
+      "stone_sites": 6,
+      "ore_sites": 5,
+      "planned_road_tiles": 32,
+      "initial_resources": {
+        "STONE": 16,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 5
+      },
+      "turn_limit": 7,
+      "turns_used": 7,
+      "actions": 52,
+      "roads_built": 26,
+      "quarries_built": 2,
+      "mines_built": 1,
+      "solver_ms": 9.289833949878812,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.415,
+      "client_seconds": 3.8464847499271855,
+      "elapsed_before_submit": 2.4249075000407174,
+      "creation_post_seconds": 1.4982507498934865,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 7,
+          "base_stone": 0,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 0,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 7,
+          "base_stone": 0,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 0,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/3/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "33736f2359ef3e0e07e8f0a59f9a2cf8c6c94c25606a0c7f3faea37a010395af"
+      }
+    },
+    {
+      "task_id": "6bbac837-7b93-407a-9268-40e8976b93c1",
+      "level": 4,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:35:52.557333+00:00",
+      "width": 24,
+      "height": 14,
+      "stone_sites": 10,
+      "ore_sites": 3,
+      "planned_road_tiles": 47,
+      "initial_resources": {
+        "STONE": 18,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 52
+      },
+      "turn_limit": 11,
+      "turns_used": 11,
+      "actions": 27,
+      "roads_built": 3,
+      "quarries_built": 0,
+      "mines_built": 1,
+      "solver_ms": 6.926957983523607,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.339,
+      "client_seconds": 4.457900332985446,
+      "elapsed_before_submit": 3.0046230830485,
+      "creation_post_seconds": 2.090736792073585,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 11,
+          "base_stone": 0,
+          "base_iron_ore": 55,
+          "base_inventory": {
+            "STONE": 0,
+            "IRON_ORE": 55
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 11,
+          "base_stone": 0,
+          "base_iron_ore": 55,
+          "base_inventory": {
+            "STONE": 0,
+            "IRON_ORE": 55
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/4/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "c3496b4d20acd55458f2724947285286548e03542303921d609894f51558f32e"
+      }
+    },
+    {
+      "task_id": "80d3a113-56b7-43b6-b93e-83f113ea7da0",
+      "level": 4,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:35:58.816161+00:00",
+      "width": 24,
+      "height": 16,
+      "stone_sites": 13,
+      "ore_sites": 2,
+      "planned_road_tiles": 56,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 5
+      },
+      "turn_limit": 7,
+      "turns_used": 7,
+      "actions": 65,
+      "roads_built": 30,
+      "quarries_built": 3,
+      "mines_built": 1,
+      "solver_ms": 19.5615419652313,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.587,
+      "client_seconds": 4.91426958295051,
+      "elapsed_before_submit": 3.576762791024521,
+      "creation_post_seconds": 2.5572372500319034,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 7,
+          "base_stone": 5,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 5,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 7,
+          "base_stone": 5,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 5,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/5/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "36384ca719de74d7af98a7168640c1eb6dc5c1533fae9f49f901367500dbc74b"
+      }
+    },
+    {
+      "task_id": "5e508463-f0a7-4fbe-8dcb-977bb7e49003",
+      "level": 4,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:36:05.359973+00:00",
+      "width": 17,
+      "height": 17,
+      "stone_sites": 10,
+      "ore_sites": 6,
+      "planned_road_tiles": 51,
+      "initial_resources": {
+        "STONE": 16,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 16
+      },
+      "turn_limit": 8,
+      "turns_used": 8,
+      "actions": 116,
+      "roads_built": 48,
+      "quarries_built": 4,
+      "mines_built": 2,
+      "solver_ms": 23.514625034295022,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.416,
+      "client_seconds": 5.337760291062295,
+      "elapsed_before_submit": 3.578906208043918,
+      "creation_post_seconds": 2.6226138750789687,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 8,
+          "base_stone": 8,
+          "base_iron_ore": 20,
+          "base_inventory": {
+            "STONE": 8,
+            "IRON_ORE": 20
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 8,
+          "base_stone": 8,
+          "base_iron_ore": 20,
+          "base_inventory": {
+            "STONE": 8,
+            "IRON_ORE": 20
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/6/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "b11e1993d8b0b4a66088c475341e5525d5ab68c1d996fdd91eac8593d60ce070"
+      }
+    },
+    {
+      "task_id": "936ff6e7-76c2-4ea7-ae2d-b764f9c5814b",
+      "level": 4,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:36:10.539128+00:00",
+      "width": 18,
+      "height": 15,
+      "stone_sites": 10,
+      "ore_sites": 4,
+      "planned_road_tiles": 46,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 100
+      },
+      "turn_limit": 12,
+      "turns_used": 12,
+      "actions": 151,
+      "roads_built": 23,
+      "quarries_built": 4,
+      "mines_built": 3,
+      "solver_ms": 29.85508309211582,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.447,
+      "client_seconds": 3.5227220410015434,
+      "elapsed_before_submit": 2.193853957927786,
+      "creation_post_seconds": 1.2099177920026705,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 12,
+          "base_stone": 92,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 92,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 3
+        },
+        "unrestricted": {
+          "turns": 12,
+          "base_stone": 92,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 92,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 3
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/7/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "7197eb77a057a80c977e96d18728b9eaa3ec61cec852f5aaf4986bd177cd7046"
+      }
+    },
+    {
+      "task_id": "3cd00f89-c455-4843-b7b3-b82da3c769ba",
+      "level": 4,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:36:16.116101+00:00",
+      "width": 18,
+      "height": 18,
+      "stone_sites": 14,
+      "ore_sites": 3,
+      "planned_road_tiles": 54,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 100
+      },
+      "turn_limit": 13,
+      "turns_used": 11,
+      "actions": 146,
+      "roads_built": 19,
+      "quarries_built": 4,
+      "mines_built": 3,
+      "solver_ms": 30.348542029969394,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.421,
+      "client_seconds": 4.177105167065747,
+      "elapsed_before_submit": 2.863122833077796,
+      "creation_post_seconds": 1.911627000081353,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 11,
+          "base_stone": 91,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 91,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 2
+        },
+        "unrestricted": {
+          "turns": 11,
+          "base_stone": 91,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 91,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 2
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/8/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "e1ace86108a2e932b2711b2572084aa494eda08f2789a81fce69a3ed732430a6"
+      }
+    },
+    {
+      "task_id": "d77fef6a-e299-4266-ae55-9e1be611f736",
+      "level": 5,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:36:22.111329+00:00",
+      "width": 24,
+      "height": 25,
+      "stone_sites": 5,
+      "ore_sites": 7,
+      "planned_road_tiles": 70,
+      "initial_resources": {
+        "STONE": 20,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 250
+      },
+      "turn_limit": 18,
+      "turns_used": 18,
+      "actions": 335,
+      "roads_built": 71,
+      "quarries_built": 5,
+      "mines_built": 6,
+      "solver_ms": 88.43925001565367,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.531,
+      "client_seconds": 4.866928957984783,
+      "elapsed_before_submit": 3.457653708057478,
+      "creation_post_seconds": 2.484208249952644,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 18,
+          "base_stone": 154,
+          "base_iron_ore": 265,
+          "base_inventory": {
+            "STONE": 154,
+            "IRON_ORE": 265
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 18,
+          "base_stone": 154,
+          "base_iron_ore": 265,
+          "base_inventory": {
+            "STONE": 154,
+            "IRON_ORE": 265
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/9/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "b6efc62e43beb89cf6b5f2e03b4aa45026b1f6ffe4385a8dcf52f30eea03aa44"
+      }
+    },
+    {
+      "task_id": "1fd4d746-9979-401a-91c5-1a304a2e5baf",
+      "level": 5,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:36:27.309839+00:00",
+      "width": 23,
+      "height": 24,
+      "stone_sites": 6,
+      "ore_sites": 5,
+      "planned_road_tiles": 51,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 10
+      },
+      "turn_limit": 8,
+      "turns_used": 6,
+      "actions": 45,
+      "roads_built": 17,
+      "quarries_built": 2,
+      "mines_built": 1,
+      "solver_ms": 20.167999900877476,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.363,
+      "client_seconds": 3.7788820420391858,
+      "elapsed_before_submit": 2.4756458749761805,
+      "creation_post_seconds": 1.5375748330261558,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 6,
+          "base_stone": 13,
+          "base_iron_ore": 10,
+          "base_inventory": {
+            "STONE": 13,
+            "IRON_ORE": 10
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 6,
+          "base_stone": 13,
+          "base_iron_ore": 10,
+          "base_inventory": {
+            "STONE": 13,
+            "IRON_ORE": 10
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/10/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "f17a7f6702dc7c33439bb9f88f83459fbb8249e1ba2598a6d5e092e38fbe4512"
+      }
+    },
+    {
+      "task_id": "84c109a2-c093-453e-a5ce-3c22d8594c39",
+      "level": 5,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:36:32.382129+00:00",
+      "width": 24,
+      "height": 23,
+      "stone_sites": 6,
+      "ore_sites": 6,
+      "planned_road_tiles": 67,
+      "initial_resources": {
+        "STONE": 23,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 52
+      },
+      "turn_limit": 12,
+      "turns_used": 11,
+      "actions": 31,
+      "roads_built": 7,
+      "quarries_built": 0,
+      "mines_built": 1,
+      "solver_ms": 44.91583292838186,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.391,
+      "client_seconds": 3.8407921249745414,
+      "elapsed_before_submit": 2.5458837079349905,
+      "creation_post_seconds": 1.575166541035287,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 11,
+          "base_stone": 1,
+          "base_iron_ore": 55,
+          "base_inventory": {
+            "STONE": 1,
+            "IRON_ORE": 55
+          },
+          "min_prefix_cash": 1
+        },
+        "unrestricted": {
+          "turns": 11,
+          "base_stone": 1,
+          "base_iron_ore": 55,
+          "base_inventory": {
+            "STONE": 1,
+            "IRON_ORE": 55
+          },
+          "min_prefix_cash": 1
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/11/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "f43dec6e6ea2f4af5ade0027af76049cba1187ecf4fa1825e4496f3bd009834b"
+      }
+    },
+    {
+      "task_id": "c542bf09-20b0-4785-9251-d2e8dd515a57",
+      "level": 6,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:36:40.271535+00:00",
+      "width": 24,
+      "height": 25,
+      "stone_sites": 20,
+      "ore_sites": 3,
+      "planned_road_tiles": 89,
+      "initial_resources": {
+        "STONE": 20,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 16
+      },
+      "turn_limit": 7,
+      "turns_used": 4,
+      "actions": 11,
+      "roads_built": 1,
+      "quarries_built": 0,
+      "mines_built": 1,
+      "solver_ms": 9.928875020705163,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.401,
+      "client_seconds": 6.595549709047191,
+      "elapsed_before_submit": 5.289265291998163,
+      "creation_post_seconds": 4.344005250022747,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 4,
+          "base_stone": 4,
+          "base_iron_ore": 20,
+          "base_inventory": {
+            "STONE": 4,
+            "IRON_ORE": 20
+          },
+          "min_prefix_cash": 4
+        },
+        "unrestricted": {
+          "turns": 4,
+          "base_stone": 4,
+          "base_iron_ore": 20,
+          "base_inventory": {
+            "STONE": 4,
+            "IRON_ORE": 20
+          },
+          "min_prefix_cash": 4
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/12/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "d21173054dcdcb9972fe618f6970bf17f1cf84cac1185e33e549733e882b878e"
+      }
+    },
+    {
+      "task_id": "3f7d3976-f962-46d8-9295-9b5c84a49c6d",
+      "level": 6,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "guidance",
+      "created_at": "2026-10-17T05:36:50.982002+00:00",
+      "width": 23,
+      "height": 24,
+      "stone_sites": 15,
+      "ore_sites": 7,
+      "planned_road_tiles": 79,
+      "initial_resources": {
+        "STONE": 17,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 5
+      },
+      "turn_limit": 8,
+      "turns_used": 6,
+      "actions": 52,
+      "roads_built": 25,
+      "quarries_built": 2,
+      "mines_built": 1,
+      "solver_ms": 22.96741690952331,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.653,
+      "client_seconds": 9.82981008302886,
+      "elapsed_before_submit": 8.28630683303345,
+      "creation_post_seconds": 7.111269708024338,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 6,
+          "base_stone": 2,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 2,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 6,
+          "base_stone": 2,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 2,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/13/receipt",
+        "file_sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+        "original_receipt_sha256": "3e799ad35f64ce3424c434eeddb7494c78ac5775a50d1f8be20e272c3fce2dd1"
+      }
+    },
+    {
+      "task_id": "fc441739-a54e-4b2a-b108-6c48fe68c484",
+      "level": 6,
+      "counted": false,
+      "outcome": "LATE",
+      "cohort": "late-recovery",
+      "created_at": "2026-10-17T05:37:18.901605+00:00",
+      "width": 24,
+      "height": 24,
+      "stone_sites": 17,
+      "ore_sites": 6,
+      "planned_road_tiles": 89,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 100
+      },
+      "turn_limit": 12,
+      "turns_used": 12,
+      "actions": 200,
+      "roads_built": 65,
+      "quarries_built": 4,
+      "mines_built": 4,
+      "solver_ms": 59.04049996752292,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 2804.84,
+      "client_seconds": null,
+      "elapsed_before_submit": null,
+      "creation_post_seconds": null,
+      "acquisition_seconds": null,
+      "creation_requests": null,
+      "creation_lookups": null,
+      "strict_replay": {
+        "matching": {
+          "turns": 12,
+          "base_stone": 40,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 40,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 12,
+          "base_stone": 40,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 40,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "creation-timeout-pending-recovery.json",
+        "json_pointer": "",
+        "file_sha256": "78f8ecc421685ae546c86111f63c4d1e70dfa55e619ef8ce5d70295592fde122",
+        "original_receipt_sha256": null
+      }
+    },
+    {
+      "task_id": "4df36a5a-caa4-4e88-b9aa-c974bae9544a",
+      "level": 6,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:24:39.717434+00:00",
+      "width": 25,
+      "height": 23,
+      "stone_sites": 15,
+      "ore_sites": 7,
+      "planned_road_tiles": 77,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 52
+      },
+      "turn_limit": 10,
+      "turns_used": 10,
+      "actions": 82,
+      "roads_built": 16,
+      "quarries_built": 3,
+      "mines_built": 2,
+      "solver_ms": 47.017249977216125,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.479,
+      "client_seconds": 7.3679972080281,
+      "elapsed_before_submit": 5.759975583059713,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 5.201310708071105,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.998557792045176,
+          "outcome": "response"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 25.25746612495277,
+          "pending_task_ids": [
+            "4df36a5a-caa4-4e88-b9aa-c974bae9544a"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 10,
+          "base_stone": 34,
+          "base_iron_ore": 55,
+          "base_inventory": {
+            "STONE": 34,
+            "IRON_ORE": 55
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 10,
+          "base_stone": 34,
+          "base_iron_ore": 55,
+          "base_inventory": {
+            "STONE": 34,
+            "IRON_ORE": 55
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/0/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "cee579e758c5cad144fbc19f9f5445a5fe5045d923b5d7c1c094913e0392c089"
+      }
+    },
+    {
+      "task_id": "b6701755-e050-4888-bb41-72318e17864c",
+      "level": 6,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:24:49.945261+00:00",
+      "width": 24,
+      "height": 24,
+      "stone_sites": 19,
+      "ore_sites": 4,
+      "planned_road_tiles": 89,
+      "initial_resources": {
+        "STONE": 17,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 5
+      },
+      "turn_limit": 7,
+      "turns_used": 6,
+      "actions": 51,
+      "roads_built": 24,
+      "quarries_built": 2,
+      "mines_built": 1,
+      "solver_ms": 22.020625066943467,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.862,
+      "client_seconds": 9.044967332971282,
+      "elapsed_before_submit": 7.709364083013497,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 7.1938974999357015,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.998977708048187,
+          "error_type": "ReadTimeout",
+          "outcome": "ambiguous"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 24.995890042046085,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 2,
+          "timeout": 3.0,
+          "remaining_before": 23.276753542013466,
+          "pending_task_ids": [
+            "b6701755-e050-4888-bb41-72318e17864c"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 6,
+          "base_stone": 3,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 3,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 6,
+          "base_stone": 3,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 3,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/1/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "cc70d0eba9c53e087fdabc3b9c5287c860305378350140b94a9854de636b4c0f"
+      }
+    },
+    {
+      "task_id": "1b047e1c-46c1-4669-a613-2490b2b1e93d",
+      "level": 6,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:24:58.486504+00:00",
+      "width": 25,
+      "height": 24,
+      "stone_sites": 19,
+      "ore_sites": 4,
+      "planned_road_tiles": 86,
+      "initial_resources": {
+        "STONE": 19,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 100
+      },
+      "turn_limit": 12,
+      "turns_used": 12,
+      "actions": 341,
+      "roads_built": 53,
+      "quarries_built": 10,
+      "mines_built": 4,
+      "solver_ms": 203.2499589258805,
+      "solver_reason": "guidance_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 1,
+        "work": 75,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [
+          "relaxed"
+        ],
+        "successful_policy": "relaxed",
+        "resource": {
+          "calls": 75,
+          "projects": 1059,
+          "dp_queries": 4425,
+          "waits_promoted": 8,
+          "deadline_fallbacks": 0,
+          "weakened_dp_fallbacks": 0,
+          "seconds": 0.0485674993833527
+        }
+      },
+      "server_seconds": 1.851,
+      "client_seconds": 7.2114210409345105,
+      "elapsed_before_submit": 5.719889333005995,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 5.031211124965921,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.99886333406903,
+          "outcome": "response"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 25.450998084037565,
+          "pending_task_ids": [
+            "1b047e1c-46c1-4669-a613-2490b2b1e93d"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 12,
+          "base_stone": 186,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 186,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 1
+        },
+        "unrestricted": {
+          "turns": 12,
+          "base_stone": 186,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 186,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 1
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/2/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "070cf9eaff5881d872e8d24db92653389af9a870e2a3241162762ae0b0ce121d"
+      }
+    },
+    {
+      "task_id": "201513a5-ff25-4c75-9cd0-f6b787609be7",
+      "level": 6,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:25:22.424381+00:00",
+      "width": 24,
+      "height": 23,
+      "stone_sites": 19,
+      "ore_sites": 3,
+      "planned_road_tiles": 89,
+      "initial_resources": {
+        "STONE": 16,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 100
+      },
+      "turn_limit": 14,
+      "turns_used": 12,
+      "actions": 165,
+      "roads_built": 30,
+      "quarries_built": 4,
+      "mines_built": 3,
+      "solver_ms": 35.80979199614376,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 2.156,
+      "client_seconds": 23.0160511250142,
+      "elapsed_before_submit": 21.62615579192061,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 21.06232883397024,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.99819291604217,
+          "error_type": "ReadTimeout",
+          "outcome": "ambiguous"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 24.99495800002478,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 2,
+          "timeout": 3.0,
+          "remaining_before": 23.312799416016787,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 3,
+          "timeout": 3.0,
+          "remaining_before": 21.82335529103875,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 4,
+          "timeout": 3.0,
+          "remaining_before": 20.322571708005853,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 5,
+          "timeout": 3.0,
+          "remaining_before": 18.794686625013128,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 6,
+          "timeout": 3.0,
+          "remaining_before": 17.285817665979266,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 7,
+          "timeout": 3.0,
+          "remaining_before": 15.760188208078034,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 8,
+          "timeout": 3.0,
+          "remaining_before": 13.973850624985062,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 9,
+          "timeout": 3.0,
+          "remaining_before": 12.430089332978241,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 10,
+          "timeout": 3.0,
+          "remaining_before": 10.91816254099831,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 11,
+          "timeout": 3.0,
+          "remaining_before": 9.42865504103247,
+          "pending_task_ids": [
+            "201513a5-ff25-4c75-9cd0-f6b787609be7"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 12,
+          "base_stone": 86,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 86,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 1
+        },
+        "unrestricted": {
+          "turns": 12,
+          "base_stone": 86,
+          "base_iron_ore": 100,
+          "base_inventory": {
+            "STONE": 86,
+            "IRON_ORE": 100
+          },
+          "min_prefix_cash": 1
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/3/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "baba1b65485eb9e3a4867c671b6c86067650f5f298796ad82e97fc8fa12128c4"
+      }
+    },
+    {
+      "task_id": "82364dcc-1a41-4e06-a504-b29a036baaac",
+      "level": 6,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:25:30.845042+00:00",
+      "width": 25,
+      "height": 23,
+      "stone_sites": 15,
+      "ore_sites": 7,
+      "planned_road_tiles": 85,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 28
+      },
+      "turn_limit": 9,
+      "turns_used": 9,
+      "actions": 115,
+      "roads_built": 38,
+      "quarries_built": 4,
+      "mines_built": 2,
+      "solver_ms": 34.66720797587186,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.518,
+      "client_seconds": 6.380377875058912,
+      "elapsed_before_submit": 5.046449083019979,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 4.482369458070025,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.998657000018284,
+          "outcome": "response"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 25.99606804200448,
+          "pending_task_ids": [
+            "82364dcc-1a41-4e06-a504-b29a036baaac"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 9,
+          "base_stone": 22,
+          "base_iron_ore": 30,
+          "base_inventory": {
+            "STONE": 22,
+            "IRON_ORE": 30
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 9,
+          "base_stone": 22,
+          "base_iron_ore": 30,
+          "base_inventory": {
+            "STONE": 22,
+            "IRON_ORE": 30
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/4/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "18974ffa56ba40eb426a5bb20b7b146abd80db21f08e83847b91d839133d0c5c"
+      }
+    },
+    {
+      "task_id": "a351d232-b8c4-4435-b009-86a714bc586b",
+      "level": 6,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:25:41.484369+00:00",
+      "width": 24,
+      "height": 23,
+      "stone_sites": 15,
+      "ore_sites": 7,
+      "planned_road_tiles": 80,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 100
+      },
+      "turn_limit": 13,
+      "turns_used": 13,
+      "actions": 326,
+      "roads_built": 64,
+      "quarries_built": 7,
+      "mines_built": 6,
+      "solver_ms": 63.08945803903043,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.685,
+      "client_seconds": 9.53374649991747,
+      "elapsed_before_submit": 7.987578082946129,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 7.391829250031151,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.998183667077683,
+          "error_type": "ReadTimeout",
+          "outcome": "ambiguous"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 24.994433042011224,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 2,
+          "timeout": 3.0,
+          "remaining_before": 23.336132667027414,
+          "pending_task_ids": [
+            "a351d232-b8c4-4435-b009-86a714bc586b"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 13,
+          "base_stone": 36,
+          "base_iron_ore": 105,
+          "base_inventory": {
+            "STONE": 36,
+            "IRON_ORE": 105
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 13,
+          "base_stone": 36,
+          "base_iron_ore": 105,
+          "base_inventory": {
+            "STONE": 36,
+            "IRON_ORE": 105
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/5/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "c743358d337276948cac4bf049c1b1a499491f2165ab577eafcae001802ae593"
+      }
+    },
+    {
+      "task_id": "2c093702-6811-4f09-a990-462549dbe24f",
+      "level": 7,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:26:05.349535+00:00",
+      "width": 25,
+      "height": 24,
+      "stone_sites": 19,
+      "ore_sites": 4,
+      "planned_road_tiles": 88,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 100
+      },
+      "turn_limit": 12,
+      "turns_used": 12,
+      "actions": 218,
+      "roads_built": 33,
+      "quarries_built": 6,
+      "mines_built": 3,
+      "solver_ms": 58.03895799908787,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 3.201,
+      "client_seconds": 24.418570750043727,
+      "elapsed_before_submit": 22.584889582940377,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 21.746414416935295,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.99888908304274,
+          "error_type": "ReadTimeout",
+          "outcome": "ambiguous"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 24.99563300004229,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 2,
+          "timeout": 3.0,
+          "remaining_before": 23.265560999978334,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 3,
+          "timeout": 3.0,
+          "remaining_before": 21.762002417002805,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 4,
+          "timeout": 3.0,
+          "remaining_before": 20.252808541990817,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 5,
+          "timeout": 3.0,
+          "remaining_before": 18.744607542059384,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 6,
+          "timeout": 3.0,
+          "remaining_before": 17.014091292046942,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 7,
+          "timeout": 3.0,
+          "remaining_before": 15.515734625048935,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 8,
+          "timeout": 3.0,
+          "remaining_before": 13.996414041961543,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 9,
+          "timeout": 3.0,
+          "remaining_before": 12.262498292024247,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 10,
+          "timeout": 3.0,
+          "remaining_before": 10.578252000035718,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 11,
+          "timeout": 3.0,
+          "remaining_before": 8.895696541992947,
+          "pending_task_ids": [
+            "2c093702-6811-4f09-a990-462549dbe24f"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 12,
+          "base_stone": 167,
+          "base_iron_ore": 105,
+          "base_inventory": {
+            "STONE": 167,
+            "IRON_ORE": 105
+          },
+          "min_prefix_cash": 1
+        },
+        "unrestricted": {
+          "turns": 12,
+          "base_stone": 167,
+          "base_iron_ore": 105,
+          "base_inventory": {
+            "STONE": 167,
+            "IRON_ORE": 105
+          },
+          "min_prefix_cash": 1
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/6/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "e8537a8d2d0e9a8e521dcb354bbf3096414e11bb036c507035a90b609fc4e7d5"
+      }
+    },
+    {
+      "task_id": "f46f40bb-b5a6-46f0-8a90-644ec7445d60",
+      "level": 7,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:26:13.707221+00:00",
+      "width": 23,
+      "height": 25,
+      "stone_sites": 16,
+      "ore_sites": 6,
+      "planned_road_tiles": 87,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "STONE": 25
+      },
+      "turn_limit": 6,
+      "turns_used": 5,
+      "actions": 17,
+      "roads_built": 5,
+      "quarries_built": 1,
+      "mines_built": 0,
+      "solver_ms": 4.420708981342614,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 2.305,
+      "client_seconds": 5.660752375028096,
+      "elapsed_before_submit": 3.9228638750500977,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 3.1379178749630228,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.995173749979585,
+          "outcome": "response"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 27.693572499905713,
+          "pending_task_ids": [
+            "f46f40bb-b5a6-46f0-8a90-644ec7445d60"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 5,
+          "base_stone": 25,
+          "base_iron_ore": 0,
+          "base_inventory": {
+            "STONE": 25,
+            "IRON_ORE": 0
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 5,
+          "base_stone": 25,
+          "base_iron_ore": 0,
+          "base_inventory": {
+            "STONE": 25,
+            "IRON_ORE": 0
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/7/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "0cdc4a80a24b7ce52d25d48c0642445feb38046537fda631f9891206889afd54"
+      }
+    },
+    {
+      "task_id": "3c38aee4-aba5-4523-b9a9-16dc9f468905",
+      "level": 7,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:26:40.341233+00:00",
+      "width": 25,
+      "height": 25,
+      "stone_sites": 18,
+      "ore_sites": 6,
+      "planned_road_tiles": 87,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 100
+      },
+      "turn_limit": 11,
+      "turns_used": 11,
+      "actions": 191,
+      "roads_built": 37,
+      "quarries_built": 4,
+      "mines_built": 4,
+      "solver_ms": 89.01279093697667,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 2.111,
+      "client_seconds": 24.671575416927226,
+      "elapsed_before_submit": 22.78054449998308,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 21.92251291696448,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.998598666046746,
+          "error_type": "ReadTimeout",
+          "outcome": "ambiguous"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 24.994612500071526,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 2,
+          "timeout": 3.0,
+          "remaining_before": 23.022466041031294,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 3,
+          "timeout": 3.0,
+          "remaining_before": 21.18389975000173,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 4,
+          "timeout": 3.0,
+          "remaining_before": 18.94659050006885,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 5,
+          "timeout": 3.0,
+          "remaining_before": 17.096085124998353,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 6,
+          "timeout": 3.0,
+          "remaining_before": 15.216501375078224,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 7,
+          "timeout": 3.0,
+          "remaining_before": 13.327273125061765,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 8,
+          "timeout": 3.0,
+          "remaining_before": 11.495234583038837,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 9,
+          "timeout": 3.0,
+          "remaining_before": 8.923098125029355,
+          "pending_task_ids": [
+            "3c38aee4-aba5-4523-b9a9-16dc9f468905"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 11,
+          "base_stone": 63,
+          "base_iron_ore": 115,
+          "base_inventory": {
+            "STONE": 63,
+            "IRON_ORE": 115
+          },
+          "min_prefix_cash": 2
+        },
+        "unrestricted": {
+          "turns": 11,
+          "base_stone": 63,
+          "base_iron_ore": 115,
+          "base_inventory": {
+            "STONE": 63,
+            "IRON_ORE": 115
+          },
+          "min_prefix_cash": 2
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/8/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "6114e5ab91582322ca497fe976aa47c50d1d86635d30baf481b5108c71f7eab1"
+      }
+    },
+    {
+      "task_id": "1877bb7b-0118-419e-baa0-05a187933825",
+      "level": 7,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:26:51.404437+00:00",
+      "width": 25,
+      "height": 24,
+      "stone_sites": 20,
+      "ore_sites": 3,
+      "planned_road_tiles": 88,
+      "initial_resources": {
+        "STONE": 17,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 5
+      },
+      "turn_limit": 7,
+      "turns_used": 5,
+      "actions": 68,
+      "roads_built": 32,
+      "quarries_built": 4,
+      "mines_built": 1,
+      "solver_ms": 49.97437505517155,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 2.518,
+      "client_seconds": 9.280239833053201,
+      "elapsed_before_submit": 7.917305750073865,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 7.3356194159714505,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.998507583979517,
+          "error_type": "ReadTimeout",
+          "outcome": "ambiguous"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 24.995770124951378,
+          "pending_task_ids": []
+        },
+        {
+          "attempt": 2,
+          "timeout": 3.0,
+          "remaining_before": 23.276980333961546,
+          "pending_task_ids": [
+            "1877bb7b-0118-419e-baa0-05a187933825"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 5,
+          "base_stone": 0,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 0,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 5,
+          "base_stone": 0,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 0,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/9/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "2dbfae4d3d7163ca2c3a212271fdc62a769b8ae13caedaab23691fe1f8edab5a"
+      }
+    },
+    {
+      "task_id": "fd0ffd28-26f2-45cb-82be-465317e9ae2c",
+      "level": 7,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:27:00.662074+00:00",
+      "width": 24,
+      "height": 25,
+      "stone_sites": 18,
+      "ore_sites": 5,
+      "planned_road_tiles": 83,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "IRON_ORE": 5
+      },
+      "turn_limit": 6,
+      "turns_used": 5,
+      "actions": 47,
+      "roads_built": 20,
+      "quarries_built": 3,
+      "mines_built": 1,
+      "solver_ms": 20.3297920525074,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.55,
+      "client_seconds": 6.859492750023492,
+      "elapsed_before_submit": 5.49984687496908,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 4.93917833303567,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.998959916993044,
+          "outcome": "response"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 25.596893958980218,
+          "pending_task_ids": [
+            "fd0ffd28-26f2-45cb-82be-465317e9ae2c"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 5,
+          "base_stone": 0,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 0,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 5,
+          "base_stone": 0,
+          "base_iron_ore": 5,
+          "base_inventory": {
+            "STONE": 0,
+            "IRON_ORE": 5
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/10/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "00f1f89c52df132ebb7913f6024d2e2eb3bb9327f007e06f71f651e86e885c1d"
+      }
+    },
+    {
+      "task_id": "506d4406-564c-4e45-a098-9beb8b85624c",
+      "level": 7,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:27:05.111869+00:00",
+      "width": 13,
+      "height": 13,
+      "stone_sites": 12,
+      "ore_sites": 0,
+      "planned_road_tiles": 17,
+      "initial_resources": {
+        "STONE": 12,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "STONE": 180
+      },
+      "turn_limit": 11,
+      "turns_used": 11,
+      "actions": 444,
+      "roads_built": 22,
+      "quarries_built": 12,
+      "mines_built": 0,
+      "solver_ms": 4.287582938559353,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "stage1",
+      "expanded": 1,
+      "guidance_metrics": null,
+      "server_seconds": 1.837,
+      "client_seconds": 3.4047749169403687,
+      "elapsed_before_submit": 1.6875013340031728,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 1.0939099580282345,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.999204375082627,
+          "outcome": "response"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 29.410701791057363,
+          "pending_task_ids": [
+            "506d4406-564c-4e45-a098-9beb8b85624c"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 11,
+          "base_stone": 185,
+          "base_iron_ore": 0,
+          "base_inventory": {
+            "STONE": 185,
+            "IRON_ORE": 0
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 11,
+          "base_stone": 185,
+          "base_iron_ore": 0,
+          "base_inventory": {
+            "STONE": 185,
+            "IRON_ORE": 0
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/11/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "42e26da782531a02c18a994637fc8d57bebf86350adb9c3991386151dfd5a331"
+      }
+    },
+    {
+      "task_id": "c0cfbfb0-70f1-4d53-bf01-c8659a865c14",
+      "level": 7,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:27:09.801332+00:00",
+      "width": 16,
+      "height": 16,
+      "stone_sites": 5,
+      "ore_sites": 0,
+      "planned_road_tiles": 21,
+      "initial_resources": {
+        "STONE": 20,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "STONE": 75
+      },
+      "turn_limit": 9,
+      "turns_used": 9,
+      "actions": 136,
+      "roads_built": 30,
+      "quarries_built": 5,
+      "mines_built": 0,
+      "solver_ms": 3.3868749160319567,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "stage1",
+      "expanded": 1,
+      "guidance_metrics": null,
+      "server_seconds": 1.454,
+      "client_seconds": 2.8748877909965813,
+      "elapsed_before_submit": 1.5261330408975482,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 1.043737041996792,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.99941391707398,
+          "outcome": "response"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 29.46839791710954,
+          "pending_task_ids": [
+            "c0cfbfb0-70f1-4d53-bf01-c8659a865c14"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 9,
+          "base_stone": 80,
+          "base_iron_ore": 0,
+          "base_inventory": {
+            "STONE": 80,
+            "IRON_ORE": 0
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 9,
+          "base_stone": 80,
+          "base_iron_ore": 0,
+          "base_inventory": {
+            "STONE": 80,
+            "IRON_ORE": 0
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/12/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "31fa1bd74021a596ebf843c513e2b34b9b5246ea0cd75a1d7e732a827c38f53b"
+      }
+    },
+    {
+      "task_id": "f06405b9-4f5d-42b0-8242-e67771dbf5de",
+      "level": 7,
+      "counted": true,
+      "outcome": "COUNTED",
+      "cohort": "reconciliation",
+      "created_at": "2026-10-17T06:27:16.025901+00:00",
+      "width": 24,
+      "height": 24,
+      "stone_sites": 20,
+      "ore_sites": 3,
+      "planned_road_tiles": 100,
+      "initial_resources": {
+        "STONE": 15,
+        "IRON_ORE": 0
+      },
+      "goals": {
+        "STONE": 25
+      },
+      "turn_limit": 7,
+      "turns_used": 5,
+      "actions": 17,
+      "roads_built": 5,
+      "quarries_built": 1,
+      "mines_built": 0,
+      "solver_ms": 4.417459014803171,
+      "solver_reason": "greedy_probe",
+      "solver_engine": "typed",
+      "expanded": 1,
+      "guidance_metrics": {
+        "variant": "both",
+        "calls": 0,
+        "work": 0,
+        "saving_wait_promotions": 0,
+        "policies_attempted": [],
+        "successful_policy": null,
+        "resource": {}
+      },
+      "server_seconds": 1.671,
+      "client_seconds": 5.321824042010121,
+      "elapsed_before_submit": 3.7649372500600293,
+      "creation_post_seconds": null,
+      "acquisition_seconds": 3.2219079999485984,
+      "creation_requests": [
+        {
+          "attempt": 1,
+          "read_timeout": 5.0,
+          "remaining_before": 29.998370999936014,
+          "outcome": "response"
+        }
+      ],
+      "creation_lookups": [
+        {
+          "attempt": 1,
+          "timeout": 3.0,
+          "remaining_before": 27.310289875022136,
+          "pending_task_ids": [
+            "f06405b9-4f5d-42b0-8242-e67771dbf5de"
+          ]
+        }
+      ],
+      "strict_replay": {
+        "matching": {
+          "turns": 5,
+          "base_stone": 25,
+          "base_iron_ore": 0,
+          "base_inventory": {
+            "STONE": 25,
+            "IRON_ORE": 0
+          },
+          "min_prefix_cash": 0
+        },
+        "unrestricted": {
+          "turns": 5,
+          "base_stone": 25,
+          "base_iron_ore": 0,
+          "base_inventory": {
+            "STONE": 25,
+            "IRON_ORE": 0
+          },
+          "min_prefix_cash": 0
+        }
+      },
+      "source": {
+        "file": "creation-retry-live-results.json",
+        "json_pointer": "/attempts/13/receipt",
+        "file_sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+        "original_receipt_sha256": "0df9a5ee12dbc14e4baceb724ed15669015bcb53cdbd421bd691e634c557c527"
+      }
+    }
+  ],
+  "historical_stops": [
+    {
+      "task_id": "8086d0d8-567d-4cb2-bf92-fec6312a72c5",
+      "kind": "unsubmitted_solver_stop",
+      "source": {
+        "file": "loop-results.json",
+        "json_pointer": "/cases/5"
+      },
+      "solver_statistics": {
+        "status": "UNKNOWN",
+        "reason": "state_limit",
+        "engine": "typed",
+        "expanded": 100000,
+        "reached": 100000,
+        "duplicate_attempts": 209948,
+        "bound_prunes": 10472,
+        "scalar_prunes": 0,
+        "typed_prunes": 79449,
+        "probe_work": 512,
+        "probe_calls": 3,
+        "probe_invalid": 0,
+        "dp_entries": 6822,
+        "dp_skipped": 0,
+        "search_seconds": 4.247470667003654
+      },
+      "timings": {
+        "task_creation_elapsed": 1.83476720796898,
+        "elapsed_total": 7.9443272079806775
+      },
+      "outcome": "STOPPED",
+      "submit_attempted": false
+    },
+    {
+      "kind": "unresolved_creation_stop",
+      "later_identified_task_id": "fc441739-a54e-4b2a-b108-6c48fe68c484",
+      "source": {
+        "file": "guidance-live-results.json",
+        "json_pointer": "/attempts/14/receipt"
+      },
+      "started_at": "2026-10-17T05:36:55.228476+00:00",
+      "creation_seconds": 10.002910624956712,
+      "client_seconds": 11.107362334034406,
+      "error_type": "ReadTimeout",
+      "submit_attempted": false
+    }
+  ],
+  "investigation": {
+    "longest_clients": [
+      {
+        "task_id": "3c38aee4-aba5-4523-b9a9-16dc9f468905",
+        "client_seconds": 24.671575416927226,
+        "acquisition_seconds": 21.92251291696448,
+        "solver_ms": 89.01279093697667,
+        "server_seconds": 2.111,
+        "create_posts": 1,
+        "lookups": 9
+      },
+      {
+        "task_id": "2c093702-6811-4f09-a990-462549dbe24f",
+        "client_seconds": 24.418570750043727,
+        "acquisition_seconds": 21.746414416935295,
+        "solver_ms": 58.03895799908787,
+        "server_seconds": 3.201,
+        "create_posts": 1,
+        "lookups": 11
+      },
+      {
+        "task_id": "201513a5-ff25-4c75-9cd0-f6b787609be7",
+        "client_seconds": 23.0160511250142,
+        "acquisition_seconds": 21.06232883397024,
+        "solver_ms": 35.80979199614376,
+        "server_seconds": 2.156,
+        "create_posts": 1,
+        "lookups": 11
+      }
+    ],
+    "original_solver_failure": {
+      "task_id": "8086d0d8-567d-4cb2-bf92-fec6312a72c5",
+      "original": {
+        "status": "UNKNOWN",
+        "reason": "state_limit",
+        "engine": "typed",
+        "expanded": 100000,
+        "reached": 100000,
+        "duplicate_attempts": 209948,
+        "bound_prunes": 10472,
+        "scalar_prunes": 0,
+        "typed_prunes": 79449,
+        "probe_work": 512,
+        "probe_calls": 3,
+        "probe_invalid": 0,
+        "dp_entries": 6822,
+        "dp_skipped": 0,
+        "search_seconds": 4.247470667003654
+      },
+      "uncapped_only": {
+        "status": "UNKNOWN",
+        "reason": "time_limit",
+        "engine": "typed",
+        "expanded": 486786,
+        "reached": 486786,
+        "duplicate_attempts": 1210745,
+        "bound_prunes": 32841,
+        "scalar_prunes": 0,
+        "typed_prunes": 404770,
+        "probe_work": 512,
+        "probe_calls": 3,
+        "probe_invalid": 0,
+        "dp_entries": 6822,
+        "dp_skipped": 0,
+        "search_seconds": 24.00002716598101,
+        "task_id": "8086d0d8-567d-4cb2-bf92-fec6312a72c5",
+        "scope": "Offline same-map counterfactual: only default state cap removed; original order/probes/bounds;24second solve budget",
+        "solver_sha256": "83bd54c653f0f10121ba60ed9bdee183c4b4759909b5e16e8540b7bc1bd455e2",
+        "process_peak_rss_bytes": 222445568
+      },
+      "route_fix_with_original_cap": {
+        "status": "FEASIBLE",
+        "reason": "greedy_probe",
+        "engine": "typed",
+        "expanded": 1,
+        "reached": 1,
+        "duplicate_attempts": 0,
+        "bound_prunes": 0,
+        "scalar_prunes": 0,
+        "typed_prunes": 63,
+        "probe_work": 161,
+        "probe_calls": 1,
+        "probe_invalid": 0,
+        "dp_entries": 6822,
+        "dp_skipped": 0,
+        "search_seconds": 0.04965795902535319
+      },
+      "fixed_child_repeats": {
+        "five_child_pipeline_median_seconds": 0.08560870797373354,
+        "five_child_pipeline_max_seconds": 0.08665291604120284,
+        "five_child_solver_median_seconds": 0.04329399997368455,
+        "five_child_solver_max_seconds": 0.04436716600321233
+      }
+    },
+    "latency_budget_diagnostic": "latency_budget_diagnostic.json",
+    "local_hard_case": {
+      "case_id": "economic-challenge-pool-034",
+      "scope": "Existing frozen offline benchmark, not an additional live task or new timing run",
+      "source_file": "../stage1_poc/stage2-economic-results.json",
+      "source_sha256": "f78f5e020cd66333f9cc940cf17cad8cd411eb4a7623f3d8699512e0164d9582",
+      "observations": [
+        {
+          "json_pointer": "/rows/580",
+          "variant": "baseline",
+          "phase": "cold",
+          "round": 0,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260285,
+          "bound_prunes": 53958,
+          "pipeline_seconds": 15.392473416985013,
+          "child_cpu_seconds": 15.377223999999979,
+          "peak_rss_bytes": 220430336
+        },
+        {
+          "json_pointer": "/rows/581",
+          "variant": "both",
+          "phase": "cold",
+          "round": 0,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260329,
+          "bound_prunes": 53961,
+          "pipeline_seconds": 15.472302333102562,
+          "child_cpu_seconds": 15.453487999999979,
+          "peak_rss_bytes": 220446720,
+          "guidance_metrics": {
+            "variant": "both",
+            "calls": 2,
+            "work": 96,
+            "saving_wait_promotions": 4,
+            "policies_attempted": [
+              "relaxed",
+              "saving"
+            ],
+            "successful_policy": null,
+            "resource": {
+              "calls": 27,
+              "projects": 367,
+              "dp_queries": 747,
+              "waits_promoted": 5,
+              "deadline_fallbacks": 0,
+              "weakened_dp_fallbacks": 0,
+              "seconds": 0.002534331870265305
+            }
+          }
+        },
+        {
+          "json_pointer": "/rows/582",
+          "variant": "relaxed",
+          "phase": "cold",
+          "round": 0,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260307,
+          "bound_prunes": 53959,
+          "pipeline_seconds": 15.28825008298736,
+          "child_cpu_seconds": 15.26628400000002,
+          "peak_rss_bytes": 220463104,
+          "guidance_metrics": {
+            "variant": "relaxed",
+            "calls": 1,
+            "work": 49,
+            "saving_wait_promotions": 0,
+            "policies_attempted": [
+              "relaxed"
+            ],
+            "successful_policy": null,
+            "resource": {
+              "calls": 27,
+              "projects": 367,
+              "dp_queries": 747,
+              "waits_promoted": 5,
+              "deadline_fallbacks": 0,
+              "weakened_dp_fallbacks": 0,
+              "seconds": 0.002490044105798006
+            }
+          }
+        },
+        {
+          "json_pointer": "/rows/583",
+          "variant": "saving",
+          "phase": "cold",
+          "round": 0,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260307,
+          "bound_prunes": 53960,
+          "pipeline_seconds": 15.338778584031388,
+          "child_cpu_seconds": 15.316924000000004,
+          "peak_rss_bytes": 220463104,
+          "guidance_metrics": {
+            "variant": "saving",
+            "calls": 1,
+            "work": 47,
+            "saving_wait_promotions": 4,
+            "policies_attempted": [
+              "saving"
+            ],
+            "successful_policy": null,
+            "resource": {}
+          }
+        },
+        {
+          "json_pointer": "/rows/736",
+          "variant": "relaxed",
+          "phase": "repeat",
+          "round": 0,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260307,
+          "bound_prunes": 53959,
+          "pipeline_seconds": 15.327750166063197,
+          "child_cpu_seconds": 15.310402000000034,
+          "peak_rss_bytes": 220413952,
+          "guidance_metrics": {
+            "variant": "relaxed",
+            "calls": 1,
+            "work": 49,
+            "saving_wait_promotions": 0,
+            "policies_attempted": [
+              "relaxed"
+            ],
+            "successful_policy": null,
+            "resource": {
+              "calls": 27,
+              "projects": 367,
+              "dp_queries": 747,
+              "waits_promoted": 5,
+              "deadline_fallbacks": 0,
+              "weakened_dp_fallbacks": 0,
+              "seconds": 0.002505750861018896
+            }
+          }
+        },
+        {
+          "json_pointer": "/rows/737",
+          "variant": "baseline",
+          "phase": "repeat",
+          "round": 0,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260285,
+          "bound_prunes": 53958,
+          "pipeline_seconds": 15.336405541980639,
+          "child_cpu_seconds": 15.303797999999922,
+          "peak_rss_bytes": 220512256
+        },
+        {
+          "json_pointer": "/rows/738",
+          "variant": "both",
+          "phase": "repeat",
+          "round": 0,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260329,
+          "bound_prunes": 53961,
+          "pipeline_seconds": 15.460250750067644,
+          "child_cpu_seconds": 15.443323000000074,
+          "peak_rss_bytes": 220774400,
+          "guidance_metrics": {
+            "variant": "both",
+            "calls": 2,
+            "work": 96,
+            "saving_wait_promotions": 4,
+            "policies_attempted": [
+              "relaxed",
+              "saving"
+            ],
+            "successful_policy": null,
+            "resource": {
+              "calls": 27,
+              "projects": 367,
+              "dp_queries": 747,
+              "waits_promoted": 5,
+              "deadline_fallbacks": 0,
+              "weakened_dp_fallbacks": 0,
+              "seconds": 0.0025204174453392625
+            }
+          }
+        },
+        {
+          "json_pointer": "/rows/739",
+          "variant": "saving",
+          "phase": "repeat",
+          "round": 0,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260307,
+          "bound_prunes": 53960,
+          "pipeline_seconds": 15.866284457966685,
+          "child_cpu_seconds": 15.813978999999945,
+          "peak_rss_bytes": 212090880,
+          "guidance_metrics": {
+            "variant": "saving",
+            "calls": 1,
+            "work": 47,
+            "saving_wait_promotions": 4,
+            "policies_attempted": [
+              "saving"
+            ],
+            "successful_policy": null,
+            "resource": {}
+          }
+        },
+        {
+          "json_pointer": "/rows/892",
+          "variant": "saving",
+          "phase": "repeat",
+          "round": 1,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260307,
+          "bound_prunes": 53960,
+          "pipeline_seconds": 15.63918062497396,
+          "child_cpu_seconds": 15.61225999999999,
+          "peak_rss_bytes": 215384064,
+          "guidance_metrics": {
+            "variant": "saving",
+            "calls": 1,
+            "work": 47,
+            "saving_wait_promotions": 4,
+            "policies_attempted": [
+              "saving"
+            ],
+            "successful_policy": null,
+            "resource": {}
+          }
+        },
+        {
+          "json_pointer": "/rows/893",
+          "variant": "baseline",
+          "phase": "repeat",
+          "round": 1,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260285,
+          "bound_prunes": 53958,
+          "pipeline_seconds": 15.352904999977909,
+          "child_cpu_seconds": 15.324526000000029,
+          "peak_rss_bytes": 220774400
+        },
+        {
+          "json_pointer": "/rows/894",
+          "variant": "both",
+          "phase": "repeat",
+          "round": 1,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260329,
+          "bound_prunes": 53961,
+          "pipeline_seconds": 15.346287375083193,
+          "child_cpu_seconds": 15.329535999999992,
+          "peak_rss_bytes": 211861504,
+          "guidance_metrics": {
+            "variant": "both",
+            "calls": 2,
+            "work": 96,
+            "saving_wait_promotions": 4,
+            "policies_attempted": [
+              "relaxed",
+              "saving"
+            ],
+            "successful_policy": null,
+            "resource": {
+              "calls": 27,
+              "projects": 367,
+              "dp_queries": 747,
+              "waits_promoted": 5,
+              "deadline_fallbacks": 0,
+              "weakened_dp_fallbacks": 0,
+              "seconds": 0.002552125952206552
+            }
+          }
+        },
+        {
+          "json_pointer": "/rows/895",
+          "variant": "relaxed",
+          "phase": "repeat",
+          "round": 1,
+          "status": "FEASIBLE",
+          "reason": "wait_completion",
+          "expanded": 377886,
+          "duplicate_attempts": 681600,
+          "typed_prunes": 260307,
+          "bound_prunes": 53959,
+          "pipeline_seconds": 15.319978832965717,
+          "child_cpu_seconds": 15.303833000000022,
+          "peak_rss_bytes": 220577792,
+          "guidance_metrics": {
+            "variant": "relaxed",
+            "calls": 1,
+            "work": 49,
+            "saving_wait_promotions": 0,
+            "policies_attempted": [
+              "relaxed"
+            ],
+            "successful_policy": null,
+            "resource": {
+              "calls": 27,
+              "projects": 367,
+              "dp_queries": 747,
+              "waits_promoted": 5,
+              "deadline_fallbacks": 0,
+              "weakened_dp_fallbacks": 0,
+              "seconds": 0.0024759172229096293
+            }
+          }
+        }
+      ]
+    },
+    "fallback_profile": "profile_stage2_fallback.json"
+  },
+  "validation": {
+    "unique_ids_match_final_inventory": true,
+    "all_final_task_summaries_match": true,
+    "plans_replayed": 36,
+    "relay_modes": [
+      "matching",
+      "unrestricted"
+    ],
+    "replay_passes": 72
+  },
+  "final_progress": {
+    "ok": true,
+    "is_superuser": false,
+    "items": [
+      {
+        "type": "1",
+        "status": "done",
+        "series_index": 1,
+        "series_total": 1,
+        "is_current": false
+      },
+      {
+        "type": "2",
+        "status": "done",
+        "series_index": 3,
+        "series_total": 3,
+        "is_current": false
+      },
+      {
+        "type": "3",
+        "status": "done",
+        "series_index": 3,
+        "series_total": 3,
+        "is_current": false
+      },
+      {
+        "type": "4",
+        "status": "done",
+        "series_index": 6,
+        "series_total": 6,
+        "is_current": false
+      },
+      {
+        "type": "5",
+        "status": "done",
+        "series_index": 3,
+        "series_total": 3,
+        "is_current": false
+      },
+      {
+        "type": "6",
+        "status": "done",
+        "series_index": 6,
+        "series_total": 6,
+        "is_current": false
+      },
+      {
+        "type": "7",
+        "status": "done",
+        "series_index": 8,
+        "series_total": 8,
+        "is_current": false
+      }
+    ],
+    "order": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "current_index": 7,
+    "current_series_index": 0,
+    "current_series_total": 0
+  }
+}

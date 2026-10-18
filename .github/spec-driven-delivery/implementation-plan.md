@@ -10,8 +10,8 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 | Field | Value |
 | --- | --- |
 | State | `IMPLEMENTING` — plan accepted by the owner on 2026-10-18 |
-| Active tasks | `T03` |
-| Next ready task | `T04` after T03 review |
+| Active tasks | `T04` |
+| Next ready task | `Final implementation audit` after T04 review |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge; Autopilot is not enabled |
 | Delivery branch | `codex/stage1-solver-design` in the existing managed worktree |
@@ -61,8 +61,8 @@ are not active implementation time.
 | --- | --- | --- | --- |
 | T01 | DONE / None | Pure `game_solver/solver/` foundation: Stage1 geometry/search, selected last-topology cache and investment DP, independent raw validators. Remove benchmark imports and temporary global configuration from the official path; keep Stage1 probe/bound semantics. | Stage1 fixed inputs and tiny raw-oracle/bound checks; selected-preset differential plans/work; import leaves sockets/environment unchanged. |
 | T02 | DONE / T01 | Package Stage2 typed search/guidance and Stage3 production/project ordering/on-demand DP. Preserve original-input replay, delegation preconditions and512/512/32 defaults. Add public solve boundary and readable state/function contracts; no algorithm changes. | Stage2/3 partial-production, impossible-bound, forced-DFS and projection controls; focused old/new outcome/plan comparisons. |
-| T03 | IN_REVIEW / T02 | Official runner and `submit.sh`, fixed packaged smoke example, portable corpus and task-to-input inventory. Add all93task records, including18fresh Stage3 maps, preserve92distinct inputs and stopped observations. Preserve the existing one-submission/reconciliation/deadline/progression behavior. | Fake-client recovery, ambiguous creation and no submission retry; child network denial/token removal; strict replay in both retained relay modes; targeted saved-map solves. |
-| T04 | PLANNED / T03 | Complete the recruiter report, three-stage chapters, diagrams/tables, sanitized time audit and issue links. Update review README and build an allowlisted local source ZIP with inventory/checksums. Retain historical source/timing attribution; no private conversation or credentials. | Report number/hash/link and visual checks; archive inventory and exclusion checks; preliminary clean-copy/offline CLI smoke. Final full corpus and ZIP validation remain the final gate below. |
+| T03 | DONE / T02 | Official runner and `submit.sh`, fixed packaged smoke example, portable corpus and task-to-input inventory. Add all93task records, including18fresh Stage3 maps, preserve92distinct inputs and stopped observations. Preserve the existing one-submission/reconciliation/deadline/progression behavior. | Fake-client recovery, ambiguous creation and no submission retry; child network denial/token removal; strict replay in both retained relay modes; targeted saved-map solves. |
+| T04 | IN_REVIEW / T03 | Complete the recruiter report, three-stage chapters, diagrams/tables, sanitized time audit and issue links. Update review README and build an allowlisted local source ZIP with inventory/checksums. Retain historical source/timing attribution; no private conversation or credentials. | Report number/hash/link and visual checks; archive inventory and exclusion checks; preliminary clean-copy/offline CLI smoke. Final full corpus and ZIP validation remain the final gate below. |
 
 T01 consumes the adopted `search.py`, selected `cache_benchmark.py` and
 `memory_benchmark.py` helpers plus `reference.py`/typed raw validators. T02 consumes
@@ -201,3 +201,21 @@ script initially expected a Stage3 counted boolean; it was corrected to the
 actual Counted/Late schema before writing the corpus. Full solver validation
 remains pending the final implementation audit; these focused checks did not
 create server tasks or call live endpoints.
+
+Both retained reviewers approved T03 commit `f982fc6bef6aecd3ea0c9e93a16b681dc45dd231`
+with findings None. T03 is DONE; T04 owns final report/packaging preparation.
+
+
+T04 focused evidence: official review README, recruiter narrative/tables/graphs,
+three historical chapters, issue links and sanitized per-turn audit are prepared.
+The refreshed audit independently reconciles164ended turns to25:07:39.349;
+current open turn is excluded. Reported time includes tools/tests/waits, not human
+labor. Both report charts were visually inspected. A fixed69-file allowlist builds
+an approximately1.2MBZIP with no research directory, credentials, Git/venv/cache
+or raw conversation. Current guide/report links resolve in the exported copy;
+historical chapter exports rebind lab links to compact metrics/source hashes,
+without rewriting the original chapters or frozen whiteboard. Preliminary ZIP
+checksums, executable helper and extracted Stage3smoke passed; full installation,
+complete corpus comparison and final readiness remain pending the implementation
+audit. See [preliminary package evidence](../../docs/reports/evidence/package-focused.json).
+No report/README pending result is represented as passed.
