@@ -240,11 +240,6 @@
     "solver_related_stops_before_submission": 2,
     "other_acquisition_or_recovery_late_tasks": 3,
     "note": "Stage 3 solver miss also had slow acquisition. Upstream delay causes are not established. Plan validity is distinct from the server accepted/progression flag; a late valid plan can have accepted=false.",
-    "sources": {
-      "stage-1-report.md": "dfc55b6758af87d54bc6f7468124959f4d57aab3d76302f647abcfea397475d6",
-      "stage-2-report.md": "86ca56aec4f3e660e1f325f688b67546a2317fc38a4ba772637eb7f09b6b0cc1",
-      "stage-3-report.md": "fb4b2da39fa81d678935d3832c37750afd57bcfb57de65d03429a98f5c18a6d1"
-    },
     "late_task_ids": [
       "8596b928",
       "ac29c919",
@@ -252,7 +247,19 @@
       "fc441739",
       "3f0d26c4"
     ],
-    "passed_submitted_plans": 93
+    "passed_submitted_plans": 93,
+    "historical_report_sources": {
+      "stage-1-report.md": "dfc55b6758af87d54bc6f7468124959f4d57aab3d76302f647abcfea397475d6",
+      "stage-2-report.md": "86ca56aec4f3e660e1f325f688b67546a2317fc38a4ba772637eb7f09b6b0cc1",
+      "stage-3-report.md": "fb4b2da39fa81d678935d3832c37750afd57bcfb57de65d03429a98f5c18a6d1"
+    },
+    "historical_report_revision": "12f4bc4",
+    "sources": {
+      "evidence/historical/stage1-task-metrics.json": "2c0ddbd48e08732c07279e80a5e790073099c8e8cca328214dc36d91c407b751",
+      "evidence/historical/stage2-task-metrics.json": "e05825d8a6c4997929127112da0e37124263f23d9357a9f7f735ebb1423a0847",
+      "evidence/historical/stage3-task-metrics.json": "b5d9e6ef4623e416e389c932fa0bc2213e54bd77d087fb2fa25fbe1b29f2bfb1"
+    },
+    "source_note": "Standalone stage reports removed at the owner request. Their historical hashes/revision remain provenance; delivered task metric JSON supplies the summary evidence."
   },
   "quality_graph": {
     "figure_source": "\"\"\"Show pre-submission controls and historical first-submission outcomes.\"\"\"\nfrom pathlib import Path\nimport hashlib,json\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom matplotlib.patches import FancyBboxPatch\nr=Path('/Users/hhhhhusky/.codex/worktrees/stage1-solver-design/blade_runner');out=r/'docs/reports';vpath=out/'evidence/visual-report.json';v=json.loads(vpath.read_text());s=v['incident_summary']\nnavy='#18354A';teal='#087F7A';blue='#4D7EA8';amber='#BF741B';gray='#A4B1BD'\nplt.rcParams.update({'font.family':'DejaVu Sans','font.size':12,'text.color':navy,'axes.labelcolor':navy,'xtick.color':navy,'ytick.color':navy})\nfig=plt.figure(figsize=(12,9.2));fig.text(.035,.95,'Quality before submission. Evidence from real use.',fontsize=23,weight='bold')\nfig.text(.035,.907,'Develop and challenge locally; use timed server tasks as acceptance runs.',fontsize=12)\nsteps=[('1  Design local cases','Hard, random, impossible\\nand forced-search controls'),('2  Compare candidates','Fixed inputs + baseline\\nCoverage before speed'),('3  Validate each plan','Independent raw replay\\nNo valid plan \u2192 no submission'),('4  Verify real results','Submit once; check credit\\nRetain every input')]\nfor i,(title,desc) in enumerate(steps):\n x=.035+i*.24\n fig.patches.append(FancyBboxPatch((x,.752),.215,.115,boxstyle='round,pad=0.008',facecolor='#EDF4F5',edgecolor='none',transform=fig.transFigure))\n fig.text(x+.012,.833,title,fontsize=11.5,weight='bold')\n fig.text(x+.012,.785,desc,fontsize=10.2,linespacing=1.6)\n if i<3:fig.text(x+.222,.807,'\u2192',fontsize=18,color=teal)\nfig.text(.06,.655,'100%',fontsize=32,weight='bold',color=teal)\nfig.text(.06,.59,'93 / 93 first submitted plans valid\\nNo invalid answer reached the server',fontsize=12,linespacing=1.5)\nfig.text(.41,.655,f\"{s['timely_tasks']/s['total_submitted_plans']*100:.1f}%\",fontsize=32,weight='bold',color=teal)\nfig.text(.41,.59,'88 / 93 first submissions on time\\nWithin the 30-second task clock',fontsize=12,linespacing=1.5)\nfig.text(.76,.655,'2',fontsize=32,weight='bold',color=blue)\nfig.text(.76,.59,'Live tasks exposed solver gaps\\nBoth stopped before submission',fontsize=12,linespacing=1.5)\nax=fig.add_axes([.17,.205,.65,.285]);tot=[19,36,38];timely=[17,34,37];solver=[0,1,1];runner=[2,1,0];y=list(range(3));left=[0,0,0]\nfor values,color,label in [(timely,teal,'Timely pass'),(solver,blue,'Late: solver-related'),(runner,amber,'Late: acquisition/recovery')]:\n pct=[n/t*100 for n,t in zip(values,tot)];ax.barh(y,pct,left=left,height=.48,color=color,label=label)\n left=[a+b for a,b in zip(left,pct)]\nax.set_yticks(y,['Stage 1','Stage 2','Stage 3']);ax.invert_yaxis();ax.set_xlim(0,100);ax.set_xticks([0,25,50,75,100]);ax.set_xlabel('Share of task records (%)',labelpad=8);ax.tick_params(axis='y',length=0,pad=12)\nfor sp in ax.spines.values():sp.set_visible(False)\nfor i,(n,t) in enumerate(zip(timely,tot)):\n ax.text(2,i,f'{n}/{t} timely',va='center',color='white',weight='bold',fontsize=12)\n ax.text(102,i,f'{n/t*100:.1f}%',va='center',weight='bold',color=teal,fontsize=14,clip_on=False)\nax.legend(loc='upper left',bbox_to_anchor=(-.20,-.32),ncol=3,frameon=False,fontsize=10.5,handlelength=1.2,columnspacing=1.6)\nfig.text(.035,.065,'Five late completions: 2 solver-related + 3 acquisition/recovery. The Stage 3 solver case also had slow acquisition.',fontsize=10.5)\nfig.text(.035,.025,'Valid first submission does not mean an immediate solve: stopped attempts were corrected locally before late completion.',fontsize=10.5)\np=out/'recruitment-quality.png';fig.savefig(p,dpi=170);plt.close(fig)\nsha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()\nv['assets'][p.name]=sha(p)\nv['quality_graph']={'figure_source':Path(__file__).read_text(),'stage_rows':[{'stage':i+1,'tasks':tot[i],'valid_first_submitted_plans':tot[i],'timely_first_submissions':timely[i],'solver_related_late_tasks':solver[i],'acquisition_recovery_late_tasks':runner[i]} for i in range(3)],'total_valid_first_submission_rate':93/93,'total_timely_first_submission_rate':88/93,'not_claimed':'No solver-first-attempt rate91/93; some initial acquisition failures never ran a solver. Solver stops preceded eventual valid late submissions.','source':'Existing stage reports and retained receipts, bound by incident_summary.sources; no fresh server calls.'}\nvpath.write_text(json.dumps(v,indent=2)+'\\n')\nprint('Wrote',p.name,sha(p))\n",
@@ -285,6 +292,6 @@
     "total_valid_first_submission_rate": 1.0,
     "total_timely_first_submission_rate": 0.946236559139785,
     "not_claimed": "No solver-first-attempt rate91/93; some initial acquisition failures never ran a solver. Solver stops preceded eventual valid late submissions.",
-    "source": "Existing stage reports and retained receipts, bound by incident_summary.sources; no fresh server calls."
+    "source": "Retained per-task metrics bound by incident_summary.sources; historical prose provenance remains separately labeled. No fresh server calls."
   }
 }

@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+from typing import Any
 import unittest
 
 from solver.capital import investment_thresholds
@@ -16,7 +17,8 @@ from solver.stage1_preset import InvestmentModel, solve
 FIXTURES = json.loads((Path(__file__).parent / "fixtures/stage1-basic.json").read_text())["cases"]
 
 
-def level(cash=11, goal=15, turns=3):
+def level(cash: int = 11, goal: int = 15, turns: int = 3) -> dict[str, Any]:
+    """Build a minimal road-and-quarry task with adjustable funding and horizon."""
     return {
         "board": {
             "width": 3,
@@ -30,7 +32,7 @@ def level(cash=11, goal=15, turns=3):
     }
 
 
-def relaxed_maximum(cash, quarries, sites, remaining):
+def relaxed_maximum(cash: int, quarries: int, sites: int, remaining: int) -> int:
     """Forward atomic enumeration; independent of the threshold recurrence."""
     seen, pending, maximum = set(), [(cash, quarries, remaining)], cash
     while pending:
@@ -48,7 +50,8 @@ def relaxed_maximum(cash, quarries, sites, remaining):
 
 
 class Stage1Tests(unittest.TestCase):
-    def test_thresholds_match_independent_forward_relaxation(self):
+    def test_thresholds_match_independent_forward_relaxation(self) -> None:
+        """Check all 20,925 small economic decisions against a forward enumerator."""
         comparisons = 0
         goals = (0, 1, 5, 10, 15, 25, 30, 40, 60)
         for sites in range(5):
@@ -64,7 +67,8 @@ class Stage1Tests(unittest.TestCase):
                             comparisons += 1
         self.assertEqual(comparisons, 20925)
 
-    def test_tiny_raw_oracle_and_deadline_outcomes(self):
+    def test_tiny_raw_oracle_and_deadline_outcomes(self) -> None:
+        """Match raw-action truth and distinguish an expired deadline from impossibility."""
         for task in (level(), level(cash=10)):
             expected = oracle(task, seconds=3, max_states=50000)
             actual = solve(task, seconds=3)
@@ -74,7 +78,8 @@ class Stage1Tests(unittest.TestCase):
                 validate_plan(task, actual["plan"])
         self.assertEqual(solve(level(), seconds=0)["status"], "UNKNOWN")
 
-    def test_all_fixed_basic_plans_replay_without_input_mutation(self):
+    def test_all_fixed_basic_plans_replay_without_input_mutation(self) -> None:
+        """Require valid fixed-fixture plans while preserving the caller's task data."""
         for case in FIXTURES:
             with self.subTest(case=case["id"]):
                 task = copy.deepcopy(case["level"])
@@ -84,7 +89,8 @@ class Stage1Tests(unittest.TestCase):
                 if result["plan"] is not None:
                     validate_plan(task, result["plan"])
 
-    def test_topology_cache_immutable_and_per_model(self):
+    def test_topology_cache_immutable_and_per_model(self) -> None:
+        """Reuse topology only within a model and expose no mutable cached tree."""
         model = InvestmentModel(level())
         state = model.step(model.initial(), 1)
         tree = model.tree(state)
@@ -92,11 +98,13 @@ class Stage1Tests(unittest.TestCase):
         self.assertIs(tree, model.tree(changed))
         self.assertEqual(dict(tree), Model(level()).tree(state))
         with self.assertRaises(TypeError):
-            tree[0] = -1
+            # Deliberately attempt mutation to verify the read-only cache contract.
+            tree[0] = -1  # type: ignore[index]
         other = InvestmentModel(level())
         self.assertIsNot(tree, other.tree(state))
 
-    def test_failed_relaxation_cannot_remove_tiny_real_win(self):
+    def test_failed_relaxation_cannot_remove_tiny_real_win(self) -> None:
+        """Ensure the optimistic road bound never rejects a genuinely winning state."""
         from functools import cache
 
         task = level()
@@ -104,7 +112,8 @@ class Stage1Tests(unittest.TestCase):
         parameters = road_parameters(model)
 
         @cache
-        def wins(state):
+        def wins(state: State) -> bool:
+            """Enumerate every continuation to establish independent winning truth."""
             return state.cash >= model.goal or any(
                 wins(model.step(state, cell)) for cell in model.choices(state)
             )
@@ -119,7 +128,8 @@ class Stage1Tests(unittest.TestCase):
                 self.assertFalse(wins(state))
             pending.extend(model.step(state, cell) for cell in model.choices(state))
 
-    def test_import_does_not_change_network_or_environment(self):
+    def test_import_does_not_change_network_or_environment(self) -> None:
+        """Keep solver imports free of process-wide network or environment side effects."""
         code = """import os, socket, ssl, sys
 before = (socket.socket, socket.create_connection, dict(os.environ))
 from solver import stage1_preset, stage2_reference, stage3_reference

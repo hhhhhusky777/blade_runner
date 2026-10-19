@@ -2,13 +2,25 @@
 
 from copy import deepcopy
 from functools import lru_cache
+from collections.abc import Iterable
+from typing import Any
 import unittest
-from solver.stage3 import Model, Bounds, ProductionDP, solve
+from solver.stage3 import Model, Bounds, ProductionDP, State, solve
 from solver.stage3_reference import read_level, initial, apply, validate_plan, oracle
 from solver.reference import _action
 
 
-def level(w=5, h=3, stone=40, ore=0, iron=0, goal=None, turns=3, nodes=()):
+def level(
+    w: int = 5,
+    h: int = 3,
+    stone: int = 40,
+    ore: int = 0,
+    iron: int = 0,
+    goal: dict[str, int] | None = None,
+    turns: int = 3,
+    nodes: Iterable[tuple[int, int, str]] = (),
+) -> dict[str, Any]:
+    """Build a compact production task with explicit inventories and resource sites."""
     return dict(
         spec_number=3,
         max_turns=turns,
@@ -26,7 +38,8 @@ def level(w=5, h=3, stone=40, ore=0, iron=0, goal=None, turns=3, nodes=()):
 
 
 class Stage3Tests(unittest.TestCase):
-    def test_production_rate_input_location_and_activation(self):
+    def test_production_rate_input_location_and_activation(self) -> None:
+        """Consume ore at the smelter, at most once per turn, including partial batches."""
         task = level(w=3, h=1, stone=21, ore=5, goal={"IRON": 5}, turns=3)
         model = read_level(task)
         s = initial(model)
@@ -53,7 +66,8 @@ class Stage3Tests(unittest.TestCase):
         apply(model, s, _action("PRODUCE", x=2, y=0))
         self.assertEqual(s.inventory[2, 0], (0, 0, 5))
 
-    def test_partial_feed_preserves_ore_goal(self):
+    def test_partial_feed_preserves_ore_goal(self) -> None:
+        """Feed only spare ore so an iron conversion cannot destroy the ore target."""
         task = level(w=3, h=1, stone=21, ore=3, goal={"IRON": 1, "IRON_ORE": 2}, turns=1)
         a = solve(task, seconds=2)
         self.assertEqual(a["status"], "FEASIBLE")
@@ -70,7 +84,8 @@ class Stage3Tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_plan(task, bad)
 
-    def test_tiny_raw_oracle_matches_all_four_variants(self):
+    def test_tiny_raw_oracle_matches_all_four_variants(self) -> None:
+        """Require every pruning configuration to agree with raw-action tiny-case truth."""
         for ore, iron_goal, ore_goal, stone, turns in [
             (3, 1, 2, 21, 1),
             (3, 2, 2, 21, 1),
@@ -100,14 +115,16 @@ class Stage3Tests(unittest.TestCase):
                     if answer["plan"]:
                         validate_plan(task, answer["plan"])
 
-    def test_every_tiny_winning_continuation_survives_both_filters(self):
+    def test_every_tiny_winning_continuation_survives_both_filters(self) -> None:
+        """Check every enumerated winning state against both resource and capital bounds."""
         task = level(w=3, h=1, stone=21, ore=3, goal={"IRON": 1, "IRON_ORE": 2}, turns=2)
         m = Model(task)
         b = Bounds(m, float("inf"))
         states = set()
 
         @lru_cache(None)
-        def winning(s):
+        def winning(s: State) -> bool:
+            """Record the tiny reachable graph and establish each state's winning truth."""
             states.add(s)
             children = [m.step(s, c)[0] for c in m.choices(s)]
             results = [winning(child) for child in children]
@@ -120,7 +137,8 @@ class Stage3Tests(unittest.TestCase):
                 self.assertTrue(b.resource(s), s)
                 self.assertTrue(b.capital(s), s)
 
-    def test_storage_is_not_transport_and_node_placement_is_checked(self):
+    def test_storage_is_not_transport_and_node_placement_is_checked(self) -> None:
+        """Require explicit storage relays and reject smelters placed on resource nodes."""
         task = level(w=5, h=1, stone=100, ore=3, goal={"IRON": 1}, turns=1)
         model = read_level(task)
         s = initial(model)
@@ -154,7 +172,9 @@ class Stage3Tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             apply(model, s, _action("BUILD", x=1, y=0, type="SMELTER"))
 
-    def test_malformed_inputs_do_not_silently_become_empty_inventory(self):
+    def test_malformed_inputs_do_not_silently_become_empty_inventory(self) -> None:
+        """Reject malformed inventories, structure lists, and missing goals explicitly."""
+        storage: object
         for storage in (0, False, [], ""):
             task = level()
             task["structures"][0]["storage"] = storage
@@ -170,7 +190,8 @@ class Stage3Tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             read_level(task)
 
-    def test_raw_oracle_covers_mining_income_and_remote_pool_merge(self):
+    def test_raw_oracle_covers_mining_income_and_remote_pool_merge(self) -> None:
+        """Check funding and remote resource merges against independent raw actions."""
         cases = [
             level(w=3, h=1, stone=11, goal={"STONE": 12}, turns=3, nodes=[(2, 0, "STONE")]),
             level(w=3, h=1, stone=11, goal={"STONE": 12}, turns=2, nodes=[(2, 0, "STONE")]),
@@ -188,14 +209,16 @@ class Stage3Tests(unittest.TestCase):
                 if answer["plan"]:
                     validate_plan(task, answer["plan"])
 
-    def test_deadline_is_unknown_and_zero_turn_cannot_claim(self):
+    def test_deadline_is_unknown_and_zero_turn_cannot_claim(self) -> None:
+        """Separate deadline exhaustion, invalid budgets, and an illegal zero-turn claim."""
         self.assertEqual(solve(level(), seconds=0)["status"], "UNKNOWN")
         self.assertEqual(solve(level(iron=5, turns=0))["status"], "INFEASIBLE")
         for seconds in (-1, True, float("inf")):
             with self.assertRaises(ValueError):
                 solve(level(), seconds=seconds)
 
-    def test_capital_dp_detects_no_first_investment_despite_future_supply(self):
+    def test_capital_dp_detects_no_first_investment_despite_future_supply(self) -> None:
+        """Reject an economy with optimistic future output but no affordable first build."""
         task = level(w=3, h=2, stone=9, ore=2, goal={"IRON": 1}, turns=5, nodes=[(2, 0, "STONE")])
         self.assertEqual(oracle(task, seconds=5)["status"], "INFEASIBLE")
         m = Model(task)
@@ -205,13 +228,15 @@ class Stage3Tests(unittest.TestCase):
         answer = solve(task, seconds=2, bounds="both")
         self.assertEqual((answer["status"], answer["reason"]), ("INFEASIBLE", "initial_bound"))
 
-    def test_dp_budget_exhaustion_weakens_filter(self):
+    def test_dp_budget_exhaustion_weakens_filter(self) -> None:
+        """Keep a state when the capital bound runs out of computation budget."""
         m = Model(level())
         b = Bounds(m, float("-inf"))
         self.assertTrue(b.capital(m.initial()))
         self.assertTrue(any(d.skipped for d in b.dps.values()))
 
-    def test_on_demand_dp_and_budget_skip(self):
+    def test_on_demand_dp_and_budget_skip(self) -> None:
+        """Avoid root DP for quick wins and keep skipped production bounds conservative."""
         from unittest.mock import patch
 
         task = level(w=3, h=1, stone=21, ore=1, goal={"IRON": 1}, turns=1)

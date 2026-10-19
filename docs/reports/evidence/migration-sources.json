@@ -1,5 +1,5 @@
 {
-  "description": "Original adopted sources; official migration does not modify these files.",
+  "description": "Historical source inventory used by the original migration. Hashes below describe the retained baseline snapshot, not current delivered-file identity.",
   "sources": {
     "experiments/stage1_poc/search.py": "b1eb4aa2f0901a7870ee95a228b15e076f39351bccf3a5d229c629f57fa7c528",
     "experiments/stage1_poc/memory_benchmark.py": "09411f4db1c3b457de4e292cf5c5197d08df50569cc81f679b86f05a80d02266",
@@ -15,5 +15,13 @@
     "game_solver/api_client/models.py": "0723f56dd9d2a9f999c2fd9fe074aea00b8b1a8fe916fcefc1e38322994b80a8",
     "game_solver/pyproject.toml": "865a75268605fbd2dbb6a1f4b2f056d178189105186e9ca87ab02640bcf39685",
     "game_solver/uv.lock": "fd9a2de9041ac4b3825da0208c2978f4f02977217de17af531da59a295b4b37b"
+  },
+  "snapshot_commit": "12f4bc4973940134d61839756cb7e2757911fb84",
+  "snapshot_inventory_sha256": "3d99791203b32879afe14afc8b8bf2e01021b2b7284a46247578a39da4244100",
+  "current_bindings": "readability-validation.json: source_files (Python files) and delivery_inputs (project configuration, lockfile and helper)",
+  "authorized_changes_since_snapshot": {
+    "game_solver/api_client/client.py": "Function documentation and annotations; HTTP behavior preserved.",
+    "game_solver/api_client/models.py": "Module purpose docstring.",
+    "game_solver/pyproject.toml": "Replace placeholder project description; dependencies and lockfile unchanged."
   }
 }

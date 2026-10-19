@@ -9,7 +9,7 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `LOCAL_DELIVERY_READY` — report refinements reviewed and package verified |
+| State | `LOCAL_DELIVERY_READY` — client-readable code reviewed and package verified |
 | Active tasks | None |
 | Next ready task | None; local delivery complete |
 | Active blocker | `None` |
@@ -62,7 +62,7 @@ are not active implementation time.
 | T01 | DONE / None | Pure `game_solver/solver/` foundation: Stage1 geometry/search, selected last-topology cache and investment DP, independent raw validators. Remove benchmark imports and temporary global configuration from the official path; keep Stage1 probe/bound semantics. | Stage1 fixed inputs and tiny raw-oracle/bound checks; selected-preset differential plans/work; import leaves sockets/environment unchanged. |
 | T02 | DONE / T01 | Package Stage2 typed search/guidance and Stage3 production/project ordering/on-demand DP. Preserve original-input replay, delegation preconditions and512/512/32 defaults. Add public solve boundary and readable state/function contracts; no algorithm changes. | Stage2/3 partial-production, impossible-bound, forced-DFS and projection controls; focused old/new outcome/plan comparisons. |
 | T03 | DONE / T02 | Official runner and `submit.sh`, fixed packaged smoke example, portable corpus and task-to-input inventory. Add all93task records, including18fresh Stage3 maps, preserve92distinct inputs and stopped observations. Preserve the existing one-submission/reconciliation/deadline/progression behavior. | Fake-client recovery, ambiguous creation and no submission retry; child network denial/token removal; strict replay in both retained relay modes; targeted saved-map solves. |
-| T04 | DONE / T03 | Complete the recruiter report, three-stage chapters, diagrams/tables, sanitized time audit and issue links. Update review README and build an allowlisted local source ZIP with inventory/checksums. Retain historical source/timing attribution; no private conversation or credentials. | Report number/hash/link and visual checks; archive inventory and exclusion checks; preliminary clean-copy/offline CLI smoke. Final full corpus and ZIP validation remain the final gate below. |
+| T04 | DONE / T03 | Complete the consolidated client report with three-stage summaries, diagrams/tables, sanitized time audit and issue links. Update review README and build an allowlisted local source ZIP with inventory/checksums. Retain historical source/timing attribution; no private conversation or credentials. | Report number/hash/link and visual checks; archive inventory and exclusion checks; preliminary clean-copy/offline CLI smoke. Final full corpus and ZIP validation remain the final gate below. |
 
 T01 consumes the adopted `search.py`, selected `cache_benchmark.py` and
 `memory_benchmark.py` helpers plus `reference.py`/typed raw validators. T02 consumes
@@ -249,14 +249,13 @@ alter this implementation content; any code change repeats the audit.
 
 | Accepted outcome | Actual evidence / remaining obligation |
 | --- | --- |
-| C1 delivered / T01–T04 | All four tasks DONE after both retained reviews, findings None. Runtime code digest above unchanged. |
+| C1 delivered / T01–T04 | All four tasks DONE; owner-requested function contracts and consolidated packaging also reviewed. Current source bindings are in readability-validation.json. |
 | Complete regression migration | 658/658 matching verdicts/plans/non-time counters:93server records,108Stage1,150Stage2,307Stage3controls; zero UNKNOWN. Winning plans strictly replayed under applicable modes. |
-| Applicable suites | 115portable tests pass;367historical tests across42isolated modules pass. These overlapping suites are reported separately. |
+| Applicable suites | Current115portable tests pass;31modules pass strict typing. The prior367historical tests across42isolated modules remain historical evidence, not a new run. |
 | Portable installation | Fresh extracted ZIP installs locked dependencies, runs115portable tests and allthreeoffline smokes, with research/.env absent and imports resolving inside the copy. |
-| Report/evidence | Recruiter report, three historical chapters, graphs,26:17:20.657ended-turn stage audit, issue links and full per-record migration results reconciled. Current report revision is excluded; human labor remains unavailable. The earlier25:07:39.349audit remains a labeled historical snapshot. |
-| Source preservation | All bound research/runtime and immutable receipt/control hashes checked unchanged;
-portable input/task/witness/stop data unchanged (derived-document snapshot metadata clarified); frozen whiteboard SHA256 remains446eaa688657df6497ad6e922ce93f3cf22a5c9284db1d973ccb913dac391aa4. |
-| Final package | PASS:78allowlisted files,80ZIP entries,2,077,728bytes; manifest/checksum/CRC entries valid; same tested runtime/client/tests, builder allowlist-only change reviewed; no research/credentials/Git/caches; helper executable. |
+| Report/evidence | One consolidated client report with three stage summaries, graphs,26:17:20.657ended-turn stage audit, issue links and full per-record migration results reconciled. Current report revision is excluded; human labor remains unavailable. The earlier25:07:39.349audit remains a labeled historical snapshot. |
+| Source preservation | Research, receipts and regression inputs remain unchanged. Authorized client/docs/configuration changes have current source bindings; old hashes are explicitly historical. Frozen whiteboard remains unchanged. |
+| Final package | PASS:74allowlisted files,76ZIP entries,1,982,274bytes; all manifest/source/checksum/CRC entries valid; final runtime/test/configuration bytes equal the clean tested copy; no standalone stage reports, credentials, research, Git or caches; helper executable. |
 | Remote lifecycle | No publication, PR creation, email, merge, target verification or post-merge cleanup is authorized/performed. This does not block the requested local package. |
 
 Actual checks are bound in [migration-full.json](../../docs/reports/evidence/migration-full.json).
@@ -287,7 +286,7 @@ receive the exact corrected candidate. Remaining finding disposition: fixed.
 
 
 Final handoff verification passed after both final reconciliation approvals.
-Current ZIP SHA256: `dfaa0404245ec5ea3b7b385cdf8625b64b90ed43bfbf771ed66ac81b87a3a544`.
+Current ZIP SHA256: `373064c70bec513115e039d6881205cfc1ddfb4d222d1fab16a2b3262d795414`.
 The archive includes the complete658-record evidence and corrected provenance;
 its31runtime/client/test files are identical to the fresh-install tested copy.
 The later report refinement changes only the builder file allowlist; its new
@@ -389,7 +388,7 @@ Quality-summary refinement: PASS. The main report embeds three stage summary tab
 Report SHA256: `c072210594aba21216793c5c8c6f7a7d87e89ee0b0d2a009f73fd39a58312433`.
 Builder SHA256: `bf19bf3f38baa67385b22d9cca8d57185495b0b866fe8e0ac06512b535f13b0a`.
 Current32-file digest: `4af63628d63f6e29e4f3c24f14d02c17a1d3f5d98f5108720c6092ae31f6487c`.
-Current ZIP SHA256: `dfaa0404245ec5ea3b7b385cdf8625b64b90ed43bfbf771ed66ac81b87a3a544`.
+Current ZIP SHA256: `373064c70bec513115e039d6881205cfc1ddfb4d222d1fab16a2b3262d795414`.
 
 The31runtime/client/test files and all fixtures remain unchanged; prior full
 validation applies. Builder AST comparison confirms only one PNG allowlist
@@ -409,3 +408,70 @@ or solver test is represented as executed.
 
 No local delivery work remains open. Preserved user changes are untouched.
 No server task, submission, email, publication or merge occurred.
+
+
+## Client-readable source delivery
+
+The owner's 2026-10-19 request explicitly removes the three standalone stage
+reports, superseding C1-11/C1-13's earlier appendix packaging choice. Their
+summaries stay embedded in the main client report; compact metric sources and
+historical Git provenance remain. The frozen whiteboard stays byte-identical as
+the accepted historical design; this explicit owner instruction governs current
+packaging. Remove the unused stage-report timing images and export-only chapter
+rebinding code, not the source measurements or regression inputs.
+
+C1-09 continuation: document every named function in the delivered Python runtime,
+client, tests and package helper with a meaningful concise docstring and accurate
+parameter/return annotations (self/cls implicit). Keep existing algorithms,
+constants, action/HTTP order, defaults, timeout/failure and validation semantics.
+Add a README directory tree and a concrete reading path. Standard Python3.13
+annotations and PEP257 docstrings are sufficient; no planner abstraction,
+runtime type enforcement, new dependency or algorithm tuning is needed.
+[Python typing](https://docs.python.org/3.13/library/typing.html) describes static
+hints; [PEP257](https://peps.python.org/pep-0257/) guides purpose, result, side-effect
+and exception documentation where applicable.
+
+Validation uses a function/signature coverage audit, static type checks, comparison
+of executable syntax with the previous reviewed source, existing portable tests,
+all658retained regression/control records and an extracted-package smoke. The
+same retained reviewers audit implementation before final full checks. Preserve
+historical validation files as snapshots; bind fresh results to current source.
+No new game tasks, submissions, email, remote publication or merge is authorized.
+
+
+Client-readable source refinement: COMPLETE. All396named function declarations
+plus2embedded test functions have meaningful docstrings and parameter/return
+annotations. Strictmypy passes all31runtime/client/test modules and the package
+helper separately. The README includes the delivered directory tree, five-step
+reading route, control-flow graph and reproducible type/test commands. Three
+standalone stage reports and two unused charts are removed; their summaries,
+compact metrics and historical Git provenance remain in the consolidated report.
+The package helper no longer contains obsolete chapter-export logic.
+
+Both retained reviewers approved implementation digest
+`a93aebfd1a947e62c2a324b2c0fd5bf6b2597f64b8b86bc7c61eafbb7d97be1f`
+before final validation. All658records pass (558FEASIBLE/100INFEASIBLE); inputs,
+verdicts, reasons, exact plans, expanded counts and replay modes match the prior
+delivery.115portable tests pass. A fresh locked offline install passes the same
+115tests,31-module stricttyping and allthreeoffline stage smokes. Final74-fileZIP
+has the same32Python sources, configuration, lock/helper and fixtures as that
+clean tested copy. Final manifest/source/checksum/CRC/exclusion/link checks pass.
+No new performance study or live game operation was performed. The historical
+367-test suite was not rerun; original migration evidence stays labeled.
+
+Final reviewer dispositions: A — APPROVE final reconciliation; provenanceP2
+resolved, remaining findings None. B — APPROVE evidence correction; remaining
+findings None. [Current validation](../../docs/reports/evidence/readability-validation.json)
+and [archive proof](../../artifacts/final-verification.json) bind the results.
+CurrentZIP SHA256: `373064c70bec513115e039d6881205cfc1ddfb4d222d1fab16a2b3262d795414`.
+
+| Finding | Concrete example | Solution | Disposition |
+| --- | --- | --- | --- |
+| A-P2: historical source hashes implied current identity | Client/model docstrings and project description changed, so three original source hashes no longer match delivered files. | Label the source inventory at full12f4bc4baseline; preserve old hashes and bind current Python/configuration files separately. | fixed; both reviewers approve |
+
+| Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
+| --- | --- | --- | --- | --- |
+| None newly introduced by this readability change | None | Existing model/time limits remain explicit in README/report | None added | NONE |
+
+All requested local work is complete. Pre-existing manifest/experience/research
+changes remain untouched. No server task, submission, email, push or merge.

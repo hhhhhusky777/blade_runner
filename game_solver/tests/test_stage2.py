@@ -1,6 +1,7 @@
 """Typed resource/funding boundaries retained from the independent research tests."""
 
 from collections import deque
+from typing import Any
 import unittest
 from solver.stage2 import (
     CapitalDP,
@@ -10,7 +11,16 @@ from solver.stage2 import (
 from solver.stage2_reference import validate_plan, oracle
 
 
-def level(stone=16, ore=0, goal=None, turns=2, nodes=None, width=3, height=1):
+def level(
+    stone: int = 16,
+    ore: int = 0,
+    goal: dict[str, int] | None = None,
+    turns: int = 2,
+    nodes: list[dict[str, int | str]] | None = None,
+    width: int = 3,
+    height: int = 1,
+) -> dict[str, Any]:
+    """Build a small mining task with independent construction and goal resources."""
     return {
         "board": {
             "width": width,
@@ -31,7 +41,9 @@ def level(stone=16, ore=0, goal=None, turns=2, nodes=None, width=3, height=1):
     }
 
 
-def forward_economy(d, qs, qo, stone, ore, gs, go, ks, ko):
+def forward_economy(
+    d: int, qs: int, qo: int, stone: int, ore: int, gs: int, go: int, ks: int, ko: int
+) -> bool:
     """Forward enumeration, not the candidate backward threshold recurrence."""
     initial = d, qs, qo, stone, ore
     seen, queue = {initial}, deque([initial])
@@ -54,7 +66,8 @@ def forward_economy(d, qs, qo, stone, ore, gs, go, ks, ko):
 
 
 class Stage2Tests(unittest.TestCase):
-    def test_final_turn_and_ore_wait(self):
+    def test_final_turn_and_ore_wait(self) -> None:
+        """Allow ore production on the final turn and preserve the requested wait count."""
         for turns, goal in ((1, 5), (2, 10)):
             task = level(turns=turns, goal={"IRON_ORE": goal})
             for variant in VARIANTS:
@@ -65,13 +78,15 @@ class Stage2Tests(unittest.TestCase):
                 self.assertEqual(replay["base_stone"], 0)
                 self.assertEqual(replay["turns"], turns)
 
-    def test_ore_cannot_pay_for_construction(self):
+    def test_ore_cannot_pay_for_construction(self) -> None:
+        """Reject a mine that lacks stone even when the base holds abundant ore."""
         task = level(stone=15, ore=100, goal={"IRON_ORE": 105}, turns=1)
         for variant in VARIANTS:
             self.assertEqual(solve(task, variant)["status"], "INFEASIBLE")
         self.assertEqual(oracle(task)["status"], "INFEASIBLE")
 
-    def test_common_wait_for_mixed_goals(self):
+    def test_common_wait_for_mixed_goals(self) -> None:
+        """Satisfy stone and ore targets on the same legal completion turn."""
         task = level(
             stone=27,
             goal={"STONE": 10, "IRON_ORE": 10},
@@ -87,20 +102,23 @@ class Stage2Tests(unittest.TestCase):
             self.assertGreaterEqual(r["base_stone"], 10)
             self.assertGreaterEqual(r["base_iron_ore"], 10)
 
-    def test_initial_goal_and_zero_turns(self):
+    def test_initial_goal_and_zero_turns(self) -> None:
+        """Require a legal turn for claiming an already satisfied goal."""
         task = level(stone=5, ore=6, goal={"STONE": 5, "IRON_ORE": 6})
         self.assertEqual(solve(task)["status"], "FEASIBLE")
         task["max_turns"] = 0
         self.assertEqual(solve(task)["status"], "INFEASIBLE")
 
-    def test_caps_are_unknown(self):
+    def test_caps_are_unknown(self) -> None:
+        """Report exhausted time or state budgets without claiming impossibility."""
         task = level()
         self.assertEqual(solve(task, seconds=0)["status"], "UNKNOWN")
         self.assertEqual(solve(task, max_states=1, use_probe=False)["status"], "UNKNOWN")
         self.assertEqual(oracle(task, seconds=0)["status"], "UNKNOWN")
         self.assertEqual(oracle(task, max_states=1)["status"], "UNKNOWN")
 
-    def test_dp_against_forward_enumeration(self):
+    def test_dp_against_forward_enumeration(self) -> None:
+        """Compare 6,528 DP funding decisions with independent economic reachability."""
         decisions = 0
         for ks, ko in ((0, 1), (1, 0), (1, 1), (2, 2)):
             for gs, go in ((0, 1), (0, 10), (7, 6), (13, 0)):

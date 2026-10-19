@@ -1,40 +1,86 @@
-# Blade Runner recruitment solver
+# Blade Runner solver: delivery guide
 
 One Python 3.13 application solves all three stages of a deterministic logistics
 game. It generates an ordered JSON action plan; the server receives the answer,
 not Python code. The adopted solver completed 31 levels and 81 required series
 positions: 93 submitted plans passed, 88 on time and five late.
 
-**Ready for human review:** all 658 retained task/control records match the adopted
-versions, 115 portable tests and 367 historical tests pass, and a fresh extracted
-package installs and runs independently. Historical game results refer to the
+**Validated for review:** all 658 retained task/control records preserve the prior
+delivery's verdicts and plans. The 115 portable tests and strict type checks pass,
+including in a fresh extracted package. Every named function has a purpose
+docstring and parameter/return annotations. Historical game results refer to the
 research versions that actually ran, not a new server run of the packaged code.
 
-Start with the [recruiter report](docs/reports/recruitment-delivery-report.md) for
-the problem, conditional proofs, measured progression, all three stage chapters,
+Start with the [delivery report](docs/reports/recruitment-delivery-report.md) for
+the problem, solution, three-stage summary tables, measured improvements,
 work-time accounting and remaining issues. The
 [concluded whiteboard](.github/spec-driven-delivery/solution-whiteboard.md#final-adopted-solution)
 contains the detailed adopted design and retained research history.
 
-## Review the code
+## Code structure and reading order
 
-The solver tries validated shortcuts, then memoized DFS. Whole production
-projects order choices. Optimistic bounds and DP reject proven dead branches;
-failed greedy probes never reject a state. Time exhaustion returns UNKNOWN.
+The delivered application is under `game_solver/`; it does not need the research
+workspace. The main files are:
 
-| Responsibility | Read first |
-| --- | --- |
-| Public solve/replay contract | [api.py](game_solver/solver/api.py) |
-| Stage 1 geometry, search, selected cache and DP | [stage1.py](game_solver/solver/stage1.py), [stage1_preset.py](game_solver/solver/stage1_preset.py), [capital.py](game_solver/solver/capital.py) |
-| Stage 2 typed resources and additional probes | [stage2.py](game_solver/solver/stage2.py), [resource_guidance.py](game_solver/solver/resource_guidance.py) |
-| Stage 3 manufacturing, project ordering and on-demand DP | [stage3.py](game_solver/solver/stage3.py) |
-| Independent raw-action legality | [reference.py](game_solver/solver/reference.py), [stage2_reference.py](game_solver/solver/stage2_reference.py), [stage3_reference.py](game_solver/solver/stage3_reference.py) |
-| Single submission, recovery and verified progression | [runner.py](game_solver/solver/runner.py), [child.py](game_solver/solver/child.py) |
-| Regressions and old/new comparison | [tests](game_solver/tests), [run_regressions.py](game_solver/tests/run_regressions.py) |
+```text
+blade-runner-review/
+├── submit.sh                        Explicit runner entry point
+├── game_solver/
+│   ├── pyproject.toml, uv.lock       Python version and locked dependencies
+│   ├── api_client/                  Server requests and response models
+│   ├── solver/
+│   │   ├── api.py, __main__.py       Public API and offline JSON command
+│   │   ├── stage1.py                Stone search and map connectivity
+│   │   ├── stage1_preset.py, capital.py  Adopted cache and investment DP
+│   │   ├── stage2.py, resource_guidance.py  Ore search and resource ordering
+│   │   ├── stage3.py                Manufacturing search and production DP
+│   │   ├── reference.py, stage2_reference.py, stage3_reference.py
+│   │   │                           Independent action replay and tiny oracles
+│   │   └── runner.py, child.py       Deadlines, isolated solve and submission
+│   └── tests/                      Tests, regression runner and fixed inputs
+├── docs/reports/                    Delivery report, graphs and compact evidence
+├── .github/spec-driven-delivery/solution-whiteboard.md  Concluded design
+└── tools/build_delivery.py          Allowlisted source ZIP and checksums
+```
 
-Stage 3's adopted probe settings are 512 initial decisions per policy, 512 DFS-state
-interval and 32 later decisions per policy. These limit optional rollouts, not the
-full search. Earlier stage presets retain their own measured settings.
+Read in this order:
+
+1. **Public contract:** [`api.solve()` and `api.validate_plan()`](game_solver/solver/api.py)
+   show the inputs, stage dispatch and outcomes: FEASIBLE, INFEASIBLE or UNKNOWN.
+2. **Search:** start with [`stage1.Model` and `stage1.solve()`](game_solver/solver/stage1.py),
+   then the [adopted Stage 1 preset](game_solver/solver/stage1_preset.py).
+   [`stage2.Model` / `solve()`](game_solver/solver/stage2.py) add ore;
+   [`stage3.Model`, `Bounds`, `ProductionDP` and `solve()`](game_solver/solver/stage3.py)
+   add manufacturing. `Model.step()` advances a search state; `Model.plan()`
+   turns the chosen path into game actions.
+3. **Independent validation:** read `validate_plan()` in
+   [Stage 1](game_solver/solver/reference.py),
+   [Stage 2](game_solver/solver/stage2_reference.py) and
+   [Stage 3](game_solver/solver/stage3_reference.py).
+   These replay the actual actions against the original input.
+4. **Live boundary:** [`runner.attempt()`](game_solver/solver/runner.py)
+   coordinates one task; `request_task()` handles creation, `read_back()` verifies
+   the result, and `run_loop()` controls progression. [`child.main()`](game_solver/solver/child.py)
+   runs the solver separately with networking disabled.
+5. **Evidence:** [tests](game_solver/tests) cover rules and runner behavior;
+   [`run_regressions.py`](game_solver/tests/run_regressions.py) exercises fixed
+   server inputs and local controls. The commands below reproduce these checks.
+
+```mermaid
+flowchart LR
+    T[Task JSON] --> A[api.solve: choose stage]
+    A --> S[Quick probes, then memoized DFS]
+    S -->|Candidate plan| V[Independent raw-action replay]
+    V --> P[Validated JSON plan]
+    S -->|No validated plan| N[INFEASIBLE or UNKNOWN]
+    P -->|Explicit live command| R[Runner: submit once and verify credit]
+```
+
+Whole production projects order choices. Optimistic bounds and dynamic
+programming (DP) reject proven dead branches; failed greedy probes never reject a
+state. Time exhaustion returns UNKNOWN. Stage 3 uses 512 initial decisions per
+probe policy, a 512-state interval and 32 later decisions per policy. These limit
+optional rollouts, not the full search; earlier stages retain their own presets.
 
 ## What you are building
 
@@ -213,6 +259,7 @@ To solve a task JSON locally or import the API:
 cd game_solver
 uv run --frozen python -m solver --stage 3 task.json > answer.json
 uv run --frozen python -m unittest discover -s tests -t .
+uv run --frozen python -m mypy solver api_client tests
 uv run --frozen python -m tests.run_regressions --suite all --output regression-results.json
 ```
 
@@ -265,12 +312,13 @@ exponential. No minimum-turn optimum or universal 30-second guarantee is claimed
 The original starter simulator is permissive and remains separate; it is not the
 legality oracle. The official runtime imports no research/benchmark modules and
 changes no sockets/environment on import. Only the explicit offline child denies
-networking. Original research sources, receipts and prior reports stay preserved
-in the owner-held workspace; they are not required to run the release.
+networking. Research sources and receipts remain in the owner-held workspace;
+the removed standalone stage reports remain recoverable in Git history. Neither
+is required to run the release.
 
-The local source ZIP contains the official application, tests/fixtures, reports,
-graphs, concluded design, compact evidence and checksums. It excludes credentials,
-Git data, virtual environments, caches, raw conversation and bulk research. The
-three exported historical chapters identify original source hashes and portable
-evidence locations; some historical whiteboard links refer to the unbundled lab.
-Nothing is published, emailed or merged by building the package.
+The local source ZIP contains the official application, tests/fixtures, one
+delivery report with all three stage summaries, graphs, concluded design, compact
+evidence and checksums. It excludes credentials, Git data, virtual environments,
+caches, raw conversation and bulk research. Compact evidence retains historical
+source hashes; some frozen whiteboard links refer to the owner-held lab. Building
+the package does not publish, email or merge it.

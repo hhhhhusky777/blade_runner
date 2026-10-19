@@ -4,6 +4,8 @@ From game_solver: python -m tests.run_regressions --suite all --output results.j
 The official package never imports this test driver or reads expected labels.
 """
 
+from collections.abc import Callable
+from typing import Any, cast
 import argparse
 import hashlib
 import json
@@ -17,13 +19,14 @@ FIXTURES = Path(__file__).resolve().parent / "fixtures"
 APP_ROOT = FIXTURES.parent.parent
 
 
-def digest(value):
+def digest(value: object) -> str:
+    """Hash a JSON-serializable value using a stable key order and encoding."""
     return hashlib.sha256(
         json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
 
 
-def cases(suite):
+def cases(suite: str) -> list[dict[str, Any]]:
     """Keep every observed task association, including repeated inputs."""
     values = []
     if suite in ("all", "server"):
@@ -47,22 +50,25 @@ def cases(suite):
     return values
 
 
-def worker(request, reference_root=None):
+def worker(
+    request: dict[str, Any], reference_root: Path | None = None
+) -> dict[str, Any]:
     """One solve per fresh child; research side effects never reach the driver."""
     stage = request["stage"]
     mode = request.get("relay_mode", "matching")
     options = dict(seconds=request["seconds"])
     if reference_root:
-        # This optional, test-only adapter is not part of the solver import path.
+        # These optional research modules are absent from the portable package.
+        # Their dynamic results retain the established JSON solver contract.
         sys.path.insert(0, str(reference_root))
         if stage == 1:
-            from memory_benchmark import execute
+            from memory_benchmark import execute  # type: ignore[import-not-found]
 
-            return execute({"level": request["level"]}, "both", **options)
+            return cast(dict[str, Any], execute({"level": request["level"]}, "both", **options))
         if stage == 2:
-            from stage2 import solve
+            from stage2 import solve  # type: ignore[import-not-found]
         else:
-            from stage3 import solve
+            from stage3 import solve  # type: ignore[import-not-found]
     else:
         if stage == 1:
             from solver.stage1_preset import solve
@@ -74,10 +80,12 @@ def worker(request, reference_root=None):
         options.update(relay_mode=mode, guidance="both", max_states=None)
     elif stage == 3:
         options.update(relay_mode=mode, probes=request.get("probes", True))
-    return solve(request["level"], **options)
+    return cast(dict[str, Any], solve(request["level"], **options))
 
 
-def measure(case, seconds, reference_root=None):
+def measure(
+    case: dict[str, Any], seconds: float, reference_root: Path | None = None
+) -> tuple[dict[str, Any], float]:
     """Record actual outcomes; an outer timeout stays UNKNOWN and fails truth."""
     command = [sys.executable, "-m", "tests.run_regressions", "--worker"]
     if reference_root:
@@ -104,7 +112,7 @@ def measure(case, seconds, reference_root=None):
     return result, perf_counter() - started
 
 
-def semantic(result):
+def semantic(result: object) -> object:
     """Compare deterministic results and work; elapsed clock fields are excluded."""
     if isinstance(result, dict):
         return {k: semantic(v) for k, v in result.items() if "second" not in k}
@@ -113,14 +121,15 @@ def semantic(result):
     return result
 
 
-def replay(case, plan):
+def replay(case: dict[str, Any], plan: list[list[dict[str, Any]]]) -> list[str]:
     """Use raw actions on the original input, independently of search internals."""
     stage = case["stage"]
     if stage == 1:
-        from solver.reference import validate_plan
+        from solver.reference import validate_plan as validate_stone_plan
 
-        validate_plan(case["level"], plan)
+        validate_stone_plan(case["level"], plan)
         return ["stone"]
+    validate_plan: Callable[[object, object, str], object]
     if stage == 2:
         from solver.stage2_reference import validate_plan
     else:
@@ -135,7 +144,8 @@ def replay(case, plan):
     return list(modes)
 
 
-def main(argv=None):
+def main(argv: list[str] | None = None) -> int:
+    """Run selected local cases, persist evidence, and fail on any unexpected outcome."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--suite", choices=("all", "server", "stage1", "stage2", "stage3"), default="all"

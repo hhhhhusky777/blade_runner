@@ -1,12 +1,22 @@
 """Public offline boundary: one application dispatches to the three stage engines."""
 
+from __future__ import annotations
+
+from collections.abc import Mapping
+from typing import Any
+
 from . import stage1_preset, stage2, stage3
 from .reference import validate_plan as validate_stone
 from .stage2_reference import validate_plan as validate_ore
 from .stage3_reference import validate_plan as validate_iron
 
 
-def validate_plan(level: dict, plan: list[list[dict]], stage: int = 1) -> dict:
+# JSON remains extensible at the public boundary; each stage validates its model.
+JsonObject = dict[str, Any]
+Plan = list[list[JsonObject]]
+
+
+def validate_plan(level: JsonObject, plan: Plan, stage: int = 1) -> Mapping[str, Any]:
     """Strict raw-action replay on the original task; raise ValueError if illegal."""
     if stage == 1:
         return validate_stone(level, plan)
@@ -17,7 +27,7 @@ def validate_plan(level: dict, plan: list[list[dict]], stage: int = 1) -> dict:
     raise ValueError("only Stage1, Stage2 and Stage3 are supported")
 
 
-def solve(level: dict, stage: int = 1, seconds: float = 24.0) -> dict:
+def solve(level: JsonObject, stage: int = 1, seconds: float = 24.0) -> JsonObject:
     """Generate an action plan using the adopted preset, without network access.
 
     FEASIBLE includes an independently replayed plan; INFEASIBLE is conditional

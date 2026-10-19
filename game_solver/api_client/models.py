@@ -1,3 +1,5 @@
+"""Typed API envelopes; documented extension fields remain available as extras."""
+
 from __future__ import annotations
 
 from typing import Any

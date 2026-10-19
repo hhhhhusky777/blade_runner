@@ -1,7 +1,7 @@
 [project]
 name = "new-recruitment-task-testdrive"
 version = "0.1.0"
-description = "Add your description here"
+description = "Deterministic three-stage logistics solver with independent plan validation and verified submission"
 requires-python = ">=3.13,<3.14"
 dependencies = [
     "click>=8.2.1",

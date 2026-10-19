@@ -15,12 +15,31 @@ inventory + 5*K*T, so the raw finite search is exhaustive without caps. Its
 state/time cost is exponential; reaching either cap returns UNKNOWN.
 """
 
+from __future__ import annotations
+
 from collections import deque
+from collections.abc import Iterator
 from dataclasses import dataclass
 from math import isfinite
 from time import perf_counter
+from typing import TypedDict, cast
 
-from .reference import _State, _integer, _mapping, _neighbors, _road_path, _action, _winning_plan
+from .reference import (
+    Action,
+    Coord,
+    Grid,
+    OracleResult,
+    OracleStatus,
+    ParentMap,
+    Plan,
+    _State,
+    _integer,
+    _mapping,
+    _neighbors,
+    _road_path,
+    _action,
+    _winning_plan,
+)
 
 RESOURCES = ("STONE", "IRON_ORE")
 RESOURCE = RESOURCES
@@ -28,42 +47,57 @@ EXTRACTORS = {"STONE": "STONE_QUARRY", "IRON_ORE": "IRON_MINE"}
 PRODUCES = {kind: resource for resource, kind in EXTRACTORS.items()}
 COSTS = {"ROAD": 1, "STONE_QUARRY": 10, "IRON_MINE": 15}
 RELAY_MODES = ("unrestricted", "matching")
-Coord = tuple[int, int]
-Inventory = tuple[int, int]
+# Variable length permits Stage 3 to reuse checked vector operations with iron.
+type Inventory = tuple[int, ...]
+
+
+class ReplaySummary(TypedDict):
+    """Final base inventories and the smallest prefix construction budget."""
+
+    turns: int
+    base_stone: int
+    base_iron_ore: int
+    base_inventory: dict[str, int]
+    min_prefix_cash: int
 
 
 @dataclass
 class _Level:
+    """Validated geometry and ordered resource vectors shared by typed stages."""
+
     width: int
     height: int
-    grid: list
+    grid: Grid
     nodes: dict[Coord, str]
     base: Coord
     initial: Inventory
     goal: Inventory
     max_turns: int
 
-    def position(self, x, y):
+    def position(self, x: object, y: object) -> Coord:
+        """Validate coordinates and require a position inside this board."""
         p = (_integer(x, "x"), _integer(y, "y"))
         if p[0] >= self.width or p[1] >= self.height:
             raise ValueError(f"coordinate out of bounds: {p}")
         return p
 
 
-def _inventory(value, name):
+def _inventory(value: object, name: str) -> Inventory:
+    """Parse stone and ore amounts in fixed resource order, defaulting to zero."""
     value = _mapping(value, name)
     if set(value) - set(RESOURCES):
         raise ValueError(f"{name} supports only STONE and IRON_ORE")
     return tuple(_integer(value.get(resource, 0), f"{name} {resource}") for resource in RESOURCES)
 
 
-def _relay_mode(mode):
+def _relay_mode(mode: str) -> str:
+    """Validate the explicit storage-relay premise used by replay and search."""
     if mode not in RELAY_MODES:
         raise ValueError(f"relay_mode must be one of {RELAY_MODES}")
     return mode
 
 
-def read_level(level):
+def read_level(level: object) -> _Level:
     """Parse the supported input strictly; missing supported inventories are zero."""
     data = _mapping(level, "level")
     board = _mapping(data.get("board"), "board")
@@ -83,7 +117,7 @@ def read_level(level):
     if goal.get("target_structure_type") != "BASE":
         raise ValueError("goal must require resources at BASE")
     target = _inventory(goal.get("target_resources"), "goal")
-    model = _Level(width, height, grid, {}, (0, 0), (0, 0), target, turns)
+    model = _Level(width, height, cast(Grid, grid), {}, (0, 0), (0, 0), target, turns)
     nodes = board.get("resource_nodes", [])
     if not isinstance(nodes, list):
         raise ValueError("resource_nodes must be a list")
@@ -110,29 +144,37 @@ def read_level(level):
 _read_level = read_level
 
 
-def _initial(model):
+def _initial(model: _Level) -> _State[Inventory]:
+    """Create the first-turn state with both resources stored at the base."""
     # _State.copy/key are resource-agnostic: tuple inventories remain immutable.
     return _State(1, {model.base: "BASE"}, {model.base: model.initial}, set())
 
 
-def _accepts(state, p, resource, relay_mode):
+def _accepts(
+    state: _State[Inventory], p: Coord, resource: str, relay_mode: str
+) -> bool:
+    """Check whether a storage endpoint accepts a resource under the relay premise."""
     kind = state.buildings.get(p)
     return kind == "BASE" or (
         kind in PRODUCES and (relay_mode == "unrestricted" or PRODUCES[kind] == resource)
     )
 
 
-def _add(inventory, index, amount):
+def _add(inventory: Inventory, index: int, amount: int) -> Inventory:
+    """Return a new resource vector with one signed inventory adjustment."""
     values = list(inventory)
     values[index] += amount
     return tuple(values)
 
 
-def _won(model, state):
+def _won(model: _Level, state: _State[Inventory]) -> bool:
+    """Check all required resources against their current base inventories."""
     return all(have >= need for have, need in zip(state.inventory[model.base], model.goal))
 
 
-def _apply(model, state, action, relay_mode="unrestricted"):
+def _apply(
+    model: _Level, state: _State[Inventory], action: object, relay_mode: str = "unrestricted"
+) -> bool:
     """Apply one checked raw action; return True only for a successful claim."""
     action = _mapping(action, "action")
     args = _mapping(action.get("args"), "action args")
@@ -203,7 +245,9 @@ def _apply(model, state, action, relay_mode="unrestricted"):
     return False
 
 
-def validate_plan(level, plan, relay_mode="unrestricted"):
+def validate_plan(
+    level: object, plan: object, relay_mode: str = "unrestricted"
+) -> ReplaySummary:
     """Replay original input with explicit successful CLAIM_WIN, or raise ValueError."""
     _relay_mode(relay_mode)
     model = read_level(level)
@@ -236,7 +280,10 @@ def validate_plan(level, plan, relay_mode="unrestricted"):
     }
 
 
-def _successors(model, state, relay_mode):
+def _successors(
+    model: _Level, state: _State[Inventory], relay_mode: str
+) -> Iterator[tuple[_State[Inventory], Action | None]]:
+    """Enumerate raw legal actions, every partial transfer and the end of a turn."""
     for y in range(model.height):
         for x in range(model.width):
             p = (x, y)
@@ -280,7 +327,12 @@ def _successors(model, state, relay_mode):
         yield successor, None
 
 
-def oracle(level, seconds=2.0, max_states=None, relay_mode="unrestricted"):
+def oracle(
+    level: object,
+    seconds: float = 2.0,
+    max_states: int | None = None,
+    relay_mode: str = "unrestricted",
+) -> OracleResult:
     """Tiny independent raw BFS. Only exhaustion proves INFEASIBLE; caps UNKNOWN."""
     _relay_mode(relay_mode)
     if (
@@ -295,8 +347,11 @@ def oracle(level, seconds=2.0, max_states=None, relay_mode="unrestricted"):
     start, expanded = perf_counter(), 0
     model = read_level(level)
 
-    def result(status, plan=None):
-        answer = {"status": status, "expanded": expanded, "seconds": perf_counter() - start}
+    def result(status: OracleStatus, plan: Plan | None = None) -> OracleResult:
+        """Capture the current effort counters and optional feasibility witness."""
+        answer: OracleResult = {
+            "status": status, "expanded": expanded, "seconds": perf_counter() - start
+        }
         if plan is not None:
             answer["plan"] = plan
         return answer
@@ -304,7 +359,8 @@ def oracle(level, seconds=2.0, max_states=None, relay_mode="unrestricted"):
     if model.max_turns == 0:
         return result("INFEASIBLE")
     initial = _initial(model)
-    parents, queue = {initial.key(): None}, deque([initial])
+    parents: ParentMap[Inventory] = {initial.key(): None}
+    queue = deque([initial])
     if _won(model, initial):
         return result("FEASIBLE", _winning_plan(initial.key(), parents, model.base))
     while queue:

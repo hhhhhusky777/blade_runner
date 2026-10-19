@@ -184,16 +184,18 @@ a separate full 30-second local run.
 
 **What the delivered code demonstrates**
 
-| Recruiter concern | Reviewable evidence |
+| Client concern | Reviewable evidence |
 | --- | --- |
 | Correctness and requirements | Ordered-action replay; exact state identity; optional manufacturing; proven optimistic cuts. Full search is complete if exhausted under the declared model; deadline exhaustion returns UNKNOWN. |
 | Validation before acceptance | Tiny exhaustive oracles, known witnesses, impossible/random/adversarial cases, tight resources, shared roads and forced full-search controls. All 93 live records / 92 distinct inputs retained. |
-| Maintainable Python | One application for all stages; pure helpers, stage modules, independent validators and a separate submission runner. [Code reading guide](../../README.md#review-the-code). |
-| Delivery verification | 658/658 adopted-to-official comparisons match; 115 portable tests and 367 historical tests pass. Suites overlap. A fresh extracted ZIP installs and runs all three offline smokes. |
+| Maintainable Python | One application for all stages; documented, typed function contracts; stage modules, independent validators and a separate submission runner. [Code reading guide](../../README.md#code-structure-and-reading-order). |
+| Delivery verification | Current revision: 658/658 regressions, 115 portable tests and strict type checks pass. Prior migration also matched the adopted code and passed 367 historical tests. A fresh package passes tests and all three offline smokes. |
 | Independent judgment | Retain negative results and regressions; compare combined candidates; distinguish solver time from acquisition and server task age. |
 
 Coverage is bounded; search remains exponential in the worst case. [Concluded proofs and assumptions](../../.github/spec-driven-delivery/solution-whiteboard.md#mathematical-guarantees-and-limits)
-and [final migration evidence](evidence/migration-full.json) provide the detail.
+and [migration evidence](evidence/migration-full.json) provide the detail.
+[Current source validation](evidence/readability-validation.json) records the
+documentation/type checks and repeated regressions for this delivery.
 Summary timing covers timely tasks only. Solver times exclude startup, network
 and the runner's outer replay. Stage 2/3 timers include internal replay; Stage 1's
 greedy path can include it too. Server time runs from task creation to the valid

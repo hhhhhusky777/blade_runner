@@ -5,14 +5,59 @@ Earlier stages are reused through pure package imports. Probe budgets limit only
 full search has only the wall deadline. See whiteboard for projection proofs.
 """
 
+from __future__ import annotations
+
 from collections import deque
+from collections.abc import Callable, Iterator, Sequence
 from dataclasses import dataclass, replace
 from functools import lru_cache
 from math import isfinite
 from time import perf_counter
+from typing import Any, Literal, TypeAlias, TypedDict, cast, overload
 
 from .stage2 import CapitalDP, solve as solve_stage2
 from .stage3_reference import RESOURCES, COSTS, accepts, read_level, validate_plan
+
+
+# JSON stays flexible at the input/output boundary; search uses the exact types below.
+Action: TypeAlias = dict[str, Any]
+Plan: TypeAlias = list[list[Action]]
+BuildChoice: TypeAlias = tuple[Literal["BUILD"], int, str]
+Choice: TypeAlias = BuildChoice | tuple[Literal["PRODUCE"], int, int] | tuple[Literal["END"]]
+# Stock keys are (flattened storage cell, resource index: stone=0, ore=1, iron=2).
+Stock: TypeAlias = dict[tuple[int, int], int]
+Layout: TypeAlias = tuple[
+    dict[int, str], tuple[dict[int, int], ...], tuple[dict[int, tuple[int, ...]], ...]
+]
+Routes: TypeAlias = tuple[dict[int, int], dict[int, int | None]]
+DemandSummary: TypeAlias = tuple[list[int], int, int, int, int, int, int, int, int]
+
+
+class SearchMetrics(TypedDict):
+    """Counters and policy labels reported alongside a search verdict."""
+
+    production_dp_queries: int
+    production_dp_root_probe_queries: int
+    production_dp_activations: int
+    production_dp_activation_reason: str | None
+    production_prunes: int
+    early_checks: int
+    early_prunes: int
+    expanded: int
+    duplicates: int
+    resource_prunes: int
+    dp_prunes: int
+    probe_work: int
+    probe_calls: int
+    investment_attempts: int
+    economic_attempts: int
+    completion_work: int
+    probe_policy: str | None
+    probe_state_checks: int
+    probe_state_skips: int
+    probe_policy_attempts: dict[str, int]
+    root_probe_calls: int
+    later_probe_calls: int
 
 
 # Work limits apply to optional probes, never to exact-search state count.
@@ -37,7 +82,8 @@ class State:
     stock: tuple[tuple[int, int, int], ...]
 
 
-def bits(mask):
+def bits(mask: int) -> Iterator[int]:
+    """Yield set-bit cell indices from lowest to highest, without changing the mask."""
     while mask:
         bit = mask & -mask
         mask -= bit
@@ -47,7 +93,10 @@ def bits(mask):
 class Model:
     """Own typed connectivity, stock normalization, transitions and project ordering."""
 
-    def __init__(self, level, relay_mode="matching", distance_reuse=False):
+    def __init__(
+        self, level: dict[str, Any], relay_mode: str = "matching", distance_reuse: bool = False
+    ) -> None:
+        """Parse the task and prepare bounded, instance-local geometry caches."""
         if relay_mode not in ("matching", "unrestricted"):
             raise ValueError("invalid relay_mode")
         parsed = read_level(level)
@@ -58,7 +107,9 @@ class Model:
         self.base = parsed.base[1] * self.w + parsed.base[0]
         self.nodes = {y * self.w + x: RESOURCES.index(r) for (x, y), r in parsed.nodes.items()}
         self.goals, self.start = parsed.goal, parsed.initial
-        self.site_counts = tuple(sum(r == i for r in self.nodes.values()) for i in (0, 1))
+        self.site_counts = cast(
+            tuple[int, int], tuple(sum(r == i for r in self.nodes.values()) for i in (0, 1))
+        )
         self.neighbors = tuple(
             tuple(
                 q
@@ -82,7 +133,8 @@ class Model:
         self.routes = lru_cache(maxsize=64)(self._routes)
         self.road_distances = lru_cache(maxsize=64)(self._road_distances)
 
-    def _road_distances(self, roads):
+    def _road_distances(self, roads: int) -> tuple[int, ...]:
+        """Return grid distance to an existing road for ordering, not feasibility."""
         # This priority key is Manhattan distance, not legal transport distance.
         # Ignore terrain/storage; every grid cell is traversable for this BFS.
         if not roads:
@@ -99,16 +151,19 @@ class Model:
                     queue.append(q)
         return tuple(distance)
 
-    def coord(self, p):
+    def coord(self, p: int) -> list[int]:
+        """Convert a flattened cell index to the JSON coordinate pair [x, y]."""
         return [p % self.w, p // self.w]
 
-    def action(self, name, p, **args):
+    def action(self, name: str, p: int, **args: str | int) -> Action:
+        """Build a raw action object with this cell and action-specific arguments."""
         return dict(action=name, args=dict(x=p % self.w, y=p // self.w, **args))
 
-    def occupied(self, s):
+    def occupied(self, s: State) -> int:
+        """Return the bitmask of every built cell, including the base."""
         return s.roads | s.extractors | s.smelters | (1 << self.base)
 
-    def _layout(self, roads, extractors, smelters):
+    def _layout(self, roads: int, extractors: int, smelters: int) -> Layout:
         """Build a separate transfer graph and canonical storage root for each resource."""
         kinds = {self.base: "BASE"}
         kinds.update(
@@ -129,7 +184,7 @@ class Model:
                 )
                 for p in valid
             }
-            rootmap = {}
+            rootmap: dict[int, int] = {}
             remaining = set(graph)
             while remaining:
                 seed = min(remaining)
@@ -153,14 +208,15 @@ class Model:
             graphs.append(graph)
         return kinds, tuple(roots), tuple(graphs)
 
-    def layout_for(self, s):
+    def layout_for(self, s: State) -> Layout:
+        """Look up transfer components for the state's immutable topology."""
         return self.layout(s.roads, s.extractors, s.smelters)
 
-    def normalize(self, s, stock, emit=False):
+    def normalize(self, s: State, stock: Stock, emit: bool = False) -> tuple[State, list[Action]]:
         """Pool fungible component stock; optionally emit the matching legal transfers."""
         _, roots, _ = self.layout_for(s)
-        pooled = {}
-        actions = []
+        pooled: Stock = {}
+        actions: list[Action] = []
         for (p, r), amount in sorted(stock.items()):
             if not amount:
                 continue
@@ -170,11 +226,14 @@ class Model:
                 actions.extend(self.transfer(s, p, root, r, amount))
         return replace(s, stock=tuple((p, r, n) for (p, r), n in sorted(pooled.items()))), actions
 
-    def transfer(self, s, source, target, r, amount):
+    def transfer(
+        self, s: State, source: int, target: int, r: int, amount: int
+    ) -> list[Action]:
+        """Emit legal road-interior transfers, splitting at intermediate storage cells."""
         kinds, _, graphs = self.layout_for(s)
         graph = graphs[r]
         queue = deque([source])
-        parent = {source: None}
+        parent: dict[int, int | None] = {source: None}
         while queue and target not in parent:
             p = queue.popleft()
             for q in graph[p]:
@@ -185,10 +244,10 @@ class Model:
             raise ValueError("disconnected transfer")
         path = [target]
         while path[-1] != source:
-            path.append(parent[path[-1]])
+            path.append(cast(int, parent[path[-1]]))
         path.reverse()
         segment = [path[0]]
-        actions = []
+        actions: list[Action] = []
         for p in path[1:]:
             segment.append(p)
             if p in kinds:
@@ -207,33 +266,39 @@ class Model:
                 segment = [p]
         return actions
 
-    def initial(self):
+    def initial(self) -> State:
+        """Create the first-turn state with only the base and its starting stock."""
         return State(1, 0, 0, 0, 0, tuple((self.base, r, n) for r, n in enumerate(self.start) if n))
 
-    def totals(self, s):
+    def totals(self, s: State) -> list[int]:
+        """Sum each resource across all storage components, including disconnected ones."""
         values = [0, 0, 0]
         for _, r, n in s.stock:
             values[r] += n
         return values
 
-    def counts(self, s):
+    def counts(self, s: State) -> tuple[int, int, int]:
+        """Count built stone quarries, ore mines and smelters, in that order."""
         q = sum(self.nodes[p] == 0 for p in bits(s.extractors))
         m = s.extractors.bit_count() - q
         return q, m, s.smelters.bit_count()
 
-    def cash(self, s):
+    def cash(self, s: State) -> int:
+        """Return base-held stone, the only inventory that can pay construction costs."""
         return sum(n for p, r, n in s.stock if p == self.base and r == 0)
 
-    def won(self, s):
+    def won(self, s: State) -> bool:
+        """Check every goal against stock at the base, never global inventory."""
         base = [0, 0, 0]
         for p, r, n in s.stock:
             if p == self.base:
                 base[r] += n
         return all(h >= g for h, g in zip(base, self.goals))
 
-    def choices(self, s):
+    def choices(self, s: State) -> Iterator[Choice]:
+        """Enumerate all affordable adjacent builds, legal productions and turn advance."""
         occupied = self.occupied(s)
-        front = set()
+        front: set[int] = set()
         for p in bits(occupied):
             front.update(q for q in self.neighbors[p] if not occupied >> q & 1)
         cash = self.cash(s)
@@ -260,10 +325,28 @@ class Model:
         if s.turn < self.turns:
             yield ("END",)
 
-    def step(self, s, choice, emit=False, admit=None):
+    @overload
+    def step(
+        self, s: State, choice: Choice, emit: bool = False, admit: None = None
+    ) -> tuple[State, list[Action]]:
+        """Apply a transition without optional pruning; a child always exists."""
+        ...
+
+    @overload
+    def step(
+        self, s: State, choice: Choice, emit: bool = False,
+        *, admit: Callable[[State, Stock], bool]
+    ) -> tuple[State | None, list[Action]]:
+        """Apply a transition that may be rejected by a proven feasibility bound."""
+        ...
+
+    def step(
+        self, s: State, choice: Choice, emit: bool = False,
+        admit: Callable[[State, Stock], bool] | None = None,
+    ) -> tuple[State | None, list[Action]]:
         """Apply build, optional production or turn advance; preserve activation in the key."""
         stock = {(p, r): n for p, r, n in s.stock}
-        actions = []
+        actions: list[Action] = []
         if choice[0] == "BUILD":
             _, p, kind = choice
             stock[self.base, 0] = stock.get((self.base, 0), 0) - COSTS[kind]
@@ -300,9 +383,10 @@ class Model:
         child, moves = self.normalize(raw, stock, emit)
         return child, actions + moves
 
-    def plan(self, steps):
+    def plan(self, steps: Sequence[Choice]) -> Plan:
+        """Replay normalized decisions into raw turns, then append the victory claim."""
         s = self.initial()
-        turns = [[]]
+        turns: Plan = [[]]
         for choice in steps:
             if choice[0] == "END":
                 turns.append([])
@@ -311,11 +395,12 @@ class Model:
         turns[-1].append(self.action("CLAIM_WIN", self.base))
         return turns
 
-    def _routes(self, roads, extractors, smelters, r):
+    def _routes(self, roads: int, extractors: int, smelters: int, r: int) -> Routes:
+        """Find minimum added-road routes while respecting resource-specific storage."""
         kinds, _, _ = self.layout(roads, extractors, smelters)
         occupied = roads | extractors | smelters | (1 << self.base)
         distance = {self.base: 0}
-        parent = {self.base: None}
+        parent: dict[int, int | None] = {self.base: None}
         queue = deque([self.base])
         while queue:
             p = queue.popleft()
@@ -337,7 +422,8 @@ class Model:
                     (queue.appendleft if cost == 0 else queue.append)(q)
         return distance, parent
 
-    def project(self, s, p, kind, r):
+    def project(self, s: State, p: int, kind: str, r: int) -> list[BuildChoice] | None:
+        """Return a producer connection with its missing roads, or no candidate route."""
         distance, parent = self.routes(s.roads, s.extractors, s.smelters, r)
         kinds, _, _ = self.layout_for(s)
         # A storage endpoint needs a road predecessor, including a future road.
@@ -348,18 +434,22 @@ class Model:
         for end in sorted(near, key=lambda q: (distance[q], q)):
             candidate = [end]
             while candidate[-1] != self.base:
-                candidate.append(parent[candidate[-1]])
+                candidate.append(cast(int, parent[candidate[-1]]))
             if p not in candidate:
                 path = list(reversed(candidate))
                 break
         if path is None:
             return None
-        steps = [("BUILD", q, "ROAD") for q in path if not self.occupied(s) >> q & 1]
+        steps: list[BuildChoice] = [
+            ("BUILD", q, "ROAD") for q in path if not self.occupied(s) >> q & 1
+        ]
         if not self.occupied(s) >> p & 1:
             steps.append(("BUILD", p, kind))
         return steps
 
-    def completion(self, s, limit, deadline):
+    def completion(
+        self, s: State, limit: int, deadline: float
+    ) -> tuple[list[Choice] | None, int]:
         """Try one funded factory schedule; a miss says nothing about feasibility.
 
         Only BASE stocks and BASE-connected quarry income fund this schedule.
@@ -402,10 +492,11 @@ class Model:
         if wait + len(project) > limit:
             return None, 0
         state = s
-        steps = []
+        steps: list[Choice] = []
         work = 0
 
-        def take(choice):
+        def take(choice: Choice) -> bool:
+            """Advance this private rollout only when its next action and budget allow."""
             nonlocal state, work
             if len(steps) >= limit or perf_counter() >= deadline:
                 return False
@@ -416,7 +507,8 @@ class Model:
             work += 1
             return True
 
-        for choice in [("END",)] * wait + project:
+        choice: Choice
+        for choice in cast(list[Choice], [("END",)] * wait) + project:
             if not take(choice):
                 return None, work
         # Project uses an IRON connection; validate ORE supply in this layout.
@@ -435,7 +527,7 @@ class Model:
                 return None, work
         return steps, work
 
-    def funded_ore_project(self, s):
+    def funded_ore_project(self, s: State) -> list[BuildChoice]:
         """An optional committed connection, including all its road costs."""
         stock = {(p, r): n for p, r, n in s.stock}
         need = self.goals[1] + max(0, self.goals[2] - stock.get((self.base, 2), 0))
@@ -452,7 +544,10 @@ class Model:
                     candidates.append((cost, p, project))
         return min(candidates)[2] if candidates else []
 
-    def ready_probes(self, s, limit, available, last=None, budget_aware=False):
+    def ready_probes(
+        self, s: State, limit: int, available: Sequence[str],
+        last: Choice | None = None, budget_aware: bool = False,
+    ) -> tuple[str, ...]:
         """Cheap applicability hints only; a skipped probe never cuts DFS."""
         base = [0, 0, 0]
         global_iron = 0
@@ -515,7 +610,9 @@ class Model:
             selected.append("balanced")
         return tuple(selected)
 
-    def ordered(self, s, choices, policy="balanced"):
+    def ordered(
+        self, s: State, choices: Sequence[Choice], policy: str = "balanced"
+    ) -> list[Choice]:
         """Rank whole production projects while retaining every legal choice."""
         totals = self.totals(s)
         q, m, f = self.counts(s)
@@ -524,7 +621,7 @@ class Model:
         ore_need = self.goals[1] + iron
         targets = []
         urgent = None
-        funded = []
+        funded: list[tuple[int, int, int, Choice]] = []
         if policy in ("deadline", "projects"):
             cash = self.cash(s)
             base_ore = sum(n for p, r, n in s.stock if p == self.base and r == 1)
@@ -611,7 +708,7 @@ class Model:
                         action = project[0] if not wait else ("END",)
                         if wait < d and action in choices:
                             funded.append((wait, cost, p, action))
-        priorities = {}
+        priorities: dict[Choice, float] = {}
         for score, project in targets:
             if project:
                 priorities[project[0]] = min(priorities.get(project[0], float("inf")), score)
@@ -633,7 +730,8 @@ class Model:
         )
         saving = policy == "capital" and funded_income and self.cash(s) < project_cost
 
-        def key(c):
+        def key(c: Choice) -> tuple[float, Choice]:
+            """Rank one legal action; use its tuple as the deterministic tie-breaker."""
             if c[0] == "END":
                 return (priorities.get(c, 0 if saving else 50), c)
             score = priorities.get(c, 100)
@@ -645,12 +743,16 @@ class Model:
         if policy == "investment" and not m and totals[1] < ore_need:
             # Probe preference only: fund ore supply before new production.
             # Keep every action, including factories, available to exact DFS.
-            is_factory = lambda c: c[0] == "BUILD" and c[2] == "SMELTER"
+            def is_factory(c: Choice) -> bool:
+                """Identify factory builds for this probe-only stable partition."""
+                return c[0] == "BUILD" and c[2] == "SMELTER"
             return [c for c in ordered if not is_factory(c)] + [c for c in ordered if is_factory(c)]
         return ordered
 
 
 class _ProductionBudget(Exception):
+    """Stop optional relaxation work without asserting that a state is impossible."""
+
     pass
 
 
@@ -662,13 +764,22 @@ class ProductionDP:
     Only completed subproblems are cached. Budget skips are weak passes.
     """
 
-    def __init__(self, stone_goal, quarry_sites, deadline=float("inf"), max_entries=20000):
+    def __init__(
+        self, stone_goal: int, quarry_sites: int,
+        deadline: float = float("inf"), max_entries: int = 20000,
+    ) -> None:
+        """Configure the optimistic production model and its bounded memo table."""
         self.goal, self.sites = stone_goal, quarry_sites
         self.deadline, self.max_entries = deadline, max_entries
-        self.cache = {}
+        self.cache: dict[tuple[int, int, int, int], float] = {}
         self.skipped = 0
 
-    def required(self, d, q, f, b):
+    def required(self, d: int, q: int, f: int, b: int) -> float:
+        """Return a stone lower bound; a budget/recursion skip safely returns zero.
+
+        d is remaining turn advances, q is quarries, f is already-used factories,
+        and b is the number of two-iron batches still needed in this relaxation.
+        """
         if d > 128 or (d and b > 128):
             self.skipped += 1
             return 0
@@ -678,7 +789,8 @@ class ProductionDP:
             self.skipped += 1
             return 0
 
-    def _required(self, d, q, f, b):
+    def _required(self, d: int, q: int, f: int, b: int) -> float:
+        """Minimize stone needed over waiting, quarry investment and smelter investment."""
         if not d:
             return self.goal + 20 * b  # No future income; new quarries only cost stone.
         f = min(f, b)
@@ -702,14 +814,19 @@ class ProductionDP:
 class Bounds:
     """Optimistic feasibility filters; failure is a proof only under the stated model."""
 
-    def __init__(self, model, deadline):
+    def __init__(self, model: Model, deadline: float) -> None:
+        """Share task facts and lazily create optional capital and production tables."""
         self.model, self.deadline = model, deadline
-        self.dps = {}
+        self.dps: dict[int, CapitalDP] = {}
         self.dp_skipped = 0
-        self.production_dp = None
+        self.production_dp: ProductionDP | None = None
 
-    def demands(self, s, total=None):
-        """Lower-bound missing ore mines/factories using optimistic remaining capacity."""
+    def demands(self, s: State, total: list[int] | None = None) -> DemandSummary:
+        """Lower-bound missing ore mines/factories using optimistic remaining capacity.
+
+        Return totals, quarry/mine/factory counts, remaining turn advances, iron
+        deficit, required new factories, ore deficit and required new mines.
+        """
         m = self.model
         total = m.totals(s) if total is None else total
         q, o, f = m.counts(s)
@@ -721,7 +838,7 @@ class Bounds:
         nm = (max(0, missing - 5 * o * d) + 5 * (d + 1) - 1) // (5 * (d + 1))
         return total, q, o, f, d, h, nf, missing, nm
 
-    def resource(self, s, summary=None):
+    def resource(self, s: State, summary: DemandSummary | None = None) -> bool:
         """Reject only if even free access and maximal production miss a goal."""
         m = self.model
         t, q, o, f, d, h, nf, missing, nm = self.demands(s) if summary is None else summary
@@ -732,10 +849,11 @@ class Bounds:
         stone_upper = t[0] + 5 * q * d + uq * max(0, 5 * (d + 1) - 10) - 15 * nm - 20 * nf
         return stone_upper >= m.goals[0]
 
-    def occupied_count(self, s):
+    def occupied_count(self, s: State) -> int:
+        """Count unavailable building cells for the optimistic factory-capacity bound."""
         return self.model.occupied(s).bit_count()
 
-    def capital(self, s, summary=None):
+    def capital(self, s: State, summary: DemandSummary | None = None) -> bool:
         """Compare available stone with a free-road typed funding threshold."""
         m = self.model
         t, q, o, f, d, h, nf, missing, nm = self.demands(s) if summary is None else summary
@@ -752,7 +870,7 @@ class Bounds:
         threshold = self.dps[goal].required(d, q, o, (missing + 4) // 5)
         return t[0] >= threshold
 
-    def production(self, s, summary=None):
+    def production(self, s: State, summary: DemandSummary | None = None) -> bool:
         """Use the infinite-ore relaxation to reject impossible production schedules."""
         m = self.model
         if summary is None:
@@ -771,17 +889,17 @@ class Bounds:
 
 
 def solve(
-    level,
-    seconds=30,
-    bounds="both",
-    probes=True,
-    relay_mode="matching",
-    improvements="both",
-    preparation="none",
-    scheduling="projects_adaptive",
-    probe_trigger="interval",
-    probe_interval=PROBE_INTERVAL,
-):
+    level: dict[str, Any],
+    seconds: float = 30,
+    bounds: str = "both",
+    probes: bool = True,
+    relay_mode: str = "matching",
+    improvements: str = "both",
+    preparation: str = "none",
+    scheduling: str = "projects_adaptive",
+    probe_trigger: str = "interval",
+    probe_interval: int = PROBE_INTERVAL,
+) -> dict[str, Any]:
     """Search the finite normalized state graph with independently replayed wins.
 
     Defaults are the adopted project ordering and on-demand production DP.
@@ -843,7 +961,7 @@ def solve(
         old.update(engine="stage2-reuse", seconds=perf_counter() - start)
         return old
     production_active = scheduling in ("bound", "both", "projects_bound")
-    metrics = dict(
+    metrics: SearchMetrics = dict(
         production_dp_queries=0,
         production_dp_root_probe_queries=0,
         production_dp_activations=int(production_active),
@@ -868,7 +986,8 @@ def solve(
         later_probe_calls=0,
     )
 
-    def possible(s, stock=None):
+    def possible(s: State, stock: Stock | None = None) -> bool:
+        """Apply enabled optimistic bounds; only a failed bound may reject this state."""
         summary = None
         if stock is not None:
             metrics["early_checks"] += 1
@@ -901,7 +1020,10 @@ def solve(
 
     admit = possible if preparation == "early" and bounds != "none" else None
 
-    def result(status, reason, steps=None):
+    def result(
+        status: str, reason: str, steps: list[Choice] | None = None
+    ) -> dict[str, Any]:
+        """Replay any candidate before returning it, enforcing the final wall deadline."""
         plan = None
         if steps is not None and perf_counter() < deadline:
             plan = m.plan(steps)
@@ -937,7 +1059,10 @@ def solve(
     if improvements in ("investment", "both"):
         policies += ("investment", "economic")
 
-    def probe(s, limit, selected=policies):
+    def probe(
+        s: State, limit: int, selected: Sequence[str] = policies
+    ) -> list[Choice] | None:
+        """Try bounded private policy rollouts; failure never changes exact-search coverage."""
         metrics["probe_calls"] += 1
         metrics["root_probe_calls" if metrics["expanded"] == 1 else "later_probe_calls"] += 1
         for policy in selected:
@@ -948,9 +1073,9 @@ def solve(
             if policy == "economic":
                 metrics["economic_attempts"] += 1
             state = s
-            steps = []
+            steps: list[Choice] = []
             seen = {state}
-            committed = []
+            committed: list[BuildChoice] = []
             completion_used = 0
             for _ in range(limit):
                 if perf_counter() >= deadline:
@@ -1011,9 +1136,10 @@ def solve(
                 return steps
         return None
 
-    parents = {root: None}
-    stack = [(root, None)]
-    found = None
+    parents: dict[State, tuple[State, Choice] | None] = {root: None}
+    stack: list[tuple[State, Iterator[Choice] | None]] = [(root, None)]
+    found: list[Choice] | None = None
+    choice: Choice | None
     while stack:
         if perf_counter() >= deadline:
             return result("UNKNOWN", "time_limit")
@@ -1035,9 +1161,9 @@ def solve(
                 else:
                     metrics["probe_state_checks"] += 1
                     selected = (
-                        m.ready_probes(s, FOLLOWUP_PROBE_DECISIONS, policies, parents[s][1], True)
+                        m.ready_probes(s, FOLLOWUP_PROBE_DECISIONS, policies, cast(tuple[State, Choice], parents[s])[1], True)
                         if probe_trigger == "policy_budget"
-                        else m.ready_probes(s, FOLLOWUP_PROBE_DECISIONS, policies, parents[s][1])
+                        else m.ready_probes(s, FOLLOWUP_PROBE_DECISIONS, policies, cast(tuple[State, Choice], parents[s])[1])
                     )
                     if selected:
                         found = probe(s, FOLLOWUP_PROBE_DECISIONS, selected)
@@ -1047,7 +1173,7 @@ def solve(
                 prefix = []
                 p = s
                 while parents[p] is not None:
-                    p, choice = parents[p]
+                    p, choice = cast(tuple[State, Choice], parents[p])
                     prefix.append(choice)
                 return result(
                     "FEASIBLE", "probe" if found else "search", list(reversed(prefix)) + found

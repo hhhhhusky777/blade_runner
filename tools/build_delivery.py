@@ -1,8 +1,10 @@
 """Build the local review ZIP from a fixed file allowlist; never publish it.
 
-Run with the project's Python after dependency installation. The historical
-chapters' exported copies rebind lab links; the frozen whiteboard stays identical.
+Run with the project's Python after dependency installation. Source bytes are
+preserved; the consolidated client report contains all three stage summaries.
 """
+
+from __future__ import annotations
 
 import argparse
 import hashlib
@@ -11,6 +13,7 @@ import os
 from pathlib import Path
 import re
 import zipfile
+from typing import cast
 
 ROOT = Path(__file__).resolve().parent.parent
 FILES = (
@@ -40,11 +43,6 @@ FILES = (
     "docs/reports/evidence/stage-turn-times.csv",
     "docs/reports/recruitment-delivery-report.md",
     "docs/reports/recruitment-work-time.png",
-    "docs/reports/stage-1-report.md",
-    "docs/reports/stage-2-report.md",
-    "docs/reports/stage-2-timing.png",
-    "docs/reports/stage-3-report.md",
-    "docs/reports/stage-3-timing.png",
     "game_solver/.env.example",
     "game_solver/api_client/__init__.py",
     "game_solver/api_client/client.py",
@@ -93,24 +91,29 @@ FILES = (
     "tools/build_delivery.py",
 )
 # Final-gate output is included once it exists, never replaced with an invented pass.
-FINAL_EVIDENCE = ("docs/reports/evidence/migration-full.json",)
+FINAL_EVIDENCE = (
+    "docs/reports/evidence/migration-full.json",
+    "docs/reports/evidence/readability-validation.json",
+)
 
 
-def sha(data):
+def sha(data: bytes) -> str:
+    """Return the SHA-256 digest used to bind source and archived file bytes."""
     return hashlib.sha256(data).hexdigest()
 
 
-def build(output):
+def build(output: Path) -> None:
     """Write an allowlisted archive, content inventory and external ZIP checksum."""
     from dotenv import dotenv_values
 
     config = {**dotenv_values(ROOT / "game_solver/.env"), **os.environ}
-    secrets = [config[k].encode() for k in ("GAME_SERVER_TOKEN", "ARBITER_TOKEN") if config.get(k)]
-    index = json.loads((ROOT / "docs/reports/evidence/historical-index.json").read_text())[
-        "sources"
+    secrets = [
+        cast(str, config[k]).encode()
+        for k in ("GAME_SERVER_TOKEN", "ARBITER_TOKEN")
+        if config.get(k)
     ]
-    payload = {}
-    inventory = {}
+    payload: dict[str, bytes] = {}
+    inventory: dict[str, dict[str, str | int]] = {}
     selected = list(FILES) + [name for name in FINAL_EVIDENCE if (ROOT / name).exists()]
     for name in selected:
         source = ROOT / name
@@ -118,32 +121,6 @@ def build(output):
             raise ValueError("Allowlisted source is missing or outside the project: " + name)
         data = source.read_bytes()
         source_sha = sha(data)
-        if re.fullmatch(r"docs/reports/stage-[123]-report\.md", name) and not data.startswith(
-            b"> Historical stage chapter."
-        ):
-            text = data.decode()
-
-            def bind_link(match):
-                target = match.group(1)
-                if "experiments/" not in target:
-                    return match.group(0)
-                resolved = str((source.parent / target.split("#")[0]).resolve().relative_to(ROOT))
-                entry = index[resolved]
-                bundled = entry.get("bundled_copy")
-                replacement = (
-                    "evidence/historical/" + Path(bundled).name
-                    if bundled
-                    else "evidence/historical-index.json"
-                )
-                return "](" + replacement + ")"
-
-            text = re.sub(r"\]\(([^)]+)\)", bind_link, text)
-            text = (
-                "> Historical stage chapter. Measurements are unchanged. This distribution copy\n"
-                "> rebinds lab links to compact metrics or the source-hash index; bulk trial logs\n"
-                "> remain owner-held. Original chapter SHA256: `" + source_sha + "`.\n\n" + text
-            )
-            data = text.encode()
         if any(secret in data for secret in secrets):
             raise ValueError("Configured credential found in allowlisted content: " + name)
         if any(
@@ -171,7 +148,7 @@ def build(output):
     manifest = dict(
         schema=1,
         content_boundary="Workspace bytes, bound below; no implied publication or Git release.",
-        historical_exports="Only stage chapter links/annotations change; original source hashes are retained. Frozen whiteboard bytes are unchanged.",
+        historical_evidence="Compact original measurements and source hashes are retained; stage summaries are in the consolidated client report. Frozen whiteboard references retain their historical Git context.",
         exclusions=["credentials", "Git data", "venvs/caches", "raw conversation", "bulk research"],
         files=inventory,
     )
@@ -200,7 +177,8 @@ def build(output):
     )
 
 
-def main():
+def main() -> None:
+    """Parse the local output path and build the credential-checked review ZIP."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/blade-runner-review.zip")
     args = parser.parse_args()

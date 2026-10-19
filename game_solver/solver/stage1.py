@@ -5,9 +5,113 @@ All affordable adjacent cell builds remain in exact search. Improved DFS omits
 only proved unnecessary zero-income waits; route distances only order successors. The independent reference module owns strict replay.
 """
 
+from __future__ import annotations
+
 from collections import deque
+from collections.abc import Callable, Hashable, Iterable, Iterator, Mapping
+from typing import TYPE_CHECKING, Any, Protocol, TypeVar, TypedDict, cast
 from dataclasses import dataclass
 from time import perf_counter
+
+
+Decision = int | None
+RoadParameters = tuple[tuple[int, ...], tuple[int, ...], int]
+ParentTree = Mapping[int, int | None]
+Plan = list[list[dict[str, Any]]]
+
+
+class ProbeDiagnostics(TypedDict, total=False):
+    """Optional observations from one bounded probe; never pruning evidence."""
+
+    origin_expanded: int
+    origin_turn: int
+    termination: str
+    policy: str
+    selected_steps_last_policy: int
+    suffix_steps: int | None
+    trials: int
+    scored_candidates: int
+    action_cap_hits: int
+    dead_ends: int
+    verification: str
+    acceptance: str
+    deadline_remaining_seconds: float
+    elapsed_seconds: float
+
+
+class SearchMetrics(TypedDict, total=False):
+    """Per-solve counters kept separate from the exact state key."""
+
+    bound_prunes: int
+    no_income_waits_removed: int
+    duplicate_attempts: int
+    ordered_states: int
+    probe_calls: int
+    probe_steps: int
+    probe_invalid: int
+    probe_seconds: float
+    probe_events: list[ProbeDiagnostics]
+
+
+if TYPE_CHECKING:
+    class StateView(Protocol):
+        """Read-only inventory and topology shared by the first two stages."""
+
+        @property
+        def turn(self) -> int:
+            """Return the one-based current turn."""
+            ...
+
+        @property
+        def roads(self) -> int:
+            """Return the bitmask of built road cells."""
+            ...
+
+        @property
+        def quarries(self) -> int:
+            """Return the bitmask of built extractor cells."""
+            ...
+
+        @property
+        def cash(self) -> int:
+            """Return stone held at the construction-paying base."""
+            ...
+
+        @property
+        def stocks(self) -> tuple[int, ...]:
+            """Return uncollected stock indexed by resource site."""
+            ...
+
+    StateT = TypeVar("StateT", bound=StateView, contravariant=True)
+
+    class RouteModel(Protocol[StateT]):
+        """Geometry needed by shared route ordering, independent of inventory type."""
+
+        nodes: tuple[int, ...]
+        node_index: dict[int, int]
+        base: int
+        v: int
+        neighbors: tuple[tuple[int, ...], ...]
+
+        def occupied(self, s: StateT) -> int:
+            """Return all occupied cells as a bitmask."""
+            ...
+
+        def tree(self, s: StateT) -> ParentTree:
+            """Return predecessor links for the base transfer component."""
+            ...
+
+    class ResourceRouteModel(RouteModel[StateT], Protocol[StateT]):
+        """Additional resource-specific routing supported by the Stage 2 model."""
+
+        relay_mode: str
+        resources: tuple[int, ...]
+
+        def tree(self, s: StateT, resource: int | None = None) -> ParentTree:
+            """Return the transfer component allowed for this resource."""
+            ...
+
+    KeyT = TypeVar("KeyT", bound=Hashable)
 
 
 @dataclass(frozen=True, slots=True)
@@ -28,19 +132,22 @@ class State:
 class Model:
     """Grid/action owner; construction and income normalize before memoization."""
 
-    def __init__(self, level):
+    def __init__(self, level: dict[str, Any]) -> None:
+        """Precompute immutable grid geometry from an already validated task."""
         self.level = level
         b = level["board"]
+        self.w: int
+        self.h: int
         self.w, self.h = b["width"], b["height"]
         self.v = self.w * self.h
-        self.nodes = tuple(n["y"] * self.w + n["x"] for n in b["resource_nodes"])
+        self.nodes: tuple[int, ...] = tuple(n["y"] * self.w + n["x"] for n in b["resource_nodes"])
         self.node_index = {p: i for i, p in enumerate(self.nodes)}
         self.k = len(self.nodes)
         base = level["structures"][0]
-        self.base = base["y"] * self.w + base["x"]
-        self.initial_cash = (base.get("storage") or {}).get("STONE", 0)
-        self.goal = level["level_goal"]["target_resources"]["STONE"]
-        self.turns = level["max_turns"]
+        self.base: int = base["y"] * self.w + base["x"]
+        self.initial_cash: int = (base.get("storage") or {}).get("STONE", 0)
+        self.goal: int = level["level_goal"]["target_resources"]["STONE"]
+        self.turns: int = level["max_turns"]
         self.neighbors = tuple(
             tuple(
                 q
@@ -56,20 +163,22 @@ class Model:
         )
         self.node_bits = sum(1 << p for p in self.nodes)
 
-    def road_bound(self, state, parameters):
+    def road_bound(self, state: State, parameters: RoadParameters) -> int:
         """Optimistic final stone; selected models may strengthen this safe bound."""
         return road_investment_upper(self, state, parameters)
 
-    def initial(self):
+    def initial(self) -> State:
+        """Return the empty-building state at the start of turn one."""
         return State(1, 0, 0, self.initial_cash, (0,) * self.k)
 
-    def occupied(self, s):
+    def occupied(self, s: StateView) -> int:
+        """Combine the base, roads and extractors into one occupied-cell mask."""
         return s.roads | s.quarries | (1 << self.base)
 
-    def tree(self, s):
+    def tree(self, s: StateView) -> ParentTree:
         """Base transfer component, with all storage-storage edges removed."""
         occupied = self.occupied(s)
-        parent = {self.base: None}
+        parent: dict[int, int | None] = {self.base: None}
         queue = deque([self.base])
         while queue:
             p = queue.popleft()
@@ -82,7 +191,7 @@ class Model:
                 queue.append(q)
         return parent
 
-    def settle(self, s):
+    def settle(self, s: State) -> State:
         """Pool every base-connected site stock; disconnected stock stays local."""
         parent = self.tree(s)
         stocks = list(s.stocks)
@@ -93,7 +202,7 @@ class Model:
                 stocks[i] = 0
         return State(s.turn, s.roads, s.quarries, cash, tuple(stocks))
 
-    def step(self, s, cell):
+    def step(self, s: State, cell: Decision) -> State:
         """cell=None ends a turn; caller supplies a legal affordable build."""
         stocks = list(s.stocks)
         if cell is None:
@@ -108,18 +217,22 @@ class Model:
             )
         return self.settle(State(s.turn, s.roads | (1 << cell), s.quarries, s.cash - 1, s.stocks))
 
-    def choices(self, s):
+    def choices(self, s: State) -> list[Decision]:
         """Enumerate all affordable adjacent builds and the legal turn advance."""
         occupied = self.occupied(s)
-        cells = set()
+        frontier: set[int] = set()
         for p in range(self.v):
             if occupied >> p & 1:
-                cells.update(q for q in self.neighbors[p] if not occupied >> q & 1)
-        cells = [p for p in cells if s.cash >= (10 if p in self.node_index else 1)]
+                frontier.update(q for q in self.neighbors[p] if not occupied >> q & 1)
+        cells: list[Decision] = [
+            p for p in frontier if s.cash >= (10 if p in self.node_index else 1)
+        ]
         remaining = [p for p in self.nodes if not s.quarries >> p & 1]
 
         # An ordering hint only. Every affordable cell and legal END remains.
-        def priority(p):
+        def priority(p: Decision) -> tuple[int, int, int]:
+            """Prefer producer cells, then short approaches; preserve all choices."""
+            p = cast(int, p)
             if p in self.node_index:
                 return (0, 0, p)
             distance = min(
@@ -137,12 +250,14 @@ class Model:
                 cells.append(None)
         return cells
 
-    def plan(self, steps):
+    def plan(self, steps: Iterable[Decision]) -> Plan:
         """Expand normalized decisions into ordered BUILD/MINE/TRANSFER/CLAIM actions."""
         s = self.initial()
-        turns = [[]]
-        action = lambda name, **args: {"action": name, "args": args}
-        coord = lambda p: (p % self.w, p // self.w)
+        turns: Plan = [[]]
+        # Action payloads intentionally follow the dynamic JSON wire format.
+        action: Callable[..., dict[str, Any]] = lambda name, **args: {"action": name, "args": args}
+        # Linear cell identifiers convert back to wire-format grid coordinates.
+        coord: Callable[[int], tuple[int, int]] = lambda p: (p % self.w, p // self.w)
         for cell in steps:
             if cell is None:
                 turns.append([])
@@ -190,10 +305,10 @@ class Model:
                 current = source
                 while current != self.base:
                     path = [current]
-                    p = tree[current]
+                    p = cast(int, tree[current])
                     while p not in inventory:
                         path.append(p)
-                        p = tree[p]
+                        p = cast(int, tree[p])
                     path.append(p)
                     amount = inventory[current]
                     turns[-1].append(
@@ -212,7 +327,7 @@ class Model:
         return turns
 
 
-def investment_upper(model, s):
+def investment_upper(model: Model, s: State) -> int:
     """Safe total-inventory bound; see whiteboard for the last-three-turn proof."""
     remaining = model.turns - s.turn
     q = s.quarries.bit_count()
@@ -225,7 +340,7 @@ def investment_upper(model, s):
     return total + 5 * q * remaining + unbuilt * max(0, 5 * (remaining + 1) - 10)
 
 
-def road_parameters(model):
+def road_parameters(model: Model) -> RoadParameters:
     """Static road contacts; ordinary cells exclude BASE and all stone nodes."""
     contacts = tuple(
         sum(1 << p for p in model.neighbors[node] if p != model.base and p not in model.node_index)
@@ -240,7 +355,7 @@ def road_parameters(model):
     return contacts, touches, max((mask.bit_count() for mask in touches), default=0)
 
 
-def road_investment_upper(model, s, parameters):
+def road_investment_upper(model: Model, s: State, parameters: RoadParameters) -> int:
     """Admissible inventory bound charging a lower bound on FUTURE roads.
 
     Existing stocks/production get free base access. Each positively contributing
@@ -269,18 +384,29 @@ def road_investment_upper(model, s, parameters):
     return total + 5 * q * remaining + count * gain - roads
 
 
-def base_income(model, s):
+def base_income(model: Model, s: State) -> int:
     """Return per-turn stone deliverable to BASE with the current topology."""
     connected = model.tree(s)
     return 5 * sum(bool(s.quarries >> p & 1) and p in connected for p in model.nodes)
 
 
-def connection_routes(model, s, affordable_only=False, resource=None):
+def connection_routes(
+    model: RouteModel[StateT],
+    s: StateT,
+    affordable_only: bool = False,
+    resource: int | None = None,
+) -> tuple[dict[int, int], dict[int, int | None]]:
     """0-1 BFS; optionally retain only routes passing the gross-cash filter."""
     occupied = model.occupied(s)
-    roots = model.tree(s) if resource is None else model.tree(s, resource)
+    # A resource filter is requested only by the resource-aware Stage 2 model.
+    resource_model = cast("ResourceRouteModel[StateT]", model)
+    roots = (
+        model.tree(s)
+        if resource is None
+        else resource_model.tree(s, resource)
+    )
     distance = {p: 0 for p in roots}
-    parent = {p: None for p in roots}
+    parent: dict[int, int | None] = {p: None for p in roots}
     # New endpoints require ten cash; pending built endpoints require roads only.
     # Nonnegative edge costs make every affordable route prefix affordable too.
     unseen = model.v + 20
@@ -303,9 +429,9 @@ def connection_routes(model, s, affordable_only=False, resource=None):
         for q in model.neighbors[p]:
             if (
                 resource is not None
-                and model.relay_mode == "matching"
+                and resource_model.relay_mode == "matching"
                 and q in model.node_index
-                and model.resources[model.node_index[q]] != resource
+                and resource_model.resources[model.node_index[q]] != resource
             ):
                 continue
             q_storage = q == model.base or q in model.node_index
@@ -322,15 +448,18 @@ def connection_routes(model, s, affordable_only=False, resource=None):
     return distance, parent
 
 
-def route_cells(parent, target):
+def route_cells(parent: ParentTree, target: int) -> list[int]:
+    """Recover a root-to-target route, excluding its already connected root."""
     path = []
     while parent[target] is not None:
         path.append(target)
-        target = parent[target]
+        target = cast(int, parent[target])
     return list(reversed(path))
 
 
-def productive_choices(model, s, choices, affordable_only=False):
+def productive_choices(
+    model: Model, s: State, choices: list[Decision], affordable_only: bool = False
+) -> list[Decision]:
     """Route hints change order only: no build or END is discarded here."""
     distance, parent = connection_routes(model, s, affordable_only)
     routes = []
@@ -362,7 +491,9 @@ def productive_choices(model, s, choices, affordable_only=False):
     )
 
 
-def one_quarry_completion(model, initial, affordable_only=False):
+def one_quarry_completion(
+    model: Model, initial: State, affordable_only: bool = False
+) -> list[Decision] | None:
     """Exact for the initial one-quarry plan family, success shortcut only."""
     distance, parent = connection_routes(model, initial, affordable_only)
     for p in model.nodes:
@@ -377,8 +508,14 @@ def one_quarry_completion(model, initial, affordable_only=False):
 
 
 def greedy_probe(
-    model, start, parameters, deadline, max_actions=128, max_work=512, diagnostics=None
-):
+    model: Model,
+    start: State,
+    parameters: RoadParameters,
+    deadline: float,
+    max_actions: int = 128,
+    max_work: int = 512,
+    diagnostics: ProbeDiagnostics | None = None,
+) -> tuple[list[Decision] | None, int]:
     """Two work-bounded legal rollouts under the shared solve deadline.
 
     Rejected children count too. The caller owns the per-solve trial allowance;
@@ -386,11 +523,15 @@ def greedy_probe(
     """
     contacts, touches, _ = parameters
     work = scored = action_cap_hits = dead_ends = 0
+    steps: list[Decision]
     steps, quarry_first = [], True
 
-    def done(termination, suffix=None):
+    def done(
+        termination: str, suffix: list[Decision] | None = None
+    ) -> tuple[list[Decision] | None, int]:
+        """Attach probe diagnostics without treating an unsuccessful rollout as proof."""
         if diagnostics is not None:
-            diagnostics.update(
+            cast("dict[str, object]", diagnostics).update(
                 termination=termination,
                 policy="quarry_first" if quarry_first else "connected_first",
                 selected_steps_last_policy=len(steps),
@@ -468,19 +609,25 @@ def greedy_probe(
     return done("action_limit" if action_cap_hits else "dead_end")
 
 
-def prefix_steps(parents, state):
+def prefix_steps(
+    parents: Mapping[KeyT, tuple[KeyT, Decision] | None], state: KeyT
+) -> list[Decision]:
     """Recover decisions from the exact initial-state predecessor chain."""
     steps = []
     while parents[state] is not None:
-        state, cell = parents[state]
+        state, cell = cast("tuple[KeyT, Decision]", parents[state])
         steps.append(cell)
     steps.reverse()
     return steps
 
 
 def solve(
-    level: dict, seconds: float = 24.0, max_states=float("inf"), *, model_factory=Model
-) -> dict:
+    level: dict[str, Any],
+    seconds: float = 24.0,
+    max_states: float = float("inf"),
+    *,
+    model_factory: Callable[[dict[str, Any]], Model] = Model,
+) -> dict[str, Any]:
     """Run the adopted serial DFS; a deadline yields UNKNOWN, never INFEASIBLE.
 
     The caller selects a per-solve model explicitly. Successful probe suffixes
@@ -499,13 +646,13 @@ def solve(
             "search_seconds": perf_counter() - begin,
         }
     parameters = road_parameters(model)
-    metrics = {
+    metrics: SearchMetrics = {
         "bound_prunes": 0,
         "no_income_waits_removed": 0,
         "duplicate_attempts": 0,
         "ordered_states": 0,
     }
-    metrics.update(
+    cast("dict[str, object]", metrics).update(
         probe_calls=0, probe_steps=0, probe_invalid=0, probe_seconds=0.0, probe_events=[]
     )
     initial = model.initial()
@@ -531,10 +678,10 @@ def solve(
                 "plan": model.plan(steps),
                 "search_seconds": perf_counter() - begin,
             }
-    parents = {initial: None}
+    parents: dict[State, tuple[State, Decision] | None] = {initial: None}
     expanded = 0
     inserts = 1
-    stack = [(initial, None)]
+    stack: list[tuple[State, Iterator[Decision] | None]] = [(initial, None)]
     goal = None
     reason = "exhausted"
     completion_waits = 0
@@ -583,7 +730,7 @@ def solve(
             and metrics["probe_steps"] < probe_work_limit
         ):
             probe_start = perf_counter()
-            event = {"origin_expanded": expanded, "origin_turn": s.turn}
+            event: ProbeDiagnostics = {"origin_expanded": expanded, "origin_turn": s.turn}
             suffix, work = greedy_probe(
                 model,
                 s,

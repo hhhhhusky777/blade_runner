@@ -5,17 +5,67 @@ Shared geometry and Stage1 projection use pure package dependencies. All adjacen
 builds survive; probes/routes order search or supply independently replayed wins.
 """
 
+from __future__ import annotations
+
 from collections import deque
+from collections.abc import Callable, Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from math import inf, isfinite
 from time import perf_counter
+from typing import TYPE_CHECKING, Any, TypedDict
 
-from .stage1 import Model as StoneModel, prefix_steps, connection_routes, route_cells
+if TYPE_CHECKING:
+    from .resource_guidance import ResourceGuidance
+    from .stage1 import StateView
+
+    class StoneModel:
+        """Only the geometry inherited at runtime; typed transitions are replaced.
+
+        Stage 2 has its own inventory State, so the inherited Stage 1 transition
+        signatures do not describe this subclass's existing runtime contract.
+        """
+
+        w: int
+        v: int
+        nodes: tuple[int, ...]
+        node_index: dict[int, int]
+        k: int
+        base: int
+        initial_cash: int
+        turns: int
+        neighbors: tuple[tuple[int, ...], ...]
+
+        def __init__(self, level: dict[str, Any]) -> None:
+            """Initialize the shared grid fields from a JSON level."""
+            ...
+
+        def occupied(self, state: StateView) -> int:
+            """Return the bitmask of BASE, roads and extractor cells."""
+            raise NotImplementedError
+else:
+    from .stage1 import Model as StoneModel
+
+from .stage1 import prefix_steps, connection_routes, route_cells
 from .capital import investment_thresholds
 from .stage1_preset import solve as stone_solve
 from .stage2_reference import RESOURCES, read_level, validate_plan
 
 VARIANTS = ("baseline", "scalar", "typed", "both")
+
+Cell = int | None  # A cell builds; None advances to the next turn.
+Plan = list[list[dict[str, Any]]]
+RouteTree = dict[int, int | None]
+
+
+class GuidanceMetrics(TypedDict):
+    """Counters for optional root policies; none is a pruning certificate."""
+
+    variant: str
+    calls: int
+    work: int
+    saving_wait_promotions: int
+    policies_attempted: list[str]
+    successful_policy: str | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -33,7 +83,8 @@ class State:
 class Model(StoneModel):
     """Two-resource transitions; quarry bits represent all extractor sites."""
 
-    def __init__(self, level, relay_mode="unrestricted"):
+    def __init__(self, level: dict[str, Any], relay_mode: str = "unrestricted") -> None:
+        """Parse typed inventories and reuse Stage 1's fixed grid geometry."""
         parsed = read_level(level)
         if relay_mode not in ("unrestricted", "matching"):
             raise ValueError("relay_mode must be unrestricted or matching")
@@ -51,9 +102,9 @@ class Model(StoneModel):
         self.costs = tuple(10 if resource == 0 else 15 for resource in self.resources)
         self.site_counts = tuple(self.resources.count(r) for r in range(2))
         self.relay_mode = relay_mode
-        self._tree_key = None
-        self._trees = {}
-        self._scalar = None
+        self._tree_key: tuple[int, int] | None = None
+        self._trees: dict[int | None, RouteTree] = {}
+        self._scalar: tuple[tuple[int, ...], ...] | None = None
         self.planned = {
             y * self.w + x
             for y, row in enumerate(parsed.grid)
@@ -61,10 +112,12 @@ class Model(StoneModel):
             if tile == "PLANNED_ROAD" and y * self.w + x not in self.node_index
         }
 
-    def initial(self):
+    def initial(self) -> State:
+        """Return turn one with starting BASE inventories and no construction."""
         return State(1, 0, 0, self.initial_cash, self.initial_ore, (0,) * self.k)
 
-    def tree(self, state, resource=None):
+    def tree(self, state: State, resource: int | None = None) -> RouteTree:
+        """Cache the BASE-connected transfer tree for this topology and resource."""
         key = state.roads, state.quarries
         if key != self._tree_key:
             self._tree_key, self._trees = key, {}
@@ -72,7 +125,7 @@ class Model(StoneModel):
         resource = None if self.relay_mode == "unrestricted" else resource
         if resource not in self._trees:
             occupied = self.occupied(state)
-            parent = {self.base: None}
+            parent: RouteTree = {self.base: None}
             queue = deque([self.base])
             while queue:
                 p = queue.popleft()
@@ -92,7 +145,8 @@ class Model(StoneModel):
             self._trees[resource] = parent
         return self._trees[resource]
 
-    def settle(self, state):
+    def settle(self, state: State) -> State:
+        """Move reachable native site stocks to BASE without spending a turn."""
         base = [state.cash, state.ore]
         stocks = list(state.stocks)
         for i, p in enumerate(self.nodes):
@@ -100,9 +154,10 @@ class Model(StoneModel):
             if stocks[i] and p in self.tree(state, resource):
                 base[resource] += stocks[i]
                 stocks[i] = 0
-        return State(state.turn, state.roads, state.quarries, *base, tuple(stocks))
+        # The normalized inventory always has exactly STONE and ORE entries.
+        return State(state.turn, state.roads, state.quarries, *base, tuple(stocks))  # type: ignore[call-arg, arg-type]
 
-    def advance(self, state, cell):
+    def advance(self, state: State, cell: Cell) -> State:
         """Raw legal build/END before free collection; also used by plan output."""
         stocks = list(state.stocks)
         if cell is None:
@@ -132,14 +187,16 @@ class Model(StoneModel):
             state.stocks,
         )
 
-    def step(self, state, cell):
+    def step(self, state: State, cell: Cell) -> State:
         """Apply one build or turn advance, mine eagerly, then settle typed stocks."""
         return self.settle(self.advance(state, cell))
 
-    def won(self, state):
+    def won(self, state: State) -> bool:
+        """Check both resource goals against the inventories already at BASE."""
         return state.cash >= self.goals[0] and state.ore >= self.goals[1]
 
-    def totals(self, state):
+    def totals(self, state: State) -> tuple[list[int], list[int]]:
+        """Return all held stock and built extractor counts, indexed by resource."""
         total = [state.cash, state.ore]
         counts = [0, 0]
         for i, p in enumerate(self.nodes):
@@ -147,7 +204,8 @@ class Model(StoneModel):
             counts[self.resources[i]] += bool(state.quarries >> p & 1)
         return total, counts
 
-    def income(self, state):
+    def income(self, state: State) -> list[int]:
+        """Return the STONE and ORE reaching BASE after one more END action."""
         income = [0, 0]
         for i, p in enumerate(self.nodes):
             r = self.resources[i]
@@ -155,7 +213,8 @@ class Model(StoneModel):
                 income[r] += 5
         return income
 
-    def completion(self, state):
+    def completion(self, state: State) -> int | None:
+        """Count waits for existing connected production, or return no completion."""
         waits = 0
         for current, goal, rate in zip((state.cash, state.ore), self.goals, self.income(state)):
             if current < goal:
@@ -164,8 +223,10 @@ class Model(StoneModel):
                 waits = max(waits, (goal - current + rate - 1) // rate)
         return waits if waits <= self.turns - state.turn else None
 
-    def choices(self, state):
+    def choices(self, state: State) -> list[Cell]:
+        """Enumerate affordable adjacent builds and productive legal turn advances."""
         occupied = self.occupied(state)
+        cells: set[int] | list[Cell]
         cells = set()
         bits = occupied
         while bits:
@@ -184,10 +245,13 @@ class Model(StoneModel):
             cells.append(None)
         return cells
 
-    def routes(self, state, resource):
+    def routes(self, state: State, resource: int) -> tuple[dict[int, int], RouteTree]:
+        """Find road-cost routes under this resource's transfer permissions."""
         return connection_routes(self, state, resource=resource)
 
-    def ordered(self, state, choices, policy="balanced"):
+    def ordered(
+        self, state: State, choices: Iterable[Cell], policy: str = "balanced"
+    ) -> list[Cell]:
         # Hints use the same resource permissions as settlement/replay. They
         # still order only: every affordable exact-search build survives.
         """Rank surviving legal choices; never remove an alternative."""
@@ -217,7 +281,8 @@ class Model(StoneModel):
             path = route_cells(parent, target)
             hint = next((p for p in path if not self.occupied(state) >> p & 1), None)
 
-        def score(p):
+        def score(p: Cell) -> tuple[int, int, Cell]:
+            """Rank each legal choice by the selected hint, then stable cell order."""
             if policy == "planned" and p in self.planned:
                 return (-1, 0, p)
             if p == hint and p is not None:
@@ -236,15 +301,17 @@ class Model(StoneModel):
 
         return sorted(choices, key=score)
 
-    def plan(self, steps):
+    def plan(self, steps: Iterable[Cell]) -> Plan:
         """Expand normalized decisions into strictly replayable raw actions."""
         state = self.initial()
-        turns = [[]]
+        turns: Plan = [[]]
 
-        def action(name, **args):
+        def action(name: str, **args: Any) -> dict[str, Any]:
+            """Build one raw JSON action with its command-specific arguments."""
             return {"action": name, "args": args}
 
-        def coord(p):
+        def coord(p: int) -> list[int]:
+            """Convert a flattened cell index to the server's x/y coordinate pair."""
             return [p % self.w, p // self.w]
 
         for cell in steps:
@@ -271,10 +338,12 @@ class Model(StoneModel):
                 current = source
                 while current != self.base:
                     path = [current]
-                    p = tree[current]
+                    # A non-BASE cell in the transfer tree has an integer parent.
+                    p = tree[current]  # type: ignore[assignment]
                     while p != self.base and p not in self.node_index:
                         path.append(p)
-                        p = tree[p]
+                        # Only BASE has a None parent; this loop stops at BASE.
+                        p = tree[p]  # type: ignore[assignment]
                     path.append(p)
                     turns[-1].append(
                         action(
@@ -290,7 +359,7 @@ class Model(StoneModel):
         return turns
 
 
-def resource_possible(model, state):
+def resource_possible(model: Model, state: State) -> bool:
     """Separate production bounds plus the minimum cost of required new mines."""
     total, built = model.totals(state)
     remaining = model.turns - state.turn
@@ -310,13 +379,28 @@ class CapitalDP:
     Budget exhaustion skips this optional filter; it never proves failure.
     """
 
-    def __init__(self, stone_goal, stone_sites, ore_sites, deadline=inf, max_entries=100000):
+    def __init__(
+        self,
+        stone_goal: int,
+        stone_sites: int,
+        ore_sites: int,
+        deadline: float = inf,
+        max_entries: int = 100000,
+    ) -> None:
+        """Allocate one solve's relaxed funding cache and safe work limits."""
         self.goal, self.ks, self.ko = stone_goal, stone_sites, ore_sites
         self.deadline, self.max_entries = deadline, max_entries
-        self.cache = {}
+        self.cache: dict[tuple[int, int, int, int], float] = {}
         self.skipped = 0
 
-    def required(self, d, qs, qo, missing):
+    def required(self, d: int, qs: int, qo: int, missing: int) -> float:
+        """Return minimum relaxed STONE; missing ORE is measured in five-unit lots.
+
+        END earns five stone per quarry; a quarry costs ten and immediately
+        returns five; a mine costs fifteen and removes one missing ore lot.
+        Infinity certifies relaxed impossibility. A work limit returns zero,
+        weakening the filter so an unfinished DP cannot reject a real solution.
+        """
         key = d, qs, qo, missing
         if key in self.cache:
             return self.cache[key]
@@ -341,7 +425,8 @@ class CapitalDP:
         return answer
 
 
-def scalar_possible(model, state):
+def scalar_possible(model: Model, state: State) -> bool:
+    """Reject only when even pooled resources and cheaper extractors cannot win."""
     total, built = model.totals(state)
     goal = sum(model.goals)
     if sum(total) >= goal:
@@ -351,7 +436,17 @@ def scalar_possible(model, state):
     return sum(total) >= model._scalar[model.turns - state.turn][sum(built)]
 
 
-def probe(model, start, possible, deadline, max_work, *, policies=None, ordered=None):
+def probe(
+    model: Model,
+    start: State,
+    possible: Callable[[State], bool],
+    deadline: float,
+    max_work: int,
+    *,
+    policies: Sequence[str] | None = None,
+    ordered: Callable[[State, Iterable[Cell], str], list[Cell]] | None = None,
+) -> tuple[list[Cell] | None, int]:
+    """Try bounded policy rollouts; return a witness or an inconclusive miss."""
     work = 0
     if policies is None:
         policies = ("planned", "balanced", "capital") if model.planned else ("balanced", "capital")
@@ -359,6 +454,7 @@ def probe(model, start, possible, deadline, max_work, *, policies=None, ordered=
         ordered = model.ordered
     for index, policy in enumerate(policies):
         allowance = work + max(1, (max_work - work) // (len(policies) - index))
+        steps: list[Cell]
         state, steps = start, []
         for _ in range(128):
             if perf_counter() >= deadline or work >= max_work:
@@ -387,16 +483,16 @@ def probe(model, start, possible, deadline, max_work, *, policies=None, ordered=
 
 
 def solve(
-    level,
-    variant="typed",
-    seconds=24.0,
-    max_states=None,
-    relay_mode="unrestricted",
-    use_probe=True,
-    use_pruning=True,
-    memoize=True,
-    guidance="none",
-):
+    level: dict[str, Any],
+    variant: str = "typed",
+    seconds: float = 24.0,
+    max_states: int | None = None,
+    relay_mode: str = "unrestricted",
+    use_probe: bool = True,
+    use_pruning: bool = True,
+    memoize: bool = True,
+    guidance: str = "none",
+) -> dict[str, Any]:
     """Return FEASIBLE/replayed plan, conditional INFEASIBLE, or capped UNKNOWN.
 
     baseline/scalar/typed/both share cheap typed bounds, exact memoization,
@@ -454,8 +550,9 @@ def solve(
         probe_calls=0,
         probe_invalid=0,
     )
-    dp = CapitalDP(model.goals[0], *model.site_counts, deadline=deadline)
-    guidance_metrics = dict(
+    # site_counts has one entry for each of the two supported resources.
+    dp = CapitalDP(model.goals[0], *model.site_counts, deadline=deadline)  # type: ignore[misc]
+    guidance_metrics: GuidanceMetrics = dict(
         variant=guidance,
         calls=0,
         work=0,
@@ -463,9 +560,12 @@ def solve(
         policies_attempted=[],
         successful_policy=None,
     )
-    resource_guide = None
+    resource_guide: ResourceGuidance | None = None
 
-    def result(status, reason, steps=None):
+    def result(
+        status: str, reason: str, steps: Iterable[Cell] | None = None
+    ) -> dict[str, Any]:
+        """Package counters and replay any witness within the original deadline."""
         plan = None
         if steps is not None:
             if perf_counter() >= deadline:
@@ -488,7 +588,8 @@ def solve(
                 dict(
                     guidance_metrics=dict(
                         guidance_metrics,
-                        resource=resource_guide.metrics if resource_guide is not None else {},
+                        # No relaxed policy means no resource-guidance counters.
+                        resource=resource_guide.metrics if resource_guide is not None else {},  # type: ignore[typeddict-item]
                     )
                 )
                 if guidance != "none"
@@ -496,7 +597,8 @@ def solve(
             ),
         )
 
-    def possible(state):
+    def possible(state: State) -> bool:
+        """Apply only optimistic impossibility filters and count their rejections."""
         if not use_pruning:
             return True
         if not resource_possible(model, state):
@@ -508,7 +610,8 @@ def solve(
         if variant in ("typed", "both"):
             total, built = model.totals(state)
             missing = (max(0, model.goals[1] - total[1]) + 4) // 5
-            required = dp.required(model.turns - state.turn, *built, missing)
+            # totals() returns exactly the STONE and ORE producer counts.
+            required = dp.required(model.turns - state.turn, *built, missing)  # type: ignore[call-arg]
             if total[0] < required:
                 metrics["typed_prunes"] += 1
                 return False
@@ -521,8 +624,8 @@ def solve(
         return result("UNKNOWN", "time_limit")
     if not possible(initial):
         return result("INFEASIBLE", "initial_bound")
-    parents = {initial: None}
-    stack = [(initial, None)]
+    parents: dict[State, tuple[State, Cell] | None] = {initial: None}
+    stack: list[tuple[State, Iterator[Cell] | None]] = [(initial, None)]
     # Parent links are path records when memoization is disabled: structurally
     # equal states then share a witness, which is still legal from that state.
     while stack:
@@ -583,10 +686,14 @@ def solve(
 
                     resource_guide = ResourceGuidance(model, dp, deadline)
 
-                def guidance_order(current, legal, selected_policy):
+                def guidance_order(
+                    current: State, legal: Iterable[Cell], selected_policy: str
+                ) -> list[Cell]:
+                    """Promote relaxed projects or productive saving without deleting choices."""
                     if selected_policy == "relaxed":
                         fallback = model.ordered(current, legal, "balanced")
-                        return resource_guide.ordered(current, fallback)
+                        # The relaxed branch constructs this guide immediately above.
+                        return resource_guide.ordered(current, fallback)  # type: ignore[union-attr]
                     ordered = model.ordered(current, legal, "capital")
                     if None in legal and model.income(current)[0]:
                         distances, _ = model.routes(current, 0)

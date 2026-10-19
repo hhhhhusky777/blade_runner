@@ -8,10 +8,29 @@ may share roads or make a chosen route cheaper. Nothing here rejects a state
 or removes a legal choice. The caller owns probe limits and witness replay.
 """
 
+from __future__ import annotations
+
+from collections.abc import Iterable, Sequence
 from math import inf
 from time import perf_counter
+from typing import TYPE_CHECKING, TypedDict
+
+if TYPE_CHECKING:
+    from .stage2 import CapitalDP, Cell, Model, State
 
 from .stage1 import route_cells
+
+
+class GuidanceCounters(TypedDict):
+    """Per-solve work counters for evaluating the optional ordering heuristic."""
+
+    calls: int
+    projects: int
+    dp_queries: int
+    waits_promoted: int
+    deadline_fallbacks: int
+    weakened_dp_fallbacks: int
+    seconds: float
 
 
 class ResourceGuidance:
@@ -23,9 +42,10 @@ class ResourceGuidance:
     cache, dependency, model, pruning rule or search limit is introduced.
     """
 
-    def __init__(self, model, dp, deadline=inf):
+    def __init__(self, model: Model, dp: CapitalDP, deadline: float = inf) -> None:
+        """Reuse the exact model and its per-solve relaxed funding cache."""
         self.model, self.dp, self.deadline = model, dp, deadline
-        self.metrics = dict(
+        self.metrics: GuidanceCounters = dict(
             calls=0,
             projects=0,
             dp_queries=0,
@@ -35,7 +55,7 @@ class ResourceGuidance:
             seconds=0.0,
         )
 
-    def ordered(self, state, choices):
+    def ordered(self, state: State, choices: Iterable[Cell]) -> list[Cell]:
         """Return every input choice once, promoting a route prefix or END.
 
         For each project, wait until its current full cost is fundable from
@@ -102,7 +122,8 @@ class ResourceGuidance:
                 if horizon is not None:
                     # Restore already-produced stranded stock first on equal
                     # economic predictions, then prefer greater funding slack.
-                    score = (waits + horizon, not existing, -slack, waits, cost, target)
+                    # _horizon returns either two numbers or two None sentinels.
+                    score = (waits + horizon, not existing, -slack, waits, cost, target)  # type: ignore[operator]
                     candidates.append((score, hint))
             if not candidates:
                 return choices
@@ -113,18 +134,23 @@ class ResourceGuidance:
         finally:
             self.metrics["seconds"] += perf_counter() - begin
 
-    def _expired(self):
+    def _expired(self) -> bool:
+        """Count a deadline fallback without making an impossibility claim."""
         if perf_counter() >= self.deadline:
             self.metrics["deadline_fallbacks"] += 1
             return True
         return False
 
-    def _horizon(self, remaining, counts, missing, wealth):
+    def _horizon(
+        self, remaining: int, counts: Sequence[int], missing: int, wealth: int
+    ) -> tuple[int, float] | tuple[None, None]:
         """First feasible exact relaxed horizon, or no finite prediction."""
 
-        def required(d):
+        def required(d: int) -> float:
+            """Query relaxed funding for this horizon and account for the work."""
             self.metrics["dp_queries"] += 1
-            return self.dp.required(d, *counts, missing)
+            # counts always contains exactly the STONE and ORE producer counts.
+            return self.dp.required(d, *counts, missing)  # type: ignore[call-arg]
 
         required_last = required(remaining)
         if self.dp.skipped or wealth < required_last:

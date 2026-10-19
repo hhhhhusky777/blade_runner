@@ -2,10 +2,14 @@
 
 Reuse the supplied typed GameClient. The offline solver runs in a separate,
 network-disabled process. Retry creation only after pre-send failures; use
-GET reconciliation after ambiguous creation, and never retry submissions. The offline engine is the adopted packaged solver; the original research adapter remains frozen.
+GET reconciliation after ambiguous creation, and never retry submissions. The
+offline engine is the adopted packaged solver; the research adapter stays frozen.
 """
 
+from __future__ import annotations
+
 import argparse
+from collections.abc import Callable, Mapping, Sequence
 from datetime import datetime, timezone
 import json
 import os
@@ -14,27 +18,49 @@ import subprocess
 import sys
 import tempfile
 from time import monotonic, sleep
+from typing import TYPE_CHECKING, Any, Protocol, cast
 from urllib.parse import urlsplit
+
+if TYPE_CHECKING:
+    from api_client.client import GameClient
+    from api_client.models import RequestTaskResponse
 
 ROOT = Path(__file__).resolve().parent
 APP_ROOT = ROOT.parent
 
+# Receipts contain evolving server fields, while control-flow dependencies have
+# explicit signatures so tests can inject an offline solver and receipt sink.
+JsonObject = dict[str, Any]
+Plan = list[list[JsonObject]]
+Solver = Callable[[JsonObject, float], JsonObject]
+ReceiptWriter = Callable[[JsonObject], None]
+ProgressLayout = tuple[tuple[str, int], ...]
+ProgressSnapshot = tuple[ProgressLayout, tuple[int, int]]
 
-def validate_local(level, plan, stage=1):
+
+class ClientFactory(Protocol):
+    """Constructor contract used to inject a client without changing CLI logic."""
+
+    def __call__(self, base_url: str, token: str, *, timeout: float) -> GameClient:
+        """Create a context-managed client with a default HTTP phase timeout."""
+        ...
+
+
+def validate_local(level: JsonObject, plan: Plan, stage: int = 1) -> Mapping[str, Any]:
     """Replay the child result on the original input in the parent process."""
     from .api import validate_plan
 
     return validate_plan(level, plan, stage)
 
 
-def solver_child():
+def solver_child() -> None:
     """Enter explicit isolation; ordinary imports never disable sockets."""
     from .child import main
 
     main()
 
 
-def solve_local(level, seconds=24.0, stage=1):
+def solve_local(level: JsonObject, seconds: float = 24.0, stage: int = 1) -> JsonObject:
     """Run the offline child with a hard outer timeout, stripped tokens and parent replay."""
     child_env = {
         k: v for k, v in os.environ.items() if k not in ("GAME_SERVER_TOKEN", "ARBITER_TOKEN")
@@ -50,13 +76,13 @@ def solve_local(level, seconds=24.0, stage=1):
         check=True,
         cwd=APP_ROOT,
     )
-    result = json.loads(completed.stdout)
+    result: JsonObject = json.loads(completed.stdout)
     if result["status"] == "FEASIBLE":
         result["strict_replay"] = validate_local(level, result["plan"], stage)
     return result
 
 
-def preflight(client, allow_complete=False, stage=1):
+def preflight(client: GameClient, allow_complete: bool = False, stage: int = 1) -> JsonObject:
     """Read capabilities, progression and pending tasks before any authorized write."""
     if stage not in (1, 2, 3):
         raise ValueError("only Stage1, Stage2 and Stage3 are supported")
@@ -67,7 +93,7 @@ def preflight(client, allow_complete=False, stage=1):
         if detail is None or detail.build_cost != {"STONE": cost}:
             raise ValueError("server construction capabilities differ from the local model")
     quarry = cap.structures_details["STONE_QUARRY"]
-    if quarry.rate != 5 or "STONE" not in quarry.resource_allow:
+    if quarry.rate != 5 or "STONE" not in cast(list[str], quarry.resource_allow):
         raise ValueError("server extraction capabilities differ from the local model")
     if not {"BUILD", "MINE", "TRANSFER", "CLAIM_WIN"} <= set(cap.actions):
         raise ValueError("server does not advertise all required actions")
@@ -77,7 +103,7 @@ def preflight(client, allow_complete=False, stage=1):
             mine is None
             or mine.build_cost != {"STONE": 15}
             or mine.rate != 5
-            or set(mine.resource_allow) != {"IRON_ORE"}
+            or set(cast(list[str], mine.resource_allow)) != {"IRON_ORE"}
             or set(cap.resources)
             != ({"STONE", "IRON_ORE"} if stage == 2 else {"STONE", "IRON_ORE", "IRON"})
         ):
@@ -130,7 +156,7 @@ def preflight(client, allow_complete=False, stage=1):
     }
 
 
-def redact(value, token):
+def redact(value: Any, token: str) -> Any:
     """Redact before JSON encoding, including secrets containing quotes/slashes."""
     if isinstance(value, str):
         return value.replace(token, "[REDACTED]") if token else value
@@ -141,7 +167,9 @@ def redact(value, token):
     return value
 
 
-def progress_changed(before, after, task_type):
+def progress_changed(
+    before: JsonObject | None, after: JsonObject | None, task_type: str | None
+) -> bool | None:
     """Observed movement, not proof this command caused it; None=no baseline."""
     if not before or not after:
         return None
@@ -149,7 +177,8 @@ def progress_changed(before, after, task_type):
     if type(bi) is int and type(ai) is int and ai > bi:
         return True
 
-    def item(progress):
+    def item(progress: JsonObject) -> JsonObject:
+        """Find this task type in a progress snapshot without inventing a baseline."""
         return next((x for x in progress.get("items", []) if x.get("type") == task_type), {})
 
     old, new = item(before), item(after)
@@ -161,10 +190,10 @@ def progress_changed(before, after, task_type):
     return False if old and new else None
 
 
-def assess_result(report):
+def assess_result(report: JsonObject) -> JsonObject:
     """Task-ID GET flags own countedness; progress is separate corroboration."""
     matches = [t for t in report.get("tasks_after", []) if t.get("id") == report.get("task_id")]
-    result = {
+    result: JsonObject = {
         "outcome": "UNKNOWN",
         "reason": "Task status could not be verified.",
         "progress_changed": None,
@@ -219,7 +248,7 @@ def assess_result(report):
     return result
 
 
-def read_back(client, report):
+def read_back(client: GameClient, report: JsonObject) -> None:
     # Independent reads retain useful task proof even if progress is unavailable.
     """Fetch task flags and progression without creating or submitting a task."""
     try:
@@ -243,7 +272,7 @@ def read_back(client, report):
     report["verification"] = assess_result(report)
 
 
-def exit_code(report):
+def exit_code(report: JsonObject) -> int:
     """Map verified outcomes to CLI success or failure without guessing advancement."""
     return {
         "COUNTED": 0,
@@ -258,7 +287,7 @@ def exit_code(report):
     }[report["outcome"]]
 
 
-def display(report, as_json=False, token=""):
+def display(report: JsonObject, as_json: bool = False, token: str = "") -> None:
     """Render a token-redacted result in JSON or plain text."""
     safe = redact(report, token)
     if as_json:
@@ -304,7 +333,7 @@ def display(report, as_json=False, token=""):
         print("Record: " + safe["record_path"])
 
 
-def checkpoint(report, save, required=False):
+def checkpoint(report: JsonObject, save: ReceiptWriter, required: bool = False) -> None:
     """Persist the receipt before consequential actions; preserve write failures."""
     try:
         save(report)
@@ -314,7 +343,14 @@ def checkpoint(report, save, required=False):
             raise OSError("Cannot checkpoint safely before the next action.") from None
 
 
-def request_task(client, stage, before, report, save, deadline):
+def request_task(
+    client: GameClient,
+    stage: int,
+    before: JsonObject,
+    report: JsonObject,
+    save: ReceiptWriter,
+    deadline: float,
+) -> tuple[RequestTaskResponse | None, str | None]:
     """Acquire one task, retrying safely within the original 30-second window.
 
     HTTPX limits inactivity per phase; deadline checks stop further work when
@@ -332,7 +368,7 @@ def request_task(client, stage, before, report, save, deadline):
             remaining = deadline - monotonic()
             if remaining <= 0:
                 break
-            entry = dict(
+            entry: JsonObject = dict(
                 attempt=len(report["creation_requests"]) + 1,
                 read_timeout=min(5.0, remaining),
                 remaining_before=remaining,
@@ -379,7 +415,7 @@ def request_task(client, stage, before, report, save, deadline):
         if remaining <= 0:
             break
         report["phase"] = "identifying_created_task"
-        lookup = dict(
+        lookup: JsonObject = dict(
             attempt=len(report["creation_lookups"]) + 1,
             timeout=min(3.0, remaining),
             remaining_before=remaining,
@@ -399,7 +435,7 @@ def request_task(client, stage, before, report, save, deadline):
                 raise RuntimeError("task ID reconciliation GET was unsuccessful")
             if any(type(getattr(t, "solved_at_all", None)) is not bool for t in refreshed.tasks):
                 raise ValueError("task completion status is unknown during reconciliation")
-            pending = [t.id for t in refreshed.tasks if t.solved_at_all is False]
+            pending = [t.id for t in refreshed.tasks if cast(Any, t).solved_at_all is False]
             lookup["pending_task_ids"] = pending
             if any(identifier in previous for identifier in pending) or len(pending) > 1:
                 raise ValueError("new task cannot be identified unambiguously")
@@ -424,7 +460,14 @@ def request_task(client, stage, before, report, save, deadline):
     )
 
 
-def attempt(client, before, save, solver=solve_local, *, recover_pending=False):
+def attempt(
+    client: GameClient,
+    before: JsonObject,
+    save: ReceiptWriter,
+    solver: Solver = solve_local,
+    *,
+    recover_pending: bool = False,
+) -> JsonObject:
     """One fresh attempt, or one explicitly selected startup recovery submission."""
     from api_client.models import Action
 
@@ -433,7 +476,7 @@ def attempt(client, before, save, solver=solve_local, *, recover_pending=False):
         raise ValueError("only Stage1, Stage2 and Stage3 are supported")
     if solver is solve_local and stage != 1:
         solver = lambda level, seconds: solve_local(level, seconds, stage=stage)
-    report = {
+    report: JsonObject = {
         "stage": stage,
         "started_at": datetime.now(timezone.utc).isoformat(),
         "submit_attempted": False,
@@ -535,9 +578,9 @@ def attempt(client, before, save, solver=solve_local, *, recover_pending=False):
             raise TimeoutError("submission reserve exhausted; nothing submitted")
         # Exactly one POST: a transport error may mean the server accepted it.
         report["submit_attempted"] = True
-        response = client.submit_plan(stage, task_id, api_plan)
+        submission = client.submit_plan(stage, task_id, api_plan)
         report.update(
-            submit_result=response.model_dump(),
+            submit_result=submission.model_dump(),
             elapsed_after_submit=monotonic() - start,
             phase="submitted",
         )
@@ -552,7 +595,7 @@ def attempt(client, before, save, solver=solve_local, *, recover_pending=False):
     )
     if recover_pending and report.get("mode") == "pending-recovery" and report["submit_attempted"]:
         matches = [t for t in report.get("tasks_after", []) if t.get("id") == report["task_id"]]
-        layout, (index, series) = snapshot
+        layout, (index, series) = cast(ProgressSnapshot, snapshot)
         counted = report["outcome"] == "COUNTED"
         next_cursor = (
             ((index, series + 1) if series + 1 < layout[index][1] else (index + 1, 0))
@@ -585,11 +628,19 @@ def attempt(client, before, save, solver=solve_local, *, recover_pending=False):
     return report
 
 
-def run_one(client, before, token, solver=solve_local, *, recover_pending=False):
+def run_one(
+    client: GameClient,
+    before: JsonObject,
+    token: str,
+    solver: Solver = solve_local,
+    *,
+    recover_pending: bool = False,
+) -> JsonObject:
     """Keep one attempt and its original input/plan in a private temporary receipt directory."""
     directory = Path(tempfile.mkdtemp(prefix="blade-runner-live-"))
 
-    def save(value):
+    def save(value: JsonObject) -> None:
+        """Write this attempt receipt with any credential text redacted."""
         (directory / "attempt.json").write_text(json.dumps(redact(value, token), indent=2) + "\n")
 
     report = attempt(client, before, save, solver, recover_pending=recover_pending)
@@ -602,7 +653,7 @@ def run_one(client, before, token, solver=solve_local, *, recover_pending=False)
     return report
 
 
-def loop_progress(progress):
+def loop_progress(progress: JsonObject | None) -> ProgressSnapshot | None:
     """Validate the finite level/series cursor; incomplete data cannot drive POSTs."""
     if not progress or progress.get("ok") is not True:
         return None
@@ -651,13 +702,20 @@ def loop_progress(progress):
     return tuple(layout), (index, series)
 
 
-def run_loop(client, token, emit=None, solver=solve_local, stage=1):
+def run_loop(
+    client: GameClient,
+    token: str,
+    emit: ReceiptWriter | None = None,
+    solver: Solver = solve_local,
+    stage: int = 1,
+) -> JsonObject:
     """Only an exact verified series step permits another task in the selected stage."""
-    summary = {"stage": stage, "mode": "loop", "counted_tasks": 0, "task_results": []}
-    expected_snapshot = None
+    summary: JsonObject = {"stage": stage, "mode": "loop", "counted_tasks": 0, "task_results": []}
+    expected_snapshot: ProgressSnapshot | None = None
     startup = True
 
-    def finish(outcome, message):
+    def finish(outcome: str, message: str) -> JsonObject:
+        """Attach a terminal reason to the accumulated loop receipt."""
         summary.update(outcome=outcome, message=message)
         return summary
 
@@ -757,7 +815,10 @@ def run_loop(client, token, emit=None, solver=solve_local, stage=1):
         # Fresh preflight on the next iteration must agree before another create.
 
 
-def main(argv=None, client_factory=None):
+def main(
+    argv: Sequence[str] | None = None, client_factory: ClientFactory | None = None
+) -> int:
+    """Run the selected mode; default to read-only checks and report verified exits."""
     parser = argparse.ArgumentParser(description=__doc__)
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument("--solver-child", action="store_true", help=argparse.SUPPRESS)
@@ -809,7 +870,8 @@ def main(argv=None, client_factory=None):
         from api_client.client import GameClient
 
         client_factory = GameClient
-    token = ""
+    token: str | None = ""
+    report: JsonObject
     try:
         config = {**dotenv_values(args.env), **os.environ}
         token = config.get("GAME_SERVER_TOKEN") or config.get("ARBITER_TOKEN")

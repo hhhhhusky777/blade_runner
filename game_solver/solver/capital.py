@@ -6,11 +6,14 @@ can reject a real state; success does not prove a real solution exists.
 """
 
 
-def investment_thresholds(goal, sites, turns):
+from __future__ import annotations
+
+
+def investment_thresholds(goal: int, sites: int, turns: int) -> tuple[tuple[int, ...], ...]:
     """F[d,q]: cash needed in the free-road, immediate-access relaxation.
 
-    Existing quarries have already mined this turn. BUILD needs10 then returns5;
-    END returns5*q. Rows cover d=0..turns-1. See whiteboard's exact derivation.
+    Existing quarries have already mined this turn. BUILD costs 10 stone and immediately returns 5;
+    END returns 5*q stone. Rows cover d=0..turns-1. See whiteboard's exact derivation.
     """
     rows = [(goal,) * (sites + 1)]
     for _ in range(1, turns):

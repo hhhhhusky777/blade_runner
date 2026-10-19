@@ -6,26 +6,54 @@ structure is either Extraction or Production, never both. Raw oracle retains
 all integer transfer amounts and explicit optional mining/production.
 """
 
+from __future__ import annotations
+
 from collections import deque
+from collections.abc import Iterator
 from copy import deepcopy
 from math import isfinite
 from time import perf_counter
+from typing import TypedDict
 
 from . import stage2_reference as old
-from .reference import _State, _integer, _mapping, _neighbors, _road_path, _action, _winning_plan
+from .reference import (
+    Action,
+    OracleResult,
+    OracleStatus,
+    ParentMap,
+    Plan,
+    _State,
+    _integer,
+    _mapping,
+    _neighbors,
+    _road_path,
+    _action,
+    _winning_plan,
+)
+from .stage2_reference import Inventory
 
 RESOURCES = ("STONE", "IRON_ORE", "IRON")
 COSTS = dict(old.COSTS, SMELTER=20)
 
 
-def inventory(value, name):
+class ReplaySummary(TypedDict):
+    """Final base resource vector and the smallest prefix construction budget."""
+
+    turns: int
+    base_inventory: dict[str, int]
+    min_prefix_cash: int
+
+
+def inventory(value: object, name: str) -> Inventory:
+    """Parse stone, ore and iron amounts in fixed order, defaulting to zero."""
     value = _mapping(value, name)
     if set(value) - set(RESOURCES):
         raise ValueError(f"{name}: unsupported resource")
     return tuple(_integer(value.get(r, 0), f"{name} {r}") for r in RESOURCES)
 
 
-def read_level(level):
+def read_level(level: object) -> old._Level:
+    """Validate geometry through Stage 2, then restore the full resource vectors."""
     data = deepcopy(_mapping(level, "level"))
     structures = data.get("structures")
     if not isinstance(structures, list) or len(structures) != 1:
@@ -42,7 +70,8 @@ def read_level(level):
     return model
 
 
-def accepts(kind, resource, mode):
+def accepts(kind: str, resource: str, mode: str) -> bool:
+    """Check resource acceptance for a base, extractor or smelter endpoint."""
     return kind == "BASE" or (
         kind in ("STONE_QUARRY", "IRON_MINE", "SMELTER")
         and (
@@ -57,15 +86,20 @@ def accepts(kind, resource, mode):
     )
 
 
-def initial(model):
+def initial(model: old._Level) -> _State[Inventory]:
+    """Create the first-turn state with all three resources at the base."""
     return _State(1, {model.base: "BASE"}, {model.base: model.initial}, set())
 
 
-def won(model, state):
+def won(model: old._Level, state: _State[Inventory]) -> bool:
+    """Check that the base meets every resource requirement simultaneously."""
     return all(h >= g for h, g in zip(state.inventory[model.base], model.goal))
 
 
-def apply(model, state, action, relay_mode="matching"):
+def apply(
+    model: old._Level, state: _State[Inventory], action: object, relay_mode: str = "matching"
+) -> bool:
+    """Apply one checked action, including smelter activation and ore consumption."""
     old._relay_mode(relay_mode)
     action = _mapping(action, "action")
     args = _mapping(action.get("args"), "args")
@@ -131,7 +165,10 @@ def apply(model, state, action, relay_mode="matching"):
     return claimed
 
 
-def validate_plan(level, plan, relay_mode="matching"):
+def validate_plan(
+    level: object, plan: object, relay_mode: str = "matching"
+) -> ReplaySummary:
+    """Replay every ordered action and require a legal, explicit winning claim."""
     old._relay_mode(relay_mode)
     model = read_level(level)
     if not isinstance(plan, list) or len(plan) > model.max_turns:
@@ -160,7 +197,10 @@ def validate_plan(level, plan, relay_mode="matching"):
     )
 
 
-def successors(model, state, relay_mode):
+def successors(
+    model: old._Level, state: _State[Inventory], relay_mode: str
+) -> Iterator[tuple[_State[Inventory], Action | None]]:
+    """Enumerate all legal builds, activations, partial transfers and turn advances."""
     for y in range(model.height):
         for x in range(model.width):
             p = x, y
@@ -212,7 +252,10 @@ def successors(model, state, relay_mode):
         yield child, None
 
 
-def oracle(level, seconds=5, relay_mode="matching"):
+def oracle(
+    level: object, seconds: float = 5, relay_mode: str = "matching"
+) -> OracleResult:
+    """Exhaust tiny raw-action states; return UNKNOWN when the time limit expires."""
     if (
         isinstance(seconds, bool)
         or not isinstance(seconds, (int, float))
@@ -225,13 +268,14 @@ def oracle(level, seconds=5, relay_mode="matching"):
     model = read_level(level)
     expanded = 0
 
-    def result(status, plan=None):
+    def result(status: OracleStatus, plan: Plan | None = None) -> OracleResult:
+        """Capture the current effort counters and optional feasibility witness."""
         return dict(status=status, expanded=expanded, seconds=perf_counter() - start, plan=plan)
 
     if not model.max_turns:
         return result("INFEASIBLE")
     root = initial(model)
-    parents = {root.key(): None}
+    parents: ParentMap[Inventory] = {root.key(): None}
     queue = deque([root])
     if won(model, root):
         return result("FEASIBLE", _winning_plan(root.key(), parents, model.base))
