@@ -9,7 +9,7 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `LOCAL_DELIVERY_READY` — all reviews and final package verification passed |
+| State | `LOCAL_DELIVERY_READY` — visual report reviewed and refreshed package verified |
 | Active tasks | `None` |
 | Next ready task | `None` for the authorized local delivery |
 | Active blocker | `None` |
@@ -253,10 +253,10 @@ alter this implementation content; any code change repeats the audit.
 | Complete regression migration | 658/658 matching verdicts/plans/non-time counters:93server records,108Stage1,150Stage2,307Stage3controls; zero UNKNOWN. Winning plans strictly replayed under applicable modes. |
 | Applicable suites | 115portable tests pass;367historical tests across42isolated modules pass. These overlapping suites are reported separately. |
 | Portable installation | Fresh extracted ZIP installs locked dependencies, runs115portable tests and allthreeoffline smokes, with research/.env absent and imports resolving inside the copy. |
-| Report/evidence | Recruiter report, three historical chapters, graphs,25:07:39.349ended-turn audit, issue links and full per-record migration results reconciled. Current open turn is excluded; human labor remains unavailable. |
+| Report/evidence | Recruiter report, three historical chapters, graphs,26:17:20.657ended-turn stage audit, issue links and full per-record migration results reconciled. Current report revision is excluded; human labor remains unavailable. The earlier25:07:39.349audit remains a labeled historical snapshot. |
 | Source preservation | All bound research/runtime and immutable receipt/control hashes checked unchanged;
 portable input/task/witness/stop data unchanged (derived-document snapshot metadata clarified); frozen whiteboard SHA256 remains446eaa688657df6497ad6e922ce93f3cf22a5c9284db1d973ccb913dac391aa4. |
-| Final package | PASS:70allowlisted files,72ZIP entries,1,288,795bytes; all manifest/checksum/CRC entries valid; same tested implementation digest, no research/credentials/Git/caches; helper executable. |
+| Final package | PASS:77allowlisted files,79ZIP entries,1,874,035bytes; manifest/checksum/CRC entries valid; same tested runtime/client/tests, builder allowlist-only change reviewed; no research/credentials/Git/caches; helper executable. |
 | Remote lifecycle | No publication, PR creation, email, merge, target verification or post-merge cleanup is authorized/performed. This does not block the requested local package. |
 
 Actual checks are bound in [migration-full.json](../../docs/reports/evidence/migration-full.json).
@@ -287,9 +287,11 @@ receive the exact corrected candidate. Remaining finding disposition: fixed.
 
 
 Final handoff verification passed after both final reconciliation approvals.
-ZIP SHA256: `e53c178cb5e56eda3786d949ebe413560f51ddf06d8610796b8388c0355bdb98`.
+ZIP SHA256: `102d3813194b648d5775ecc647a7567316142447353a52a2de5b6a18d1d0cf4d`.
 The archive includes the complete658-record evidence and corrected provenance;
-its32-file implementation digest is identical to the fresh-install tested copy.
+its31runtime/client/test files are identical to the fresh-install tested copy.
+The later report refinement changes only the builder file allowlist; its new
+implementation digest and audit are recorded below.
 See [local verification proof](../../artifacts/final-verification.json).
 Final reviewer dispositions: A — APPROVE corrected final reconciliation,
 findings None; B — APPROVE final reconciliation, B-P2 resolved, remaining
@@ -308,3 +310,59 @@ The rebuilt package's manifest/checksums/CRC and exclusions pass; its code diges
 and frozen whiteboard remain identical to the tested delivery. Existing solver
 validation remains applicable; no full suite or server operation was repeated.
 The current archive size/hash above and local verification proof are refreshed.
+
+
+## Owner-requested visual report refinement
+
+2026-10-19: owner requests fewer words, more design/performance graphs, three
+stage stories with existing stage reports included, evidence-led candidate
+selection, accurate classification of the two live solver stops, and time
+reconstruction because TiMaS records are inaccurate. This extends T04's accepted
+report/readability outcome (C1-09 / C1-11), without changing the frozen design.
+The assignment email was read with owner authorization; only its non-sensitive
+requirements summary enters the evidence. No email is sent.
+
+Reuses historical metrics, incident receipts and source-bound comparisons.
+Adds three stage comparison figures and one stage-time figure; old evidence,
+chapters and raw measurements stay unchanged. The package builder changes only
+its file allowlist to carry the seven new report assets/evidence files. No solver,
+client, test, dependency or submission behavior changes. The previous 32-file
+implementation digest includes the builder, so it is a historical validation
+binding; current runtime/test identity and the new builder digest will be checked
+separately. Proportional checks cover plotted values, source hashes, sanitized
+stage-time sum/classification, links, rendered images and the final ZIP. No new
+benchmark or server request is required. Both retained reviewers assess this
+exact implementation/report candidate before final archive validation.
+
+
+Visual report final outcome: PASS. Main report reduced from3243to1766words
+(about46%); four static figures plus four Mermaid diagrams explain stage
+progression, shared search, observability, live diagnosis, candidate choices and
+stage-time estimates. All original stage reports remain included. Plot values,
+source hashes,166paired turn durations, conservative/primary allocation ledgers,
+links and rendered PNGs were checked. The same runtime/test bytes retain their
+prior658/658migration,115portable and367historical test evidence; these suites
+were not unnecessarily rerun for presentation changes.
+
+Both retained reviewers approved before final archive verification:
+A — APPROVE revised report and packaging audit; remaining findings None.
+B — APPROVE this report/archive candidate; remaining findings None.
+Report SHA256: `f2d5fa5d3c06f38ddd41d57cf0815234affdd6f10cf2ae177872917bd8fbd695`.
+Builder SHA256: `baff4e6f177677fd6a4d1d4c9b138eaf6b42626581c445fdbef678378787d5b7`.
+Current32-file content digest: `95735ab4acc2ca1e49a379b793c14fc875c524863c5664f62dc5b6b28eb0f023`.
+Unchanged31-file runtime/client/test digest: `5bcec5accbe8479e7f0ad79b97d5fc4a747f93616ec98d8a85c40e9b1ce82d42`.
+Final77-file archive,79entries,1,874,035bytes passed manifest/source/checksum/CRC,
+all new figures/audit inclusion, unchanged runtime/fixtures/design and exclusions.
+Current ZIP SHA256: `102d3813194b648d5775ecc647a7567316142447353a52a2de5b6a18d1d0cf4d`.
+See updated [handoff proof](../../artifacts/final-verification.json).
+
+| Finding | Concrete example | Solution | Disposition |
+| --- | --- | --- | --- |
+| A-P2: valid plans conflated with accepted progression | S1 task8596b928passed validation but its late submission hadaccepted=false;93accepted plans would misstate credit. | Report says93valid plans,88timely; evidence key ispassed_submitted_plans. | fixed; both reviewers approve |
+
+| Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
+| --- | --- | --- | --- | --- |
+| Whole-turn main context approximates stage effort | Uncertain attribution |166recorded durations reconciled; mixed ledger/ranges retained; TiMaS inaccurate per owner | Per-stage attribution can shift; human labor remains unknown | DISCLOSE; label estimates, preserve mixed/shared work and cutoff |
+
+No new runtime rejection, game task, submission, email, publication or merge.
+No authorized local task remains open. Prior user-owned changes are preserved.
