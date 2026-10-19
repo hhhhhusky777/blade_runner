@@ -35,6 +35,7 @@ FILES = (
     "docs/reports/recruitment-stage3-decisions.png",
     "docs/reports/evidence/visual-report.json",
     "docs/reports/recruitment-stage-time.png",
+    "docs/reports/recruitment-quality.png",
     "docs/reports/evidence/stage-time-audit.json",
     "docs/reports/evidence/stage-turn-times.csv",
     "docs/reports/recruitment-delivery-report.md",

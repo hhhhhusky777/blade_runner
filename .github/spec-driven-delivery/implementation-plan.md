@@ -9,9 +9,9 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `LOCAL_DELIVERY_READY` — visual report reviewed and refreshed package verified |
-| Active tasks | `None` |
-| Next ready task | `None` for the authorized local delivery |
+| State | `LOCAL_DELIVERY_READY` — report refinements reviewed and package verified |
+| Active tasks | None |
+| Next ready task | None; local delivery complete |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge; Autopilot is not enabled |
 | Delivery branch | `codex/stage1-solver-design` in the existing managed worktree |
@@ -256,7 +256,7 @@ alter this implementation content; any code change repeats the audit.
 | Report/evidence | Recruiter report, three historical chapters, graphs,26:17:20.657ended-turn stage audit, issue links and full per-record migration results reconciled. Current report revision is excluded; human labor remains unavailable. The earlier25:07:39.349audit remains a labeled historical snapshot. |
 | Source preservation | All bound research/runtime and immutable receipt/control hashes checked unchanged;
 portable input/task/witness/stop data unchanged (derived-document snapshot metadata clarified); frozen whiteboard SHA256 remains446eaa688657df6497ad6e922ce93f3cf22a5c9284db1d973ccb913dac391aa4. |
-| Final package | PASS:77allowlisted files,79ZIP entries,1,874,035bytes; manifest/checksum/CRC entries valid; same tested runtime/client/tests, builder allowlist-only change reviewed; no research/credentials/Git/caches; helper executable. |
+| Final package | PASS:78allowlisted files,80ZIP entries,2,077,728bytes; manifest/checksum/CRC entries valid; same tested runtime/client/tests, builder allowlist-only change reviewed; no research/credentials/Git/caches; helper executable. |
 | Remote lifecycle | No publication, PR creation, email, merge, target verification or post-merge cleanup is authorized/performed. This does not block the requested local package. |
 
 Actual checks are bound in [migration-full.json](../../docs/reports/evidence/migration-full.json).
@@ -287,7 +287,7 @@ receive the exact corrected candidate. Remaining finding disposition: fixed.
 
 
 Final handoff verification passed after both final reconciliation approvals.
-ZIP SHA256: `102d3813194b648d5775ecc647a7567316142447353a52a2de5b6a18d1d0cf4d`.
+Current ZIP SHA256: `dfaa0404245ec5ea3b7b385cdf8625b64b90ed43bfbf771ed66ac81b87a3a544`.
 The archive includes the complete658-record evidence and corrected provenance;
 its31runtime/client/test files are identical to the fresh-install tested copy.
 The later report refinement changes only the builder file allowlist; its new
@@ -366,3 +366,46 @@ See updated [handoff proof](../../artifacts/final-verification.json).
 
 No new runtime rejection, game task, submission, email, publication or merge.
 No authorized local task remains open. Prior user-owned changes are preserved.
+
+
+## Embedded stage summaries and quality presentation
+
+Owner asks to replace links to full stage reports with embedded summary tables,
+make pre-submission local validation explicit, and graph first-submission quality.
+This is T04/C1-09/C1-11 presentation work. Historical reports and measurements
+remain preserved; no algorithm, task, benchmark or submission changes. One new
+quality graphic is added to the existing package allowlist. All93first submitted
+plans were valid,88were timely; two live solver stops and three other operational
+late cases are kept distinct. The owner's recalled two operational cases omits
+one historical incident; both Stage1 incidents and the Stage2 acquisition
+incident remain visible. No91/93solver-first-attempt rate is inferred because
+acquisition failures lack comparable first solver attempts. Final solver/test
+identity, static values, chart rendering, source hashes, links and final archive
+are the applicable checks. Both retained reviewers assess the exact candidate.
+
+
+Quality-summary refinement: PASS. The main report embeds three stage summary tables and removes all full-stage report links. A quality graphic shows local controls,93/93valid first submitted plans,88/93timely submissions and2solver/3acquisition-recovery incidents. Historical chapters remain preserved. Both retained reviewers approved the exact corrected candidate with no remaining findings.
+
+Report SHA256: `c072210594aba21216793c5c8c6f7a7d87e89ee0b0d2a009f73fd39a58312433`.
+Builder SHA256: `bf19bf3f38baa67385b22d9cca8d57185495b0b866fe8e0ac06512b535f13b0a`.
+Current32-file digest: `4af63628d63f6e29e4f3c24f14d02c17a1d3f5d98f5108720c6092ae31f6487c`.
+Current ZIP SHA256: `dfaa0404245ec5ea3b7b385cdf8625b64b90ed43bfbf771ed66ac81b87a3a544`.
+
+The31runtime/client/test files and all fixtures remain unchanged; prior full
+validation applies. Builder AST comparison confirms only one PNG allowlist
+addition in this refinement. The final78-file/80-entry archive is2,077,728bytes.
+Manifest/source hashes, checksums, CRC, executable helper, figure hashes,
+exclusions and frozen whiteboard identity pass. See the refreshed local
+[verification proof](../../artifacts/final-verification.json). No new benchmark
+or solver test is represented as executed.
+
+| Finding | Concrete example | Solution | Disposition |
+| --- | --- | --- | --- |
+| B: replay timing wording ambiguous | Later-wrapper wording could imply the runner's outer validation is timed; it is excluded. | Distinguish internal and outer replay. | fixed; both reviewers approve |
+
+| Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
+| --- | --- | --- | --- | --- |
+| Whole-turn context approximates stage effort | Uncertain attribution | Existing166-turn audit; shared/mixed work retained | Stage split can shift; human labor unknown | DISCLOSE; estimates and cutoff explicit |
+
+No local delivery work remains open. Preserved user changes are untouched.
+No server task, submission, email, publication or merge occurred.

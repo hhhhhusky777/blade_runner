@@ -5,18 +5,18 @@ One Python application handles the full game. It reads a map and resource goal,
 then returns an ordered JSON plan within the game's turn limit. Advancement also
 requires the first submission within 30 seconds of task creation.
 
-The assignment asks for requirement understanding, complex problem solving,
-Python coding, independent judgment, time accounting and work in the remote
-environment. This report follows the decisions that demonstrate those skills.
-Detailed task ledgers and proofs are linked beneath each stage.
+**Our quality advantage: validate locally before asking the live system to judge
+an answer.** We built hard local cases, compared changes against fixed baselines,
+and independently replayed plans before submission. Real tasks served as
+acceptance runs, not a trial-and-error loop for untested strategies. When a live
+case exposed a gap, we investigated it locally and retained it as a regression.
 
-**Delivery approach:** develop and compare locally; treat timed server runs as
-acceptance tests. All 93 submitted plans passed independent replay and
-passed game validation. Two live cases exposed solver weaknesses—one each in
-Stages 2 and 3—and stopped before submission. Three other late tasks exposed
-acquisition/recovery gaps. Thus 88 tasks passed on time and five were completed
-late; resets lost seven earlier credits. The record supports reduced delivery
-risk, not a claim that every unseen input will finish within 30 seconds.
+![Quality before submission: local controls and replay, 93 of 93 valid first submitted plans, 88 of 93 timely passes, and two solver-related stops](recruitment-quality.png)
+
+**Read the rates separately:** all 93 plans were valid on their first and only
+submission; 88 arrived on time. Two solver gaps (Stages 2 and 3) stopped before
+submission. Three other tasks were late after acquisition/recovery incidents.
+All five were eventually completed; series resets lost seven earlier credits.
 
 ```mermaid
 flowchart LR
@@ -66,20 +66,25 @@ benefit on easy inputs; bad-investment controls revealed where it mattered.
 
 ![Stage 1: four candidate timings, equal cold-validation outcomes, and the adopted cache-plus-DP option](recruitment-stage1-decisions.png)
 
-**Adopted:** cache + investment DP, with **75.8% lower warm suite time** and equal
-outcomes. The comparison includes the baseline and each improvement separately;
-the cold corpus retains the two slow cases omitted equally from warm timing.
+**Adopted:** cache + investment DP: **75.8% lower warm suite time**, equal
+outcomes. The cold corpus retains two slow cases omitted equally from warm timing.
 
-| Live result | Local evidence | Median timely solver / server time |
-| --- | --- | --- |
-| 17/17 levels; 19 valid plans; 17 on time | 108 controls: 66 wins, 42 impossibility proofs | 0.648 ms / 1.481 s |
+**Stage 1 delivery summary**
 
-**What escaped local checks:** no observed solver miss. Two deadlines were lost
-to task-ID response handling and creation-timeout recovery. The corrected runner
-locates an existing task before creating another and verifies progression after
-submission. Upstream delay itself was not diagnosed as a server defect.
+| Measure | Result |
+| --- | --- |
+| Progression | 17/17 levels; 17 required series positions completed |
+| First submitted plan valid / timely | **19/19 (100%)** / **17/19 (89.5%)** |
+| Observed maps and starting resources | Largest 25×24; 1–23 stone sites; 12–19 starting stone |
+| Goals and limits | 15–300 stone; 4–14 turns |
+| Timely solver time: median / maximum | 0.648 / 14.181 ms |
+| Timely server clock: median / maximum | 1.481 / 2.815 s |
+| Final local controls | 108: 66 winning plans, 42 impossibility proofs, zero UNKNOWN |
+| Late-task causes | **0 solver gaps; 2 acquisition/recovery incidents** |
 
-[Full Stage 1 report: inputs, timings and both incidents](stage-1-report.md).
+**Integration lesson:** task-ID handling and timeout recovery caused two late
+tasks. The corrected runner locates an existing task before creating another
+and verifies progression. The upstream timeout cause remains unconfirmed.
 
 ## Stage 2 — preserve capital while introducing a second resource
 
@@ -109,20 +114,26 @@ flowchart LR
     B --> C["Inspect route decisions<br/>Correct resource-specific ordering<br/>Same map wins in 49.658 ms"]
 ```
 
-The counterexample ruled out “just search longer” as a sufficient correction.
-The final solver uses time limits without that state cap, and the saved map
-remains a regression.
+Removing the state cap alone was insufficient. The corrected map remains a
+regression; the final solver uses only a time limit.
 
-| Live result | Local evidence | Median timely solver / server time |
-| --- | --- | --- |
-| 7/7 levels; 36 valid plans; 34 on time | 150 controls: 126 wins, 24 impossibility proofs | 20.249 ms / 1.499 s |
+**Stage 2 delivery summary**
+
+| Measure | Result |
+| --- | --- |
+| Progression | 7/7 levels; 30 required series positions completed |
+| First submitted plan valid / timely | **36/36 (100%)** / **34/36 (94.4%)** |
+| Observed maps and starting resources | Up to 25×25; 3–20 stone / 0–7 ore sites; 12–23 starting stone |
+| Goals and limits | 32 ore tasks (5–250); 4 stone tasks (25–180); 6–18 turns |
+| Timely solver time: median / maximum | 20.249 / 203.250 ms |
+| Timely server clock: median / maximum | 1.499 / 3.201 s |
+| Final local controls | 150: 126 winning plans, 24 impossibility proofs, zero UNKNOWN |
+| Late-task causes | **1 solver gap; 1 acquisition/recovery incident** |
 
 **Two late tasks:** the solver gap above and an acquisition timeout with no
 solver execution. One long successful client run spent 21.923 s acquiring the
 task but only 89 ms solving it. Separate timing boundaries prevented us from
 mistaking acquisition delay for search cost.
-
-[Full Stage 2 report: inputs, timings, diagnosis and remaining gaps](stage-2-report.md).
 
 ## Stage 3 — schedule manufacturing and pay for stronger checks on demand
 
@@ -153,16 +164,23 @@ misses to three wins in 0.457–0.486 s. Two long-horizon controls slowed by
 0.354/0.590 s; these costs remain in the evidence. The adopted settings are
 **512 initial decisions / 512-state interval / 32 later decisions** per policy.
 
-| Live result | Local evidence | Median timely solver / server time |
-| --- | --- | --- |
-| 7/7 levels; 38 valid plans; 37 on time | Final 307 configurations: 273 wins, 34 impossibility proofs | 127.156 ms / 1.799 s |
+**Stage 3 delivery summary**
+
+| Measure | Result |
+| --- | --- |
+| Progression | 7/7 levels; 34 required series positions completed |
+| First submitted plan valid / timely | **38/38 (100%)** / **37/38 (97.4%)** |
+| Observed maps and starting resources | Up to 25×25; 3–21 stone / 0–7 ore sites; 12–21 starting stone |
+| Goals and limits | 30 iron tasks (5–300); 4 ore (5–100); 4 stone (25–180); 6–27 turns |
+| Timely solver time: median / maximum | 127.156 / 4,232.246 ms |
+| Timely server clock: median / maximum | 1.799 / 8.956 s |
+| Final local controls | 307 configurations: 273 winning plans, 34 impossibility proofs, zero UNKNOWN |
+| Late-task causes | **1 solver gap**, with acquisition delay also contributing |
 
 After correcting the solver gap, all 18 fresh tasks counted, at 1.218–3.537 s
 server time. The old task was completed late before the series restarted.
 Slow acquisition contributed to that incident; the original solver also missed
 a separate full 30-second local run.
-
-[Full Stage 3 report: inputs, timings and the failed-map investigation](stage-3-report.md).
 
 **What the delivered code demonstrates**
 
@@ -174,11 +192,13 @@ a separate full 30-second local run.
 | Delivery verification | 658/658 adopted-to-official comparisons match; 115 portable tests and 367 historical tests pass. Suites overlap. A fresh extracted ZIP installs and runs all three offline smokes. |
 | Independent judgment | Retain negative results and regressions; compare combined candidates; distinguish solver time from acquisition and server task age. |
 
-These are bounded results, not 100% coverage of possible maps. Search remains
-exponential in the worst case. [Concluded proofs and assumptions](../../.github/spec-driven-delivery/solution-whiteboard.md#mathematical-guarantees-and-limits)
+Coverage is bounded; search remains exponential in the worst case. [Concluded proofs and assumptions](../../.github/spec-driven-delivery/solution-whiteboard.md#mathematical-guarantees-and-limits)
 and [final migration evidence](evidence/migration-full.json) provide the detail.
-Historical timings describe the versions that ran; different stage inputs and
-timer wrappers are not a cross-stage speed comparison.
+Summary timing covers timely tasks only. Solver times exclude startup, network
+and the runner's outer replay. Stage 2/3 timers include internal replay; Stage 1's
+greedy path can include it too. Server time runs from task creation to the valid
+submission. Different inputs and timer scopes prevent cross-stage speedup claims. Live inputs had no mixed
+resource goals; the local controls cover additional combinations.
 
 **Time accounting and scope choice**
 
@@ -187,16 +207,14 @@ timer wrappers are not a cross-stage speed comparison.
 The tracker total is known to be inaccurate. These estimates reconstruct this
 conversation's ended assistant turns: **Stage 1 ≈ 5 h 23 m; Stage 2 ≈ 6 h 58 m;
 Stage 3 ≈ 11 h 35 m**, plus shared work and an unsplit transition. They include
-tools, experiments and waits, and exclude gaps and this report revision. They
-cannot establish human hours or replace the requested TiMaS record.
+tools, experiments and waits. They exclude gaps and report revisions after
+18 October 2026, 20:52 (UTC+8), and cannot establish human hours or replace TiMaS.
 [Allocation method and uncertainty](evidence/stage-time-audit.json) and a
 [sanitized turn ledger](evidence/stage-turn-times.csv) make the estimate auditable.
 
-The effort grew with the model: investment tests in Stage 1; resource policies
-in Stage 2; manufacturing, probe scheduling and repeated comparisons in Stage 3.
-This was a deliberate investment in local evidence before acceptance runs.
-We retain the cost as part of the engineering trade-off, not a claim that a
-longer process is inherently better.
+Time grew with the model: investment tests in Stage 1; resource policies in
+Stage 2; manufacturing and repeated probe comparisons in Stage 3. This was
+the cost of building local evidence before acceptance runs.
 
 **Remaining work is explicit:** improve [deadline allocation](https://github.com/hhhhhusky777/blade_runner/issues/1),
 clarify [model boundaries](https://github.com/hhhhhusky777/blade_runner/issues/2),
@@ -205,8 +223,8 @@ test [reuse plus guidance](https://github.com/hhhhhusky777/blade_runner/issues/4
 and investigate [partial-probe reuse](https://github.com/hhhhhusky777/blade_runner/issues/5).
 These are follow-ups rather than unreported fixes in this release.
 
-The local ZIP contains code, locked dependencies, tests, this report, all three
-stage chapters and compact evidence. It excludes credentials and raw private
+The local ZIP contains code, locked dependencies, tests, this report and
+compact supporting evidence. It excludes credentials and raw private
 conversation. [Chart data and method](evidence/visual-report.json) bind the figures
 to the preserved experiments. The [README](../../README.md#setup-and-commands)
 provides reproducible offline commands.
