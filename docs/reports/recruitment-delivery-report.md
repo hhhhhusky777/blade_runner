@@ -5,18 +5,20 @@ One Python application handles the full game. It reads a map and resource goal,
 then returns an ordered JSON plan within the game's turn limit. Advancement also
 requires the first submission within 30 seconds of task creation.
 
-**Our quality advantage: validate locally before asking the live system to judge
-an answer.** We built hard local cases, compared changes against fixed baselines,
-and independently replayed plans before submission. Real tasks served as
-acceptance runs, not a trial-and-error loop for untested strategies. When a live
-case exposed a gap, we investigated it locally and retained it as a regression.
+**Quality advantage: validate locally before live acceptance.** Hard local cases,
+fixed-baseline comparisons and independent plan replay reduced delivery risk
+before submission. Real tasks served as acceptance runs. Any live gap was
+investigated locally and retained as a regression.
 
-![Quality before submission: local controls and replay, 93 of 93 valid first submitted plans, 88 of 93 timely passes, and two solver-related stops](recruitment-quality.png)
+![Quality before submission: local controls and replay, 93 of 93 valid first submitted plans, 88 of 93 timely passes, and two product issues that stopped the solver before submission](recruitment-quality.png)
 
 **Read the rates separately:** all 93 plans were valid on their first and only
-submission; 88 arrived on time. Two solver gaps (Stages 2 and 3) stopped before
-submission. Three other tasks were late after acquisition/recovery incidents.
-All five were eventually completed; series resets lost seven earlier credits.
+submission; 88 arrived on time. **Product issues** mean solver gaps: two tasks
+(Stages 2 and 3) stopped before submission. **Non-product issues** mean task
+acquisition or recovery incidents: three other tasks were late. These labels
+distinguish solver quality from submission operations; they do not assign blame
+to the server. All five tasks were eventually completed; series resets lost
+seven earlier credits.
 
 ```mermaid
 flowchart LR
@@ -80,7 +82,7 @@ outcomes. The cold corpus retains two slow cases omitted equally from warm timin
 | Timely solver time: median / maximum | 0.648 / 14.181 ms |
 | Timely server clock: median / maximum | 1.481 / 2.815 s |
 | Final local controls | 108: 66 winning plans, 42 impossibility proofs, zero UNKNOWN |
-| Late-task causes | **0 solver gaps; 2 acquisition/recovery incidents** |
+| Late-task issues | **0 product; 2 non-product** |
 
 **Integration lesson:** task-ID handling and timeout recovery caused two late
 tasks. The corrected runner locates an existing task before creating another
@@ -94,19 +96,20 @@ is reused with separate stone and ore inventories and resource-aware routes.
 
 **Observation → decision.** A pruning/reuse candidate improved common wins by
 6.5%, yet still missed the same six known-solvable cases. That was insufficient.
-We compared saving-aware policies, which can wait to fund a useful project,
-with relaxed-resource guidance, which uses an easier economic model to suggest
-quick plans. These policies guide search; their failure never proves impossibility.
+The comparison paired saving-aware policies, which can wait to fund a useful
+project, with relaxed-resource guidance, which uses an easier economic model
+to suggest quick plans. These policies guide search; their failure never proves
+impossibility.
 
 ![Stage 2: winning plans, impossibility proofs and unresolved cases beside total observed time for all four policy variants](recruitment-stage2-decisions.png)
 
 **Adopted:** both policies. Saving-aware guidance closed all six gaps. Relaxed
-guidance added no standalone coverage in this corpus, so we challenged it
-separately: five of seven selected economic cases met a repeated 2× speed/work
+guidance added no standalone coverage in this corpus. In a separate challenge,
+five of seven selected economic cases met a repeated 2× speed/work
 criterion. That evidence justified keeping it. Selected development challenges
 are not estimates of how often such maps occur on the server.
 
-**The live solver gap shows why counters matter:**
+**The product issue shows why counters matter:**
 
 ```mermaid
 flowchart LR
@@ -128,12 +131,12 @@ regression; the final solver uses only a time limit.
 | Timely solver time: median / maximum | 20.249 / 203.250 ms |
 | Timely server clock: median / maximum | 1.499 / 3.201 s |
 | Final local controls | 150: 126 winning plans, 24 impossibility proofs, zero UNKNOWN |
-| Late-task causes | **1 solver gap; 1 acquisition/recovery incident** |
+| Late-task issues | **1 product; 1 non-product** |
 
-**Two late tasks:** the solver gap above and an acquisition timeout with no
-solver execution. One long successful client run spent 21.923 s acquiring the
-task but only 89 ms solving it. Separate timing boundaries prevented us from
-mistaking acquisition delay for search cost.
+**Two late tasks:** the product issue above and a non-product acquisition
+timeout with no solver execution. One long successful client run spent 21.923 s
+acquiring the task but only 89 ms solving it. Separate timing boundaries
+distinguished acquisition delay from search cost.
 
 ## Stage 3 — schedule manufacturing and pay for stronger checks on demand
 
@@ -155,8 +158,8 @@ fell from 144,399 to zero. Strong pruning remained available for fallback.
 
 **Decision B: longer initial probes.** The live miss consumed 13.173 s acquiring
 the task, then exhausted its 11.302 s solver allowance. A local trace found a
-useful policy truncated at 192 decisions; allowing 256 finished it. We compared
-192 against 512 with the interval fixed at 512 and later probes at 32.
+useful policy truncated at 192 decisions; allowing 256 finished it. A comparison
+tested 192 against 512 with the interval fixed at 512 and later probes at 32.
 
 Across 1,842 runs, initial 512 raised reliability from 306/307 to 307/307 and
 reduced common winning time 32.1%. The failed map changed from three 30-second
@@ -175,7 +178,7 @@ misses to three wins in 0.457–0.486 s. Two long-horizon controls slowed by
 | Timely solver time: median / maximum | 127.156 / 4,232.246 ms |
 | Timely server clock: median / maximum | 1.799 / 8.956 s |
 | Final local controls | 307 configurations: 273 winning plans, 34 impossibility proofs, zero UNKNOWN |
-| Late-task causes | **1 solver gap**, with acquisition delay also contributing |
+| Late-task issues | **1 product; 0 non-product**; acquisition delay also contributed to the product case |
 
 After correcting the solver gap, all 18 fresh tasks counted, at 1.218–3.537 s
 server time. The old task was completed late before the series restarted.

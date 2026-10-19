@@ -176,7 +176,7 @@ Capability **interfaces** describe abilities: `Buildable` permits construction; 
 
 Extractors must match the node's `resource_allow`; other structures cannot occupy
 resource nodes. Construction uses an empty tile next to an existing structure;
-our supported model uses up/down/left/right adjacency. A legal transfer needs
+the supported model uses up/down/left/right adjacency. A legal transfer needs
 road tiles between storage endpoints: two adjacent storage buildings alone are
 not a route. Mining income must reach the base before it can fund construction.
 

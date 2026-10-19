@@ -9,7 +9,7 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `LOCAL_DELIVERY_READY` — client-readable code reviewed and package verified |
+| State | `LOCAL_DELIVERY_READY` — quality terminology reviewed and package verified |
 | Active tasks | None |
 | Next ready task | None; local delivery complete |
 | Active blocker | `None` |
@@ -255,7 +255,7 @@ alter this implementation content; any code change repeats the audit.
 | Portable installation | Fresh extracted ZIP installs locked dependencies, runs115portable tests and allthreeoffline smokes, with research/.env absent and imports resolving inside the copy. |
 | Report/evidence | One consolidated client report with three stage summaries, graphs,26:17:20.657ended-turn stage audit, issue links and full per-record migration results reconciled. Current report revision is excluded; human labor remains unavailable. The earlier25:07:39.349audit remains a labeled historical snapshot. |
 | Source preservation | Research, receipts and regression inputs remain unchanged. Authorized client/docs/configuration changes have current source bindings; old hashes are explicitly historical. Frozen whiteboard remains unchanged. |
-| Final package | PASS:74allowlisted files,76ZIP entries,1,982,274bytes; all manifest/source/checksum/CRC entries valid; final runtime/test/configuration bytes equal the clean tested copy; no standalone stage reports, credentials, research, Git or caches; helper executable. |
+| Final package | PASS:74allowlisted files,76ZIP entries,1,995,726bytes; all manifest/source/checksum/CRC entries valid; final runtime/test/configuration bytes equal the clean tested copy; no standalone stage reports, credentials, research, Git or caches; helper executable. |
 | Remote lifecycle | No publication, PR creation, email, merge, target verification or post-merge cleanup is authorized/performed. This does not block the requested local package. |
 
 Actual checks are bound in [migration-full.json](../../docs/reports/evidence/migration-full.json).
@@ -286,7 +286,7 @@ receive the exact corrected candidate. Remaining finding disposition: fixed.
 
 
 Final handoff verification passed after both final reconciliation approvals.
-Current ZIP SHA256: `373064c70bec513115e039d6881205cfc1ddfb4d222d1fab16a2b3262d795414`.
+Current ZIP SHA256: `2ce4295a48c4d768d4bc5da877b0ed5f4595e6270ad0d9579b58f933c5b26fab`.
 The archive includes the complete658-record evidence and corrected provenance;
 its31runtime/client/test files are identical to the fresh-install tested copy.
 The later report refinement changes only the builder file allowlist; its new
@@ -475,3 +475,34 @@ CurrentZIP SHA256: `373064c70bec513115e039d6881205cfc1ddfb4d222d1fab16a2b3262d79
 
 All requested local work is complete. Pre-existing manifest/experience/research
 changes remain untouched. No server task, submission, email, push or merge.
+
+
+## Quality terminology refinement
+
+T04/C1-11 continuation requested by the owner: use **product issues** for the
+two solver gaps and **non-product issues** for the three task-acquisition/recovery
+incidents. The report, quality chart and stage tables define the classification;
+Stage3's contributing acquisition delay stays explicit. Incident measurements,
+93valid first submitted plans and88timely submissions remain unchanged. Neutral
+wording removes “our”, “we” and “us” from the report; README's single “our” is
+also removed. Historical incident/source provenance is preserved.
+
+Reviewer A: APPROVE focused update. Findings: None. New dangerous assumptions: None.
+Reviewer B: APPROVE. Findings: None. Dangerous assumptions: None introduced.
+
+Focused verification passes: rendered figure, source/count/asset hashes, neutral
+voice, local links and the74-file/76-entry archive's manifest, checksums, CRC,
+exclusions and executable helper. All32Python sources and the frozen whiteboard
+remain identical; prior658regressions/115tests/type checks apply without reruns.
+No new benchmark or game operation was performed.
+
+Current ZIP SHA256: `2ce4295a48c4d768d4bc5da877b0ed5f4595e6270ad0d9579b58f933c5b26fab`. Size:1,995,726bytes.
+Report SHA256: `026acec2d95dcb19b08c5050ef26ff4d7c85390032d8e3ac4b9e1d793ce3705a`.
+
+| Finding | Concrete example | Solution | Disposition |
+| --- | --- | --- | --- |
+| None | — | — | NONE |
+
+| Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
+| --- | --- | --- | --- | --- |
+| None newly introduced | None | Issue classification is explicitly defined; evidence unchanged | None added | NONE |
