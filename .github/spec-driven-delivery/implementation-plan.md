@@ -9,7 +9,7 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `LOCAL_DELIVERY_READY` — quality terminology reviewed and package verified |
+| State | `LOCAL_DELIVERY_READY` — self-contained report reviewed and package verified |
 | Active tasks | None |
 | Next ready task | None; local delivery complete |
 | Active blocker | `None` |
@@ -255,7 +255,7 @@ alter this implementation content; any code change repeats the audit.
 | Portable installation | Fresh extracted ZIP installs locked dependencies, runs115portable tests and allthreeoffline smokes, with research/.env absent and imports resolving inside the copy. |
 | Report/evidence | One consolidated client report with three stage summaries, graphs,26:17:20.657ended-turn stage audit, issue links and full per-record migration results reconciled. Current report revision is excluded; human labor remains unavailable. The earlier25:07:39.349audit remains a labeled historical snapshot. |
 | Source preservation | Research, receipts and regression inputs remain unchanged. Authorized client/docs/configuration changes have current source bindings; old hashes are explicitly historical. Frozen whiteboard remains unchanged. |
-| Final package | PASS:74allowlisted files,76ZIP entries,1,995,726bytes; all manifest/source/checksum/CRC entries valid; final runtime/test/configuration bytes equal the clean tested copy; no standalone stage reports, credentials, research, Git or caches; helper executable. |
+| Final package | PASS:74allowlisted files,76ZIP entries,1,996,976bytes; all manifest/source/checksum/CRC entries valid; final runtime/test/configuration bytes equal the clean tested copy; no standalone stage reports, credentials, research, Git or caches; helper executable. |
 | Remote lifecycle | No publication, PR creation, email, merge, target verification or post-merge cleanup is authorized/performed. This does not block the requested local package. |
 
 Actual checks are bound in [migration-full.json](../../docs/reports/evidence/migration-full.json).
@@ -286,7 +286,7 @@ receive the exact corrected candidate. Remaining finding disposition: fixed.
 
 
 Final handoff verification passed after both final reconciliation approvals.
-Current ZIP SHA256: `2ce4295a48c4d768d4bc5da877b0ed5f4595e6270ad0d9579b58f933c5b26fab`.
+Current ZIP SHA256: `db141c4410ad479a6747ddb4ab0bee5d2c60ce7f0d012764549cafe3629ad92f`.
 The archive includes the complete658-record evidence and corrected provenance;
 its31runtime/client/test files are identical to the fresh-install tested copy.
 The later report refinement changes only the builder file allowlist; its new
@@ -506,3 +506,37 @@ Report SHA256: `026acec2d95dcb19b08c5050ef26ff4d7c85390032d8e3ac4b9e1d793ce3705a
 | Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
 | --- | --- | --- | --- | --- |
 | None newly introduced | None | Issue classification is explicitly defined; evidence unchanged | None added | NONE |
+
+
+## Self-contained report and research references
+
+T04/C1-11 continuation requested by the owner: make the report understandable
+when read with an email. Replace all project-document and issue links in its
+body with short explanations of code responsibilities, correctness/model limits,
+complexity, the time-allocation method and remaining work. Keep the existing
+charts, stage summaries and neutral voice. A six-entry bibliography explains
+the influence of build-order, numeric-relaxation, resource-flow, lazy-heuristic,
+SCIP scheduling and SRE troubleshooting research. All sources were already used
+in the frozen research; primary titles/authors/publication details were checked.
+The text distinguishes research inspiration from project-specific proofs and
+measured adoption, with no new algorithm or runtime dependency.
+
+Reviewer A: APPROVE report refinement; no actionable findings; no new material assumptions.
+Reviewer B: APPROVE — no findings for the exact report.
+
+Focused checks pass: no document/issue links in the report body; six bibliography
+links; five unchanged chart images; neutral voice; unchanged stage metrics,
+32Python sources and frozen whiteboard. The74-file/76-entry ZIP passes current
+source/manifest/checksum/CRC/exclusion checks. Prior code validation applies; no
+solver tests or server operations were repeated.
+
+Report SHA256: `a116193c0d19a561ea7c91e6430337626ee1852adcd1581fe70172ef46d209ce`.
+Current ZIP SHA256: `db141c4410ad479a6747ddb4ab0bee5d2c60ce7f0d012764549cafe3629ad92f`. Size:1,996,976bytes.
+
+| Finding | Concrete example | Solution | Disposition |
+| --- | --- | --- | --- |
+| None | — | — | NONE |
+
+| Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
+| --- | --- | --- | --- | --- |
+| None newly introduced | None | Existing model and timing limits remain explicit; research attribution verified | None added | NONE |

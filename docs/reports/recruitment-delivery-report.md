@@ -191,14 +191,27 @@ a separate full 30-second local run.
 | --- | --- |
 | Correctness and requirements | Ordered-action replay; exact state identity; optional manufacturing; proven optimistic cuts. Full search is complete if exhausted under the declared model; deadline exhaustion returns UNKNOWN. |
 | Validation before acceptance | Tiny exhaustive oracles, known witnesses, impossible/random/adversarial cases, tight resources, shared roads and forced full-search controls. All 93 live records / 92 distinct inputs retained. |
-| Maintainable Python | One application for all stages; documented, typed function contracts; stage modules, independent validators and a separate submission runner. [Code reading guide](../../README.md#code-structure-and-reading-order). |
+| Maintainable Python | One application for all stages; documented, typed functions. A public solve entry calls the stage engines; independent validators check plans; a separate runner handles requests, deadlines and submission. |
 | Delivery verification | Current revision: 658/658 regressions, 115 portable tests and strict type checks pass. Prior migration also matched the adopted code and passed 367 historical tests. A fresh package passes tests and all three offline smokes. |
 | Independent judgment | Retain negative results and regressions; compare combined candidates; distinguish solver time from acquisition and server task age. |
 
-Coverage is bounded; search remains exponential in the worst case. [Concluded proofs and assumptions](../../.github/spec-driven-delivery/solution-whiteboard.md#mathematical-guarantees-and-limits)
-and [migration evidence](evidence/migration-full.json) provide the detail.
-[Current source validation](evidence/readability-validation.json) records the
-documentation/type checks and repeated regressions for this delivery.
+**Why the search is correct within its model.** Collecting available free
+mining income at the base early preserves later construction options.
+Manufacturing stays optional because it consumes ore. The search remembers the
+full map, stocks, turn and used production actions, so merging identical states preserves future choices.
+Every real win must also work in the easier game used by a pruning check;
+failure there safely rejects the real branch. Search order and failed quick
+probes remove no legal alternatives. Exhausting the finite search proves no
+solution exists; hitting the deadline returns UNKNOWN. Independent replay checks
+every returned action and the final goal.
+
+These arguments assume up/down/left/right adjacency, renewable extraction of
+five units per turn, construction paid from the base, matching-resource relay
+rules and unlimited storage. Time grows with visited states, work per state and
+optional probes/DP; memory grows with stored states
+and caches. Both can grow exponentially. Local coverage establishes neither a
+universal 30-second guarantee nor correctness under different server rules.
+
 Summary timing covers timely tasks only. Solver times exclude startup, network
 and the runner's outer replay. Stage 2/3 timers include internal replay; Stage 1's
 greedy path can include it too. Server time runs from task creation to the valid
@@ -214,22 +227,38 @@ conversation's ended assistant turns: **Stage 1 ≈ 5 h 23 m; Stage 2 ≈ 6 h 58
 Stage 3 ≈ 11 h 35 m**, plus shared work and an unsplit transition. They include
 tools, experiments and waits. They exclude gaps and report revisions after
 18 October 2026, 20:52 (UTC+8), and cannot establish human hours or replace TiMaS.
-[Allocation method and uncertainty](evidence/stage-time-audit.json) and a
-[sanitized turn ledger](evidence/stage-turn-times.csv) make the estimate auditable.
+The reconstruction sums 166 recorded assistant work periods, assigning each
+whole period to its main topic. Shared setup/delivery adds about 2 h 9 m and an
+unsplit Stage 1/2 transition adds 11 m: **about 26 h 17 m total**. Parallel
+agents' durations are not added again. Mixed activities make the stage split
+approximate; these are elapsed work periods, not a human timesheet.
 
 Time grew with the model: investment tests in Stage 1; resource policies in
 Stage 2; manufacturing and repeated probe comparisons in Stage 3. This was
 the cost of building local evidence before acceptance runs.
 
-**Remaining work is explicit:** improve [deadline allocation](https://github.com/hhhhhusky777/blade_runner/issues/1),
-clarify [model boundaries](https://github.com/hhhhhusky777/blade_runner/issues/2),
-add [phase timing](https://github.com/hhhhhusky777/blade_runner/issues/3),
-test [reuse plus guidance](https://github.com/hhhhhusky777/blade_runner/issues/4),
-and investigate [partial-probe reuse](https://github.com/hhhhhusky777/blade_runner/issues/5).
-These are follow-ups rather than unreported fixes in this release.
+**Remaining work:** reserve enough solving time after slow task creation;
+confirm uncertain adjacency, mining and transfer rules; measure acquisition,
+search, replay and submission consistently; compare route-cache reuse with the
+adopted guidance; and test reuse of progress from unfinished probes. These are
+recorded follow-ups, with no unmeasured benefit claimed.
 
-The local ZIP contains code, locked dependencies, tests, this report and
-compact supporting evidence. It excludes credentials and raw private
-conversation. [Chart data and method](evidence/visual-report.json) bind the figures
-to the preserved experiments. The [README](../../README.md#setup-and-commands)
-provides reproducible offline commands.
+The delivery ZIP contains code, locked dependencies, reproducible offline
+commands, tests, this report and compact supporting evidence. Charts compare
+fixed inputs and retain failed outcomes; saved measurements and file checksums
+make the results traceable. Credentials and raw private conversation are excluded.
+
+## References
+
+These sources informed the design and experiments. The game's pruning proofs
+and chosen settings were derived and tested for this solver; the cited planners
+and optimization packages are not runtime dependencies.
+
+| Source consulted | Contribution to this solver |
+| --- | --- |
+| David Churchill and Michael Buro (AIIDE, 2011), [Build Order Optimization in StarCraft](https://ojs.aaai.org/index.php/AIIDE/article/view/12435). | Treat construction as a schedule constrained by available resources; prioritize useful investments while preserving fallback search. |
+| Jörg Hoffmann, [Metric-FF: algorithmic principles](https://fai.cs.uni-saarland.de/hoffmann/metric-ff.html), author documentation. | Use easier resource-planning problems to guide choices. In this solver, heuristic failure never proves impossibility or removes a legal action. |
+| Amanda Jane Coles et al. (JAIR, 2013), [A Hybrid LP-RPG Heuristic for Modelling Numeric Resource Flows in Planning](https://arxiv.org/abs/1402.0564). | Account for production and consumption together: spending ore on iron changes what remains for other goals. This informed the funding/production DP, without importing an LP solver. |
+| David Tolpin et al. (IJCAI, 2013), [Towards Rational Deployment of Multiple Heuristics in A*](https://www.ijcai.org/Proceedings/13/Abstracts/106.html). | Defer expensive reasoning until it is useful. This motivated testing production DP after initial probes miss; the implementation retains its existing depth-first search. |
+| SCIP Optimization Suite, [How to add primal heuristics](https://www.scipopt.org/scip/doc/html/HEUR.php), official documentation. | Separate probe priority, frequency and timing; compare the cost of unsuccessful probes against earlier winning plans. Final intervals came from local experiments. |
+| Chris Jones, [Effective Troubleshooting](https://sre.google/sre-book/effective-troubleshooting/), Google SRE. | Start from measured symptoms, test one explanation at a time and distinguish search cost from acquisition delay before choosing a correction. |
