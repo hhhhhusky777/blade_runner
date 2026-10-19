@@ -9,7 +9,7 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `LOCAL_DELIVERY_READY` — probe-feedback follow-up clarified and reviewed |
+| State | `LOCAL_DELIVERY_READY` — solver-only report follow-ups reviewed |
 | Active tasks | None |
 | Next ready task | None; local delivery complete |
 | Active blocker | `None` |
@@ -255,7 +255,7 @@ alter this implementation content; any code change repeats the audit.
 | Portable installation | Fresh extracted ZIP installs locked dependencies, runs115portable tests and allthreeoffline smokes, with research/.env absent and imports resolving inside the copy. |
 | Report/evidence | One consolidated client report with three stage summaries, graphs,26:17:20.657ended-turn stage audit, issue links and full per-record migration results reconciled. Current report revision is excluded; human labor remains unavailable. The earlier25:07:39.349audit remains a labeled historical snapshot. |
 | Source preservation | Research, receipts and regression inputs remain unchanged. Authorized client/docs/configuration changes have current source bindings; old hashes are explicitly historical. Frozen whiteboard remains unchanged. |
-| Final package | PASS:74allowlisted files,76ZIP entries,1,997,108bytes; all manifest/source/checksum/CRC entries valid; final runtime/test/configuration bytes equal the clean tested copy; no standalone stage reports, credentials, research, Git or caches; helper executable. |
+| Final package | PASS:74allowlisted files,76ZIP entries,1,997,067bytes; all manifest/source/checksum/CRC entries valid; final runtime/test/configuration bytes equal the clean tested copy; no standalone stage reports, credentials, research, Git or caches; helper executable. |
 | Remote lifecycle | No publication, PR creation, email, merge, target verification or post-merge cleanup is authorized/performed. This does not block the requested local package. |
 
 Actual checks are bound in [migration-full.json](../../docs/reports/evidence/migration-full.json).
@@ -286,7 +286,7 @@ receive the exact corrected candidate. Remaining finding disposition: fixed.
 
 
 Final handoff verification passed after both final reconciliation approvals.
-Current ZIP SHA256: `a943e062f8a81623eeb094c7178fe50bf3f321962745addd6d808b83089e8179`.
+Current ZIP SHA256: `4007855ab7612625395f8b2cce7caa520764ba5dd1e907ecfd61baa0ab060a51`.
 The archive includes the complete658-record evidence and corrected provenance;
 its31runtime/client/test files are identical to the fresh-install tested copy.
 The later report refinement changes only the builder file allowlist; its new
@@ -552,3 +552,14 @@ assumption. Surrounding text, code, evidence, charts and references are unchange
 The refreshed74-fileZIP passes current source/manifest/checksum/CRC checks.
 Report SHA256: `890b36b9eada9f6730e889c1a076a01b3f55f9baa759339f2a3a9bd82b55ba78`.
 Current ZIP SHA256: `a943e062f8a81623eeb094c7178fe50bf3f321962745addd6d808b83089e8179`. Size:1,997,108bytes.
+
+
+T04 solver-only follow-ups: COMPLETE. Owner requested removal of non-product
+improvement work from the report. Removed acquisition-budget and cross-phase
+timing bullets; retained rule correctness, route-cache/guidance comparison and
+greedy-probe feedback under “Remaining solver work.” Historical issues and
+incident evidence remain unchanged. Both retained reviewers: APPROVE the exact
+report; no findings. No new material assumptions. Exact diff scope and refreshed
+archive/source/checksum/CRC checks pass; no code changes or test reruns.
+Report SHA256: `a378e44758e9b139ebdac2bd8d3b661044e78ec42f66b825588d54eda60ee5c0`.
+Current ZIP SHA256: `4007855ab7612625395f8b2cce7caa520764ba5dd1e907ecfd61baa0ab060a51`. Size:1,997,067bytes.

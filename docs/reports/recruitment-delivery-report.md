@@ -237,11 +237,9 @@ Time grew with the model: investment tests in Stage 1; resource policies in
 Stage 2; manufacturing and repeated probe comparisons in Stage 3. This was
 the cost of building local evidence before acceptance runs.
 
-**Remaining work**
+**Remaining solver work**
 
-- Reserve enough solving time after slow task creation.
 - Confirm uncertain adjacency, mining and transfer rules.
-- Measure acquisition, search, replay and submission consistently.
 - Compare route-cache reuse with the adopted guidance.
 - **Use greedy-probe results to guide fallback search:** test whether partial
   progress can identify promising branches, guide the fallback policy and search
