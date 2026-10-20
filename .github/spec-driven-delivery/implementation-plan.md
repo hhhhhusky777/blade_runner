@@ -9,9 +9,9 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `COMPLETE` |
-| Active tasks | None |
-| Next ready task | None |
+| State | `CORRECTING` — deadline reliability before main integration |
+| Active tasks | T05: measured Stage 2 deadline reliability correction |
+| Next ready task | Compare bounded implementation optimizations; preserve the 30-second check |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge; Autopilot is not enabled |
 | Delivery branch | `codex/stage1-solver-design` in the existing managed worktree |
@@ -63,6 +63,7 @@ are not active implementation time.
 | T02 | DONE / T01 | Package Stage2 typed search/guidance and Stage3 production/project ordering/on-demand DP. Preserve original-input replay, delegation preconditions and512/512/32 defaults. Add public solve boundary and readable state/function contracts; no algorithm changes. | Stage2/3 partial-production, impossible-bound, forced-DFS and projection controls; focused old/new outcome/plan comparisons. |
 | T03 | DONE / T02 | Official runner and `submit.sh`, fixed packaged smoke example, portable corpus and task-to-input inventory. Add all93task records, including18fresh Stage3 maps, preserve92distinct inputs and stopped observations. Preserve the existing one-submission/reconciliation/deadline/progression behavior. | Fake-client recovery, ambiguous creation and no submission retry; child network denial/token removal; strict replay in both retained relay modes; targeted saved-map solves. |
 | T04 | DONE / T03 | Complete the consolidated client report with three-stage summaries, diagrams/tables, sanitized time audit and issue links. Update review README and build an allowlisted local source ZIP with inventory/checksums. Retain historical source/timing attribution; no private conversation or credentials. | Report number/hash/link and visual checks; archive inventory and exclusion checks; preliminary clean-copy/offline CLI smoke. Final full corpus and ZIP validation remain the final gate below. |
+| T05 | ACTIVE / T01–T04 | Owner-authorized correction after final CI: reduce measured Stage 2 geometry work while preserving the exact search, ordering, pruning, outcomes and 30-second budget. No case-specific behavior or new live requests. | Compare CPU and wall time at equal search work; test geometry equivalence and original-input replay; run all retained regressions and package checks on the final candidate. |
 
 T01 consumes the adopted `search.py`, selected `cache_benchmark.py` and
 `memory_benchmark.py` helpers plus `reference.py`/typed raw validators. T02 consumes
@@ -805,3 +806,49 @@ sending and new game-task creation remain outside this authorization.
 | Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
 | --- | --- | --- | --- | --- |
 | Host load fully explains deadline variability | Causal attribution | Local throughput fell, but the first clean CI also failed; cause unproven | Incorrect diagnosis of a timing risk | DISCLOSE; preserve failed evidence and avoid a causal claim |
+
+## T05 — Owner-requested deadline reliability correction
+
+The final-head run [39435720772](https://github.com/hhhhhusky777/blade_runner/actions/runs/39435720772)
+on `5507d1d18f24b8fb9109ac567a3f4bc6db1b5880` again passed 657/658 cases;
+`economic-challenge-pool-034` returned UNKNOWN at the unchanged 30-second budget.
+Unit tests, strict types and the extracted package passed. The owner explicitly
+chose to keep PR #6 open and fix reliability rather than merge with a timing
+exception. Main remains at the original baseline.
+
+This supersedes the proposed closure above. The source archive is a candidate
+snapshot until regenerated from the corrected final plan. Existing passing and
+failing evidence remains retained. No repeated unchanged attempts are used as a
+substitute for a correction.
+
+Both retained reviewers permit an implementation-only reduction of repeated
+graph work under C1: preserve legal choices, distances, parent tie order,
+inventory/turn semantics, policy defaults, pruning and all deadlines. Do not
+activate the deferred pruning bundle or introduce map-specific behavior.
+Measured candidates are bounded route/topology reuse and precomputed fixed
+adjacency rules. A fixed-work comparison must preserve semantic counters and
+plans; CPU and wall time are recorded separately. Focused graph-equivalence
+checks precede all-stage regressions, repeated hard-case timing and final
+package/CI verification. No new server calls or email sending are authorized.
+
+Selected candidate: lazy, per-model static edge metadata. Resource cells and
+BASE remain storage for the whole solve, so storage-to-storage exclusions and
+matching-resource exclusions can be prepared once in the original neighbor
+order. Occupancy, unbuilt extractors, costs, strict relaxation and queue order
+remain dynamic and unchanged. The existing one-topology tree cache is retained.
+No topology LRU or separate bitset connectivity mechanism is adopted.
+
+| Local experiment | Observation / decision |
+| --- | --- |
+| Uninstrumented equal 20,000-state prefix | Baseline process CPU 2.277 s; lazy static edges 1.934 s (15.0% lower in this pair); semantic result/counters identical. This is not a full deadline result. |
+| Topology/route LRU | Fewer graph rebuilds did not produce a meaningful net CPU benefit; reject. |
+| Additional bitset connectivity | 5.8% higher median CPU than static edges alone in the direct paired comparison; reject. |
+| Geometry equivalence | Independent original BFS and ordered route maps agree across both relay modes, topology changes, inventories and board boundaries. Four new portable tests; all ten Stage 2 tests passed. |
+| Focused static checks | Strict typing passed for 31 files; purpose docstrings and parameter/return annotations remain complete in the edited Python modules. |
+
+The local machine's variable scheduling and CPU rate limit timing conclusions.
+Clean CI must now check all 658 retained cases, all unit tests/types and the
+extracted package, plus three predeclared fresh-process attempts of the stress
+control at 30 seconds each. Any failed repetition fails the check. Regression
+telemetry now reports process CPU, outer wall time and expanded states without
+printing inputs or plans. No retry-until-green rule or larger allowance is added.

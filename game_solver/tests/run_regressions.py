@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
-from time import perf_counter
+from time import perf_counter, process_time
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 APP_ROOT = FIXTURES.parent.parent
@@ -160,7 +160,10 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     reference = args.reference_root.resolve() if args.reference_root else None
     if args.worker:
-        print(json.dumps(worker(json.load(sys.stdin), reference)))
+        cpu_started = process_time()
+        result = worker(json.load(sys.stdin), reference)
+        result["process_cpu_seconds"] = process_time() - cpu_started
+        print(json.dumps(result))
         return 0
     selected = cases(args.suite)
     if args.case:
@@ -187,6 +190,7 @@ def main(argv: list[str] | None = None) -> int:
             reason=result["reason"],
             expected_status=case["expected_status"],
             elapsed_seconds=elapsed,
+            process_cpu_seconds=result.get("process_cpu_seconds"),
             replayed_modes=modes,
             expanded=result.get("expanded"),
             plan_sha256=digest(result["plan"]) if result.get("plan") is not None else None,
@@ -205,8 +209,14 @@ def main(argv: list[str] | None = None) -> int:
         report["rows"].append(row)
         if args.output:
             args.output.write_text(json.dumps(report, indent=2) + "\n")
-        if index % 20 == 0 or not row["passed"]:
-            print(index, "/", len(selected), case["id"], row["status"], row["passed"], flush=True)
+        if index % 20 == 0 or not row["passed"] or len(selected) == 1:
+            print(
+                index, "/", len(selected), case["id"], row["status"], row["passed"],
+                "wall_seconds=", round(elapsed, 4),
+                "cpu_seconds=", row["process_cpu_seconds"],
+                "expanded=", row["expanded"],
+                flush=True,
+            )
     report.update(
         complete=True, passed=sum(r["passed"] for r in report["rows"]), total=len(selected)
     )

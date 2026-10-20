@@ -35,6 +35,15 @@ jobs:
       - name: All retained cases, unchanged 30-second solve budgets
         working-directory: game_solver
         run: .venv/bin/python -m tests.run_regressions --suite all --seconds 30
+      - name: Repeat the retained deadline stress control in fresh processes
+        if: success() || failure()
+        working-directory: game_solver
+        run: |
+          regression_status=0
+          for repeat in 1 2 3; do
+            .venv/bin/python -m tests.run_regressions --suite stage2 --case economic-challenge-pool-034 --seconds 30 || regression_status=1
+          done
+          exit "$regression_status"
       - name: Verify the portable package without research
         if: success() || failure()
         run: |

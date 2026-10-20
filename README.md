@@ -9,8 +9,9 @@ positions: 93 submitted plans passed, 88 on time and five late.
 658 retained task/control records. The final source passed 116 unit tests,
 strict type checks, all 658 regressions and fresh-package checks in a
 [clean CI run](https://github.com/hhhhhusky777/blade_runner/actions/runs/39434315627).
-Earlier local and CI runs reached 657/658 at the same 30-second limit; those
-failures remain recorded in [the delivery PR](https://github.com/hhhhhusky777/blade_runner/pull/6).
+Other runs, including the latest final-head check, reached 657/658 at the same
+30-second limit. The delivery remains open for a reliability correction in
+[the delivery PR](https://github.com/hhhhhusky777/blade_runner/pull/6).
 Timing varies; the passing run is not a universal deadline guarantee.
 Every named function has a purpose docstring and parameter/return annotations.
 Historical game results refer to the research versions that actually ran,

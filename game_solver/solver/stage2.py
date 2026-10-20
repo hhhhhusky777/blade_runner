@@ -45,7 +45,7 @@ if TYPE_CHECKING:
 else:
     from .stage1 import Model as StoneModel
 
-from .stage1 import prefix_steps, connection_routes, route_cells
+from .stage1 import prefix_steps, route_cells
 from .capital import investment_thresholds
 from .stage1_preset import search as stone_search
 from .stage2_reference import RESOURCES, read_level, validate_plan
@@ -55,6 +55,8 @@ VARIANTS = ("baseline", "scalar", "typed", "both")
 Cell = int | None  # A cell builds; None advances to the next turn.
 Plan = list[list[dict[str, Any]]]
 RouteTree = dict[int, int | None]
+# Each source retains neighbor order: destination cell, bit and storage flag.
+TransferEdges = tuple[tuple[tuple[int, int, bool], ...], ...]
 
 
 class GuidanceMetrics(TypedDict):
@@ -104,6 +106,7 @@ class Model(StoneModel):
         self.relay_mode = relay_mode
         self._tree_key: tuple[int, int] | None = None
         self._trees: dict[int | None, RouteTree] = {}
+        self._edge_views: dict[int | None, TransferEdges] = {}
         self._scalar: tuple[tuple[int, ...], ...] | None = None
         self.planned = {
             y * self.w + x
@@ -116,6 +119,34 @@ class Model(StoneModel):
         """Return turn one with starting BASE inventories and no construction."""
         return State(1, 0, 0, self.initial_cash, self.initial_ore, (0,) * self.k)
 
+    def transfer_edges(self, resource: int | None) -> TransferEdges:
+        """Prepare fixed edge permissions once per resource view, preserving order.
+
+        Resource cells and BASE are storage; every other occupied cell is a ROAD.
+        Thus storage-to-storage edges are always unusable. Occupancy and unbuilt
+        extractor checks remain dynamic in the traversals. Lazy preparation also
+        leaves the stone-only projection free of unused geometry allocations.
+        """
+        resource = None if self.relay_mode == "unrestricted" else resource
+        if resource not in self._edge_views:
+            storages = set(self.node_index) | {self.base}
+            bits = tuple(1 << p for p in range(self.v))
+            self._edge_views[resource] = tuple(
+                tuple(
+                    (q, bits[q], q in storages)
+                    for q in neighbors
+                    if not (p in storages and q in storages)
+                    and not (
+                        resource is not None
+                        and self.relay_mode == "matching"
+                        and q in self.node_index
+                        and self.resources[self.node_index[q]] != resource
+                    )
+                )
+                for p, neighbors in enumerate(self.neighbors)
+            )
+        return self._edge_views[resource]
+
     def tree(self, state: State, resource: int | None = None) -> RouteTree:
         """Cache the BASE-connected transfer tree for this topology and resource."""
         key = state.roads, state.quarries
@@ -127,18 +158,11 @@ class Model(StoneModel):
             occupied = self.occupied(state)
             parent: RouteTree = {self.base: None}
             queue = deque([self.base])
+            edges = self.transfer_edges(resource)
             while queue:
                 p = queue.popleft()
-                for q in self.neighbors[p]:
-                    if q in parent or not occupied >> q & 1:
-                        continue
-                    if not (state.roads >> p & 1 or state.roads >> q & 1):
-                        continue
-                    if (
-                        resource is not None
-                        and q in self.node_index
-                        and self.resources[self.node_index[q]] != resource
-                    ):
+                for q, bit, _ in edges[p]:
+                    if q in parent or not occupied & bit:
                         continue
                     parent[q] = p
                     queue.append(q)
@@ -246,8 +270,32 @@ class Model(StoneModel):
         return cells
 
     def routes(self, state: State, resource: int) -> tuple[dict[int, int], RouteTree]:
-        """Find road-cost routes under this resource's transfer permissions."""
-        return connection_routes(self, state, resource=resource)
+        """Run the same uncapped 0-1 BFS with precomputed fixed edge permissions."""
+        occupied = self.occupied(state)
+        roots = self.tree(state, resource)
+        distance = {p: 0 for p in roots}
+        parent: RouteTree = {p: None for p in roots}
+        unseen = self.v + 20
+        queue = deque(roots)
+        done: set[int] = set()
+        edges = self.transfer_edges(resource)
+        while queue:
+            p = queue.popleft()
+            if p in done:
+                continue
+            done.add(p)
+            if p in self.node_index and not state.quarries >> p & 1:
+                continue
+            for q, bit, storage in edges[p]:
+                cost = 0 if occupied & bit or storage else 1
+                nd = distance[p] + cost
+                if nd < distance.get(q, unseen):
+                    distance[q], parent[q] = nd, p
+                    if cost:
+                        queue.append(q)
+                    else:
+                        queue.appendleft(q)
+        return distance, parent
 
     def ordered(
         self, state: State, choices: Iterable[Cell], policy: str = "balanced"

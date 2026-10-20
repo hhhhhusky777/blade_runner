@@ -1,5 +1,10 @@
 # Recruitment solver delivery archive
 
+Candidate snapshot only: final-head CI later missed the deadline on one case.
+The owner requested a reliability correction before merge; the live implementation
+plan owns that work. Regenerate this complete archive from the finished sources
+when the correction passes review and validation.
+
 <!-- sdd: delivery-archive -->
 
 | Field | Value |
