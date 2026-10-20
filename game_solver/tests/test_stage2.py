@@ -2,9 +2,11 @@
 
 from collections import deque
 from copy import deepcopy
+from functools import partial
 from random import Random
 from typing import Any
 import unittest
+from unittest.mock import patch
 from solver.stage1 import connection_routes
 from solver.stage2 import (
     CapitalDP,
@@ -12,6 +14,8 @@ from solver.stage2 import (
     RouteTree,
     State,
     VARIANTS,
+    resource_possible,
+    scalar_possible,
     solve,
 )
 from solver.stage2_reference import validate_plan, oracle
@@ -205,6 +209,20 @@ class Stage2GeometryTests(unittest.TestCase):
         )
         self.assertEqual(model.income(state), income)
 
+    def test_zero_stock_settlement_preserves_later_geometry_queries(self) -> None:
+        """Refresh geometry after a topology change even when settlement has no stock."""
+        task = level(stone=30, width=3, height=2)
+        for mode in ("matching", "unrestricted"):
+            model, reference = Model(task, mode), ReferenceGeometry(task, mode)
+            state = model.step(model.step(model.initial(), 1), 2)
+            self.assertFalse(any(state.stocks))
+            self.assert_geometry(model, reference, state)
+            changed = model.advance(state, 3)
+            self.assertEqual(model.settle(changed), changed)
+            self.assert_geometry(model, reference, changed)
+            self.assertIn(3, model.tree(changed, 1))
+            self.assertEqual(model.income(changed), [0, 5])
+
     def test_seeded_geometry_preserves_order_across_models_and_topologies(self) -> None:
         """Cover topology/resource cache keys, inventories, planned roads and 625 cells."""
         for width, height, seed in ((1, 1, 11), (1, 7, 23), (7, 1, 47), (6, 5, 103), (25, 25, 617)):
@@ -312,13 +330,15 @@ class Stage2Tests(unittest.TestCase):
         """Allow ore production on the final turn and preserve the requested wait count."""
         for turns, goal in ((1, 5), (2, 10)):
             task = level(turns=turns, goal={"IRON_ORE": goal})
-            for variant in VARIANTS:
-                answer = solve(task, variant)
-                self.assertEqual(answer["status"], "FEASIBLE")
-                replay = validate_plan(task, answer["plan"])
-                self.assertEqual(replay["base_iron_ore"], goal)
-                self.assertEqual(replay["base_stone"], 0)
-                self.assertEqual(replay["turns"], turns)
+            for mode in ("matching", "unrestricted"):
+                for variant in VARIANTS:
+                    with self.subTest(turns=turns, mode=mode, variant=variant):
+                        answer = solve(task, variant, relay_mode=mode, use_probe=False)
+                        self.assertEqual(answer["status"], "FEASIBLE")
+                        replay = validate_plan(task, answer["plan"], relay_mode=mode)
+                        self.assertEqual(replay["base_iron_ore"], goal)
+                        self.assertEqual(replay["base_stone"], 0)
+                        self.assertEqual(replay["turns"], turns)
 
     def test_ore_cannot_pay_for_construction(self) -> None:
         """Reject a mine that lacks stone even when the base holds abundant ore."""
@@ -337,12 +357,104 @@ class Stage2Tests(unittest.TestCase):
             height=3,
             nodes=[{"x": 2, "y": 0, "resource": "STONE"}, {"x": 0, "y": 2, "resource": "IRON_ORE"}],
         )
-        for variant in VARIANTS:
-            answer = solve(task, variant)
-            self.assertEqual(answer["status"], "FEASIBLE")
-            r = validate_plan(task, answer["plan"])
-            self.assertGreaterEqual(r["base_stone"], 10)
-            self.assertGreaterEqual(r["base_iron_ore"], 10)
+        for mode in ("matching", "unrestricted"):
+            for variant in VARIANTS:
+                with self.subTest(mode=mode, variant=variant):
+                    answer = solve(task, variant, relay_mode=mode, use_probe=False)
+                    self.assertEqual(answer["status"], "FEASIBLE")
+                    r = validate_plan(task, answer["plan"], relay_mode=mode)
+                    self.assertGreaterEqual(r["base_stone"], 10)
+                    self.assertGreaterEqual(r["base_iron_ore"], 10)
+
+    def test_precomputed_summaries_preserve_both_bounds(self) -> None:
+        """Reusable totals preserve accepting and rejecting standalone bound decisions."""
+        decisions: dict[str, set[bool]] = {"resource": set(), "scalar": set()}
+        for goal in (10, 11):
+            for mode in ("matching", "unrestricted"):
+                model = Model(level(goal={"IRON_ORE": goal}), mode)
+                state = model.initial()
+                states = [state]
+                for cell in (1, 2, None):
+                    state = model.step(state, cell)
+                    states.append(state)
+                for state in states:
+                    summary = model.totals(state)
+                    original = deepcopy(summary)
+                    for name, bound in (("resource", resource_possible), ("scalar", scalar_possible)):
+                        expected = bound(model, state)
+                        self.assertEqual(bound(model, state, summary), expected)
+                        decisions[name].add(expected)
+                    self.assertEqual(summary, original)
+        self.assertEqual(decisions, {"resource": {False, True}, "scalar": {False, True}})
+
+    def test_wait_witness_passes_bounds_with_disconnected_stock(self) -> None:
+        """A raw-replayed final-turn wait remains possible despite stranded quarry stock."""
+        task = level(
+            stone=36, ore=2, goal={"STONE": 9, "IRON_ORE": 8}, turns=2,
+            width=3, height=2,
+            nodes=[
+                {"x": 2, "y": 0, "resource": "STONE"},
+                {"x": 1, "y": 1, "resource": "IRON_ORE"},
+                {"x": 0, "y": 1, "resource": "STONE"},
+            ],
+        )
+        for mode in ("matching", "unrestricted"):
+            model = Model(task, mode)
+            state = model.initial()
+            for cell in (3, 1, 2, 4):
+                state = model.step(state, cell)
+            stranded = model.node_index[3]
+            self.assertEqual((state.cash, state.ore, state.stocks[stranded]), (5, 7, 5))
+            self.assertEqual(model.income(state), [5, 5])
+            self.assertEqual(model.completion(state), 1)
+            final = model.step(state, None)
+            self.assertEqual((final.cash, final.ore, final.stocks[stranded]), (10, 12, 10))
+            self.assertEqual(model.completion(final), 0)
+            for current in (state, final):
+                total, built = model.totals(current)
+                self.assertEqual(total, [current.cash + current.stocks[stranded], current.ore])
+                self.assertTrue(resource_possible(model, current))
+                self.assertTrue(scalar_possible(model, current))
+                dp = CapitalDP(model.goals[0], model.site_counts[0], model.site_counts[1])
+                required = dp.required(
+                    model.turns - current.turn, built[0], built[1],
+                    (max(0, model.goals[1] - total[1]) + 4) // 5,
+                )
+                self.assertLessEqual(required, total[0])
+            replay = validate_plan(task, model.plan([3, 1, 2, 4, None]), relay_mode=mode)
+            self.assertEqual((replay["base_stone"], replay["base_iron_ore"], replay["turns"]), (10, 12, 2))
+
+    def test_pruning_switch_preserves_tiny_raw_oracle_results(self) -> None:
+        """Compare exact search with independent raw reachability, with probes disabled."""
+        for task, expected in ((level(), "FEASIBLE"), (level(stone=15), "INFEASIBLE")):
+            for mode in ("matching", "unrestricted"):
+                self.assertEqual(oracle(task, relay_mode=mode)["status"], expected)
+                for variant in VARIANTS:
+                    for pruning in (False, True):
+                        with self.subTest(expected=expected, mode=mode, variant=variant, pruning=pruning):
+                            answer = solve(
+                                task, variant, relay_mode=mode, use_probe=False,
+                                use_pruning=pruning,
+                            )
+                            self.assertEqual(answer["status"], expected)
+                            if expected == "FEASIBLE":
+                                validate_plan(task, answer["plan"], relay_mode=mode)
+
+    def test_exhausted_optional_dp_is_a_weak_pass(self) -> None:
+        """Exhausted work limits cannot turn a feasible exact search into a rejection."""
+        for dp in (CapitalDP(0, 0, 1, max_entries=0), CapitalDP(0, 0, 1, deadline=0)):
+            self.assertEqual(dp.required(1, 0, 0, 2), 0)
+            self.assertEqual(dp.skipped, 1)
+            self.assertFalse(dp.cache)
+        task = level()
+        with patch("solver.stage2.CapitalDP", new=partial(CapitalDP, max_entries=0)):
+            for mode in ("matching", "unrestricted"):
+                for variant in ("typed", "both"):
+                    answer = solve(task, variant, relay_mode=mode, use_probe=False)
+                    self.assertEqual(answer["status"], "FEASIBLE")
+                    self.assertGreater(answer["dp_skipped"], 0)
+                    self.assertEqual(answer["dp_entries"], 0)
+                    validate_plan(task, answer["plan"], relay_mode=mode)
 
     def test_initial_goal_and_zero_turns(self) -> None:
         """Require a legal turn for claiming an already satisfied goal."""

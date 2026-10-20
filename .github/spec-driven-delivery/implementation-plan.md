@@ -11,7 +11,7 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 | --- | --- |
 | State | `CORRECTING` — deadline reliability before main integration |
 | Active tasks | T05: measured Stage 2 deadline reliability correction |
-| Next ready task | Compare bounded implementation optimizations; preserve the 30-second check |
+| Next ready task | Validate the reviewed correction with forced-search tests, full CI and three unchanged 30-second stress checks |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge; Autopilot is not enabled |
 | Delivery branch | `codex/stage1-solver-design` in the existing managed worktree |
@@ -852,3 +852,51 @@ extracted package, plus three predeclared fresh-process attempts of the stress
 control at 30 seconds each. Any failed repetition fails the check. Regression
 telemetry now reports process CPU, outer wall time and expanded states without
 printing inputs or plans. No retry-until-green rule or larger allowance is added.
+
+The first corrected-head CI run
+[39439593076](https://github.com/hhhhhusky777/blade_runner/actions/runs/39439593076)
+on `e5a0a42e28fbe82cd1179c00b55ee9bd055754fb` still passed only 657/658.
+The same control returned UNKNOWN in the suite and all three fixed repetitions.
+Each consumed about 30.07 process-CPU seconds and 30.13 outer-wall seconds;
+the repetitions expanded 316,692–330,445 states. This establishes CPU work as
+the limiting cost in those CI runs; local scheduling alone cannot explain them.
+All 120 unit tests, 31-file strict typing and the extracted-package checks passed.
+Keep this failed correction as evidence; it does not establish deadline reliability.
+
+The next bounded candidates schedule the existing optimistic bounds before
+expensive wait-completion geometry, and share one immutable inventory summary
+between the same bounds. A real wait-only win remains possible in every existing
+relaxation, so early rejection removes no valid wait completion. Directly met
+goals retain their shortcut; root checks, choices, policies, DP formulas and
+limits remain unchanged. A final wait-winning state's earlier bound query may
+populate additional DP entries: preserve and report that diagnostic difference,
+rather than claiming all non-time counters must match.
+
+Both retained reviewers approved runtime SHA256
+`3c27cb83cbc7ff771d7b930cca5eb0a6eb6586c629a8eb67c915594eeaf326bc`.
+It also returns the existing immutable state when all site stocks are zero:
+the old settlement loop transferred nothing and never queried a tree in that
+case. There is no new identity cache, producer mask, policy or work allowance.
+
+| Follow-up evidence | Result and limit |
+| --- | --- |
+| Existing bounds before completion, alone | CPU fell 13.7% on an equal 20,000-state prefix and 12.5% on 100,000 states; non-time results matched. These are search segments, not complete deadlines. |
+| Minimal combined candidate | Per-call summary reuse and zero-stock settlement join the bound move. Its short timing pair was affected by host-rate/scheduling drift and does not establish a combined speedup. |
+| One full local attempt, 30 seconds | UNKNOWN: 30.175 s wall / 22.563 s CPU / 324,908 expanded states. Preserve the miss; clean CI remains the acceptance check. |
+| Bounded semantic comparison | 30,314 assertions across 2,000 reachable states in both relay modes; 104 solve pairs across all four bound variants and probes on/off, including 64 replayed winning pairs and 40 impossible pairs. Plans and non-time results matched in these controls. |
+| More elaborate summary prototype | Identity cache and producer masks were measured separately, then omitted from the chosen candidate to avoid unnecessary lifetime state. Its timing cannot be attributed to the minimal candidate. |
+
+The immutable local investigation bundle has SHA256
+`bba5a0285220febefb66a44a2d9d33f9ba961a8513d1e13e7332df03169a86e8`;
+only these compact, sanitized results are published. The same full CI and three
+fixed stress repetitions remain required. Focused tests must force DFS so probes
+cannot bypass the reordered wait-completion path; counters on winning states
+remain diagnostic, not a compatibility guarantee.
+
+Focused portable validation passed all 15 Stage 2 tests, including forced DFS
+across bound variants and relay modes, independently replayed wait/direct wins,
+stranded stocks, summary equivalence, zero-stock topology changes, a tiny raw
+oracle comparison and weak-pass DP exhaustion. Scoped typing and whitespace
+checks passed. Test source SHA256 is
+`87f3c3a47a8010a2c42cd0a55c8b6598918c7596441ac66581bdaeeaefc59b1f`.
+The complete candidate's CI outcome is still pending.

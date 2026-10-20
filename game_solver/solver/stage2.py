@@ -171,6 +171,8 @@ class Model(StoneModel):
 
     def settle(self, state: State) -> State:
         """Move reachable native site stocks to BASE without spending a turn."""
+        if not any(state.stocks):
+            return state
         base = [state.cash, state.ore]
         stocks = list(state.stocks)
         for i, p in enumerate(self.nodes):
@@ -407,9 +409,11 @@ class Model(StoneModel):
         return turns
 
 
-def resource_possible(model: Model, state: State) -> bool:
-    """Separate production bounds plus the minimum cost of required new mines."""
-    total, built = model.totals(state)
+def resource_possible(
+    model: Model, state: State, summary: tuple[list[int], list[int]] | None = None
+) -> bool:
+    """Apply the production bound, optionally reusing this call's stock summary."""
+    total, built = model.totals(state) if summary is None else summary
     remaining = model.turns - state.turn
     unbuilt = [k - q for k, q in zip(model.site_counts, built)]
     stone = total[0] + 5 * built[0] * remaining + unbuilt[0] * max(0, 5 * (remaining + 1) - 10)
@@ -473,9 +477,11 @@ class CapitalDP:
         return answer
 
 
-def scalar_possible(model: Model, state: State) -> bool:
-    """Reject only when even pooled resources and cheaper extractors cannot win."""
-    total, built = model.totals(state)
+def scalar_possible(
+    model: Model, state: State, summary: tuple[list[int], list[int]] | None = None
+) -> bool:
+    """Apply the pooled bound, optionally reusing this call's stock summary."""
+    total, built = model.totals(state) if summary is None else summary
     goal = sum(model.goals)
     if sum(total) >= goal:
         return True
@@ -650,14 +656,15 @@ def solve(
         """Apply only optimistic impossibility filters and count their rejections."""
         if not use_pruning:
             return True
-        if not resource_possible(model, state):
+        summary = model.totals(state)
+        if not resource_possible(model, state, summary):
             metrics["bound_prunes"] += 1
             return False
-        if variant in ("scalar", "both") and not scalar_possible(model, state):
+        if variant in ("scalar", "both") and not scalar_possible(model, state, summary):
             metrics["scalar_prunes"] += 1
             return False
         if variant in ("typed", "both"):
-            total, built = model.totals(state)
+            total, built = summary
             missing = (max(0, model.goals[1] - total[1]) + 4) // 5
             # totals() returns exactly the STONE and ORE producer counts.
             required = dp.required(model.turns - state.turn, *built, missing)  # type: ignore[call-arg]
@@ -698,6 +705,9 @@ def solve(
             stack.append((child, None))
             continue
         metrics["expanded"] += 1
+        if not model.won(state) and not possible(state):
+            stack.pop()
+            continue
         waits = model.completion(state)
         if waits is not None:
             return result(
@@ -705,9 +715,6 @@ def solve(
                 "wait_completion" if waits else "goal",
                 prefix_steps(parents, state) + [None] * waits,
             )
-        if not possible(state):
-            stack.pop()
-            continue
         if (
             use_probe
             and metrics["probe_calls"] < 4
