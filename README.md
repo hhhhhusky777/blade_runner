@@ -6,13 +6,14 @@ not Python code. The adopted solver completed 31 levels and 81 required series
 positions: 93 submitted plans passed, 88 on time and five late.
 
 **Validation:** the delivery migration preserved verdicts and plans across all
-658 retained task/control records. The final source passed 116 unit tests,
+658 retained task/control records. The corrected source passed 125 unit tests,
 strict type checks, all 658 regressions and fresh-package checks in a
-[clean CI run](https://github.com/hhhhhusky777/blade_runner/actions/runs/39434315627).
-Other runs, including the latest final-head check, reached 657/658 at the same
-30-second limit. The delivery remains open for a reliability correction in
-[the delivery PR](https://github.com/hhhhhusky777/blade_runner/pull/6).
-Timing varies; the passing run is not a universal deadline guarantee.
+[clean CI run](https://github.com/hhhhhusky777/blade_runner/actions/runs/39443951274).
+Earlier runs reached 657/658 at the same 30-second limit. After removing repeated
+Stage 2 work, the failing stress case passed three fresh-process repetitions in
+20.85–21.12 seconds, with the same search decisions. Failed attempts and the
+correction remain recorded in [the delivery PR](https://github.com/hhhhhusky777/blade_runner/pull/6).
+These results cover the tested inputs and runner, not every possible deadline.
 Every named function has a purpose docstring and parameter/return annotations.
 Historical game results refer to the research versions that actually ran,
 not a new server run of the packaged code.

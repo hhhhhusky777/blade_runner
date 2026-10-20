@@ -9,9 +9,9 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `CORRECTING` — deadline reliability before main integration |
-| Active tasks | T05: measured Stage 2 deadline reliability correction |
-| Next ready task | Validate the reviewed correction with forced-search tests, full CI and three unchanged 30-second stress checks |
+| State | `COMPLETE` |
+| Active tasks | None |
+| Next ready task | None |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge; Autopilot is not enabled |
 | Delivery branch | `codex/stage1-solver-design` in the existing managed worktree |
@@ -63,7 +63,7 @@ are not active implementation time.
 | T02 | DONE / T01 | Package Stage2 typed search/guidance and Stage3 production/project ordering/on-demand DP. Preserve original-input replay, delegation preconditions and512/512/32 defaults. Add public solve boundary and readable state/function contracts; no algorithm changes. | Stage2/3 partial-production, impossible-bound, forced-DFS and projection controls; focused old/new outcome/plan comparisons. |
 | T03 | DONE / T02 | Official runner and `submit.sh`, fixed packaged smoke example, portable corpus and task-to-input inventory. Add all93task records, including18fresh Stage3 maps, preserve92distinct inputs and stopped observations. Preserve the existing one-submission/reconciliation/deadline/progression behavior. | Fake-client recovery, ambiguous creation and no submission retry; child network denial/token removal; strict replay in both retained relay modes; targeted saved-map solves. |
 | T04 | DONE / T03 | Complete the consolidated client report with three-stage summaries, diagrams/tables, sanitized time audit and issue links. Update review README and build an allowlisted local source ZIP with inventory/checksums. Retain historical source/timing attribution; no private conversation or credentials. | Report number/hash/link and visual checks; archive inventory and exclusion checks; preliminary clean-copy/offline CLI smoke. Final full corpus and ZIP validation remain the final gate below. |
-| T05 | ACTIVE / T01–T04 | Owner-authorized correction after final CI: reduce measured Stage 2 geometry work while preserving the exact search, ordering, pruning, outcomes and 30-second budget. No case-specific behavior or new live requests. | Compare CPU and wall time at equal search work; test geometry equivalence and original-input replay; run all retained regressions and package checks on the final candidate. |
+| T05 | DONE / T01–T04 | Owner-authorized correction after final CI: reduce repeated Stage 2 geometry, completion and inventory work while preserving search choices, ordering, pruning and the 30-second budget. No case-specific behavior or new live requests. | Both retained reviews approved; 125 unit tests, 31-file strict typing, all 658 regressions, three fixed deadline stress runs and extracted-package checks passed on `0e03c72`. |
 
 T01 consumes the adopted `search.py`, selected `cache_benchmark.py` and
 `memory_benchmark.py` helpers plus `reference.py`/typed raw validators. T02 consumes
@@ -899,4 +899,37 @@ stranded stocks, summary equivalence, zero-stock topology changes, a tiny raw
 oracle comparison and weak-pass DP exhaustion. Scoped typing and whitespace
 checks passed. Test source SHA256 is
 `87f3c3a47a8010a2c42cd0a55c8b6598918c7596441ac66581bdaeeaefc59b1f`.
-The complete candidate's CI outcome is still pending.
+The complete candidate's CI outcome follows below.
+
+### Corrected final outcome
+
+Clean CI [39443951274](https://github.com/hhhhhusky777/blade_runner/actions/runs/39443951274)
+passed on `0e03c72e08cf4b23fa2ad4ddd2551ede7684a9ae` after both retained
+reviewers approved the exact candidate with no findings. This completes T05's
+correction and supersedes the proposed pre-correction closure and pending-state
+statements above. The final documentation candidate contains the resulting
+COMPLETE plan and regenerated full archive; PR #6 owns its exact-head checks,
+authorized merge and target verification.
+
+| Required check | Observed result |
+| --- | --- |
+| Unit tests / strict types | 125 passed; no issues in 31 source files. |
+| Complete retained corpus | 658/658 passed at the unchanged 30-second budget, with original-input replay. |
+| Stress repetition 1 | FEASIBLE; 20.8472 s wall / 20.8005 s CPU / 377,886 expanded states. |
+| Stress repetition 2 | FEASIBLE; 21.1236 s wall / 21.0750 s CPU / 377,886 expanded states. |
+| Stress repetition 3 | FEASIBLE; 21.0018 s wall / 20.9553 s CPU / 377,886 expanded states. |
+| Fresh package | 125 tests passed without research files; all three offline submission smokes passed. |
+
+The slowest repetition left 8.88 seconds within the local 30-second solve budget.
+This is measured headroom on that CI runner, not spare time promised for server
+acquisition, transport or every machine. The earlier 657/658 results, failed
+static-edge correction and local combined-candidate timeout remain visible.
+Do not turn the before/after CI runs on different hosts into a controlled speedup
+percentage. The measured fixed-work comparison and successful final deadline
+checks answer different questions.
+
+No case, expected outcome or budget was weakened. Stage 1 and native Stage 3
+algorithms remain unchanged; their regression coverage passed. No additional
+game tasks, submissions or email sending occurred. The report's historical
+timing comparisons and frozen work-time cutoff are unchanged. Broader performance
+and partial-probe reuse proposals remain open in issues #4 and #5.

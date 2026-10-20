@@ -1,10 +1,5 @@
 # Recruitment solver delivery archive
 
-Candidate snapshot only: final-head CI later missed the deadline on one case.
-The owner requested a reliability correction before merge; the live implementation
-plan owns that work. Regenerate this complete archive from the finished sources
-when the correction passes review and validation.
-
 <!-- sdd: delivery-archive -->
 
 | Field | Value |
@@ -12,13 +7,14 @@ when the correction passes review and validation.
 | Issues | [#1](https://github.com/hhhhhusky777/blade_runner/issues/1), [#2](https://github.com/hhhhhusky777/blade_runner/issues/2), [#3](https://github.com/hhhhhusky777/blade_runner/issues/3), [#4](https://github.com/hhhhhusky777/blade_runner/issues/4), [#5](https://github.com/hhhhhusky777/blade_runner/issues/5); retained follow-ups, not closed by this archive |
 | Closing pull request | [#6](https://github.com/hhhhhusky777/blade_runner/pull/6) |
 | Whiteboard source SHA256 | `446eaa688657df6497ad6e922ce93f3cf22a5c9284db1d973ccb913dac391aa4` |
-| Final plan source SHA256 | `cf71a7c443325583bd265396ed0debc8140327f6ca0213d357516f4d96d8c926` |
+| Final plan source SHA256 | `13db340c8ebd03674073d36c5183e05e3be995632988605a50f87220753a8c72` |
 
 The complete sources follow. Only embedded lifecycle markers, heading depth and
 relative-link prefixes are adapted to this archive location. No source section
 is omitted. The original concluded whiteboard is unchanged. The closing PR owns
-review, final check and actual merge evidence; prior delivery restrictions in the
-embedded sources are historical and superseded by the owner's publication request.
+review, final checks and actual merge evidence. Earlier restrictions and
+superseded closure proposals remain as history; the final correction outcome
+in the implementation plan governs delivery.
 
 ## Concluded whiteboard
 
@@ -7939,6 +7935,7 @@ are not active implementation time.
 | T02 | DONE / T01 | Package Stage2 typed search/guidance and Stage3 production/project ordering/on-demand DP. Preserve original-input replay, delegation preconditions and512/512/32 defaults. Add public solve boundary and readable state/function contracts; no algorithm changes. | Stage2/3 partial-production, impossible-bound, forced-DFS and projection controls; focused old/new outcome/plan comparisons. |
 | T03 | DONE / T02 | Official runner and `submit.sh`, fixed packaged smoke example, portable corpus and task-to-input inventory. Add all93task records, including18fresh Stage3 maps, preserve92distinct inputs and stopped observations. Preserve the existing one-submission/reconciliation/deadline/progression behavior. | Fake-client recovery, ambiguous creation and no submission retry; child network denial/token removal; strict replay in both retained relay modes; targeted saved-map solves. |
 | T04 | DONE / T03 | Complete the consolidated client report with three-stage summaries, diagrams/tables, sanitized time audit and issue links. Update review README and build an allowlisted local source ZIP with inventory/checksums. Retain historical source/timing attribution; no private conversation or credentials. | Report number/hash/link and visual checks; archive inventory and exclusion checks; preliminary clean-copy/offline CLI smoke. Final full corpus and ZIP validation remain the final gate below. |
+| T05 | DONE / T01–T04 | Owner-authorized correction after final CI: reduce repeated Stage 2 geometry, completion and inventory work while preserving search choices, ordering, pruning and the 30-second budget. No case-specific behavior or new live requests. | Both retained reviews approved; 125 unit tests, 31-file strict typing, all 658 regressions, three fixed deadline stress runs and extracted-package checks passed on `0e03c72`. |
 
 T01 consumes the adopted `search.py`, selected `cache_benchmark.py` and
 `memory_benchmark.py` helpers plus `reference.py`/typed raw validators. T02 consumes
@@ -8681,4 +8678,131 @@ sending and new game-task creation remain outside this authorization.
 | Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
 | --- | --- | --- | --- | --- |
 | Host load fully explains deadline variability | Causal attribution | Local throughput fell, but the first clean CI also failed; cause unproven | Incorrect diagnosis of a timing risk | DISCLOSE; preserve failed evidence and avoid a causal claim |
+
+#### T05 — Owner-requested deadline reliability correction
+
+The final-head run [39435720772](https://github.com/hhhhhusky777/blade_runner/actions/runs/39435720772)
+on `5507d1d18f24b8fb9109ac567a3f4bc6db1b5880` again passed 657/658 cases;
+`economic-challenge-pool-034` returned UNKNOWN at the unchanged 30-second budget.
+Unit tests, strict types and the extracted package passed. The owner explicitly
+chose to keep PR #6 open and fix reliability rather than merge with a timing
+exception. Main remains at the original baseline.
+
+This supersedes the proposed closure above. The source archive is a candidate
+snapshot until regenerated from the corrected final plan. Existing passing and
+failing evidence remains retained. No repeated unchanged attempts are used as a
+substitute for a correction.
+
+Both retained reviewers permit an implementation-only reduction of repeated
+graph work under C1: preserve legal choices, distances, parent tie order,
+inventory/turn semantics, policy defaults, pruning and all deadlines. Do not
+activate the deferred pruning bundle or introduce map-specific behavior.
+Measured candidates are bounded route/topology reuse and precomputed fixed
+adjacency rules. A fixed-work comparison must preserve semantic counters and
+plans; CPU and wall time are recorded separately. Focused graph-equivalence
+checks precede all-stage regressions, repeated hard-case timing and final
+package/CI verification. No new server calls or email sending are authorized.
+
+Selected candidate: lazy, per-model static edge metadata. Resource cells and
+BASE remain storage for the whole solve, so storage-to-storage exclusions and
+matching-resource exclusions can be prepared once in the original neighbor
+order. Occupancy, unbuilt extractors, costs, strict relaxation and queue order
+remain dynamic and unchanged. The existing one-topology tree cache is retained.
+No topology LRU or separate bitset connectivity mechanism is adopted.
+
+| Local experiment | Observation / decision |
+| --- | --- |
+| Uninstrumented equal 20,000-state prefix | Baseline process CPU 2.277 s; lazy static edges 1.934 s (15.0% lower in this pair); semantic result/counters identical. This is not a full deadline result. |
+| Topology/route LRU | Fewer graph rebuilds did not produce a meaningful net CPU benefit; reject. |
+| Additional bitset connectivity | 5.8% higher median CPU than static edges alone in the direct paired comparison; reject. |
+| Geometry equivalence | Independent original BFS and ordered route maps agree across both relay modes, topology changes, inventories and board boundaries. Four new portable tests; all ten Stage 2 tests passed. |
+| Focused static checks | Strict typing passed for 31 files; purpose docstrings and parameter/return annotations remain complete in the edited Python modules. |
+
+The local machine's variable scheduling and CPU rate limit timing conclusions.
+Clean CI must now check all 658 retained cases, all unit tests/types and the
+extracted package, plus three predeclared fresh-process attempts of the stress
+control at 30 seconds each. Any failed repetition fails the check. Regression
+telemetry now reports process CPU, outer wall time and expanded states without
+printing inputs or plans. No retry-until-green rule or larger allowance is added.
+
+The first corrected-head CI run
+[39439593076](https://github.com/hhhhhusky777/blade_runner/actions/runs/39439593076)
+on `e5a0a42e28fbe82cd1179c00b55ee9bd055754fb` still passed only 657/658.
+The same control returned UNKNOWN in the suite and all three fixed repetitions.
+Each consumed about 30.07 process-CPU seconds and 30.13 outer-wall seconds;
+the repetitions expanded 316,692–330,445 states. This establishes CPU work as
+the limiting cost in those CI runs; local scheduling alone cannot explain them.
+All 120 unit tests, 31-file strict typing and the extracted-package checks passed.
+Keep this failed correction as evidence; it does not establish deadline reliability.
+
+The next bounded candidates schedule the existing optimistic bounds before
+expensive wait-completion geometry, and share one immutable inventory summary
+between the same bounds. A real wait-only win remains possible in every existing
+relaxation, so early rejection removes no valid wait completion. Directly met
+goals retain their shortcut; root checks, choices, policies, DP formulas and
+limits remain unchanged. A final wait-winning state's earlier bound query may
+populate additional DP entries: preserve and report that diagnostic difference,
+rather than claiming all non-time counters must match.
+
+Both retained reviewers approved runtime SHA256
+`3c27cb83cbc7ff771d7b930cca5eb0a6eb6586c629a8eb67c915594eeaf326bc`.
+It also returns the existing immutable state when all site stocks are zero:
+the old settlement loop transferred nothing and never queried a tree in that
+case. There is no new identity cache, producer mask, policy or work allowance.
+
+| Follow-up evidence | Result and limit |
+| --- | --- |
+| Existing bounds before completion, alone | CPU fell 13.7% on an equal 20,000-state prefix and 12.5% on 100,000 states; non-time results matched. These are search segments, not complete deadlines. |
+| Minimal combined candidate | Per-call summary reuse and zero-stock settlement join the bound move. Its short timing pair was affected by host-rate/scheduling drift and does not establish a combined speedup. |
+| One full local attempt, 30 seconds | UNKNOWN: 30.175 s wall / 22.563 s CPU / 324,908 expanded states. Preserve the miss; clean CI remains the acceptance check. |
+| Bounded semantic comparison | 30,314 assertions across 2,000 reachable states in both relay modes; 104 solve pairs across all four bound variants and probes on/off, including 64 replayed winning pairs and 40 impossible pairs. Plans and non-time results matched in these controls. |
+| More elaborate summary prototype | Identity cache and producer masks were measured separately, then omitted from the chosen candidate to avoid unnecessary lifetime state. Its timing cannot be attributed to the minimal candidate. |
+
+The immutable local investigation bundle has SHA256
+`bba5a0285220febefb66a44a2d9d33f9ba961a8513d1e13e7332df03169a86e8`;
+only these compact, sanitized results are published. The same full CI and three
+fixed stress repetitions remain required. Focused tests must force DFS so probes
+cannot bypass the reordered wait-completion path; counters on winning states
+remain diagnostic, not a compatibility guarantee.
+
+Focused portable validation passed all 15 Stage 2 tests, including forced DFS
+across bound variants and relay modes, independently replayed wait/direct wins,
+stranded stocks, summary equivalence, zero-stock topology changes, a tiny raw
+oracle comparison and weak-pass DP exhaustion. Scoped typing and whitespace
+checks passed. Test source SHA256 is
+`87f3c3a47a8010a2c42cd0a55c8b6598918c7596441ac66581bdaeeaefc59b1f`.
+The complete candidate's CI outcome follows below.
+
+##### Corrected final outcome
+
+Clean CI [39443951274](https://github.com/hhhhhusky777/blade_runner/actions/runs/39443951274)
+passed on `0e03c72e08cf4b23fa2ad4ddd2551ede7684a9ae` after both retained
+reviewers approved the exact candidate with no findings. This completes T05's
+correction and supersedes the proposed pre-correction closure and pending-state
+statements above. The final documentation candidate contains the resulting
+COMPLETE plan and regenerated full archive; PR #6 owns its exact-head checks,
+authorized merge and target verification.
+
+| Required check | Observed result |
+| --- | --- |
+| Unit tests / strict types | 125 passed; no issues in 31 source files. |
+| Complete retained corpus | 658/658 passed at the unchanged 30-second budget, with original-input replay. |
+| Stress repetition 1 | FEASIBLE; 20.8472 s wall / 20.8005 s CPU / 377,886 expanded states. |
+| Stress repetition 2 | FEASIBLE; 21.1236 s wall / 21.0750 s CPU / 377,886 expanded states. |
+| Stress repetition 3 | FEASIBLE; 21.0018 s wall / 20.9553 s CPU / 377,886 expanded states. |
+| Fresh package | 125 tests passed without research files; all three offline submission smokes passed. |
+
+The slowest repetition left 8.88 seconds within the local 30-second solve budget.
+This is measured headroom on that CI runner, not spare time promised for server
+acquisition, transport or every machine. The earlier 657/658 results, failed
+static-edge correction and local combined-candidate timeout remain visible.
+Do not turn the before/after CI runs on different hosts into a controlled speedup
+percentage. The measured fixed-work comparison and successful final deadline
+checks answer different questions.
+
+No case, expected outcome or budget was weakened. Stage 1 and native Stage 3
+algorithms remain unchanged; their regression coverage passed. No additional
+game tasks, submissions or email sending occurred. The report's historical
+timing comparisons and frozen work-time cutoff are unchanged. Broader performance
+and partial-probe reuse proposals remain open in issues #4 and #5.
 
