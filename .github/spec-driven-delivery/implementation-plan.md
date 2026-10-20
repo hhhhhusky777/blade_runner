@@ -9,9 +9,9 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `FINALIZING` — owner-authorized publication to main |
-| Active tasks | Final candidate audit, full validation, delivery archive and publication |
-| Next ready task | Publish reviewed candidate through one closing PR to main; update unsent reply |
+| State | `COMPLETE` |
+| Active tasks | None |
+| Next ready task | None |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge; Autopilot is not enabled |
 | Delivery branch | `codex/stage1-solver-design` in the existing managed worktree |
@@ -51,7 +51,7 @@ establish universal server equivalence or a universal30-second guarantee.
 ## Tasks and review boundaries
 
 Every row uses branch `codex/stage1-solver-design`, prospective final PR target
-`main`, current PR `None`. Tasks are review boundaries within one delivery;
+`main`, current PR [#6](https://github.com/hhhhhusky777/blade_runner/pull/6). Tasks are review boundaries within one delivery;
 no task is merged separately. Before marking a task DONE, run its focused checks
 and obtain both retained reviews. Stop and consult the owner if a task reaches
 90minutes of active implementation before that boundary; tools/tests/review waits
@@ -740,3 +740,68 @@ approved the exact text/HTML and denominator; reviewer B approved the images
 at 900 px and factual framing. No required corrections. Gmail readback confirms
 the same recipient/thread, exact revised HTML, four inline images and original
 PDF, with DRAFT status. Private receipt updated; report, PDF and package unchanged.
+
+
+## Final publication and close
+
+The owner explicitly authorized finalization and publication to `main` on
+2026-10-20. Implementation and the reviewable handover are complete; the
+[closing PR #6](https://github.com/hhhhhusky777/blade_runner/pull/6) owns final-head
+reviews, checks, merge outcome and target verification. Earlier no-publication
+statements above record their historical authority boundary.
+
+Both retained reviewers approved the final implementation audit and the small
+offline CI workflow. The workflow checks the exact PR head using read-only
+permissions, locked dependencies and unchanged time limits. It calls no game
+endpoint and uploads no detailed task-result artifact.
+
+### Actual final validation
+
+| Evidence | Result / scope |
+| --- | --- |
+| Local source unittest | 116 tests ran; one Stage 3 child exceeded its 6-second outer timeout. One unchanged-budget isolated repeat passed. The original failure remains recorded. |
+| Local strict types | Passed, 31 files. |
+| Local full regressions | 657/658 passed. `economic-challenge-pool-034` was UNKNOWN at 30.3045 seconds; one unchanged 30-second repeat also returned UNKNOWN at 30.2802 seconds. |
+| Local load observation | Load approximately 18 on 10 logical CPUs; Docker used several cores. Lower search throughput is consistent with contention, but the specific cause is unproven. No workload was stopped. |
+| Fresh local package | 116/116 tests and all three offline submission smokes passed, without the research tree. |
+| First clean GitHub runner | [Run 39432886934](https://github.com/hhhhhusky777/blade_runner/actions/runs/39432886934), head `6bc780c13b41bd65b3f442ff7158ca6f385ac0dc`: unit tests/types passed; regressions were 657/658. Its aggregate-only log cannot identify the failed case. Package check was skipped. |
+| Diagnostic clean GitHub runner | [Run 39434315627](https://github.com/hhhhhusky777/blade_runner/actions/runs/39434315627), head `64c98da95d49786267baaa423e6550cef0a33e2f`: 116 unit tests, strict types, all 658 regressions at the unchanged 30-second limit, package build and extracted-package tests/smokes passed. Only diagnostic logging and independent package-step execution changed; solver bytes and budgets did not. |
+| Source binding | Runtime/test digest `aa69559ad557f945f4549ebdcf868ef5111b5c868fbd9bd9c292f2903200312b`; fixture digest `b521b7bcf7c54a4c50544b7da797d1fc8bfb240c5bbf46fc85f53235838c94d4`. No solver or time-limit changes during final validation. |
+| Publication contents | Exact reviewed paths only; configured-credential and private-path checks passed. Credentials, private email drafts and bulk research remain excluded. |
+
+The failed local and first CI runs are not relabeled as passing. The diagnostic
+run was requested to identify the failed case, not to retry until green; no case
+failed in that run. Timing varies across environments and runs; the cause is
+not established. Successful checks establish that run's result, not a universal
+30-second guarantee. A bounded temporary comparison of redundant stock copies
+and resource-tree lookups preserved a 20,000-state prefix but showed no material
+CPU gain; no candidate optimization was adopted.
+The historical performance report and its frozen time cutoff are unchanged.
+Detailed local logs remain under `/private/tmp/blade-final-20261020`; durable
+CI logs and final-head check results are linked from the closing PR.
+
+### Archive and cleanup
+
+The [combined delivery archive](archive/recruitment-solver-delivery.md) retains
+the complete concluded whiteboard and this complete plan, with source hashes.
+The original whiteboard remains byte-identical and both live documents remain
+available to preserve existing review links. The current worktree and branch
+are retained because they contain owner-held research and private artifacts;
+deleting them would discard work outside the published package. No cleanup of
+those files is authorized or claimed. The primary clean checkout can fast-forward
+to the verified remote main after merge.
+
+All three game stages are complete. Open performance and strategy proposals
+remain tracked separately, especially [#4](https://github.com/hhhhhusky777/blade_runner/issues/4)
+and [#5](https://github.com/hhhhhusky777/blade_runner/issues/5); this delivery does
+not close them or claim unmeasured gains. The email draft includes the work-time
+chart, documentation effort and links to the project and follow-ups. Email
+sending and new game-task creation remain outside this authorization.
+
+| Finding | Concrete example | Solution | Disposition |
+| --- | --- | --- | --- |
+| Deadline variability | Stage 2 stress case missed 30 seconds locally; first CI was also 657/658 | Preserve misses and subsequent diagnostic 658/658 result; retain the unchanged 30-second check | DISCLOSE; no solver change or universal timing claim |
+
+| Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
+| --- | --- | --- | --- | --- |
+| Host load fully explains deadline variability | Causal attribution | Local throughput fell, but the first clean CI also failed; cause unproven | Incorrect diagnosis of a timing risk | DISCLOSE; preserve failed evidence and avoid a causal claim |

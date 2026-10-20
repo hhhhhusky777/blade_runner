@@ -5,11 +5,16 @@ game. It generates an ordered JSON action plan; the server receives the answer,
 not Python code. The adopted solver completed 31 levels and 81 required series
 positions: 93 submitted plans passed, 88 on time and five late.
 
-**Validated for review:** all 658 retained task/control records preserve the prior
-delivery's verdicts and plans. The original 115 portable tests and strict type checks passed,
-including in a fresh extracted package. Every named function has a purpose
-docstring and parameter/return annotations. Historical game results refer to the
-research versions that actually ran, not a new server run of the packaged code.
+**Validation:** the delivery migration preserved verdicts and plans across all
+658 retained task/control records. The final source passed 116 unit tests,
+strict type checks, all 658 regressions and fresh-package checks in a
+[clean CI run](https://github.com/hhhhhusky777/blade_runner/actions/runs/39434315627).
+Earlier local and CI runs reached 657/658 at the same 30-second limit; those
+failures remain recorded in [the delivery PR](https://github.com/hhhhhusky777/blade_runner/pull/6).
+Timing varies; the passing run is not a universal deadline guarantee.
+Every named function has a purpose docstring and parameter/return annotations.
+Historical game results refer to the research versions that actually ran,
+not a new server run of the packaged code.
 
 Start with the delivery report ([PDF](output/pdf/blade-runner-delivery-report.pdf)
 or [Markdown](docs/reports/recruitment-delivery-report.md)) for
