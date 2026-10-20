@@ -1,11 +1,13 @@
 {
   "pdf": "output/pdf/blade-runner-delivery-report.pdf",
-  "pdf_sha256": "97ea0c7821c82e5599da4c8bbeae623a1a16431b57ea92d514b0002dc327b88c",
-  "pdf_bytes": 950406,
-  "source_sha256": "6b4212c7f456e9e240e5806c725bc83d7f4e01de450e21e4bedcde9d34b05165",
+  "pdf_sha256": "8797d0e8c79d2db01424a8e62ac596838bb9f655ef7c683733dc5eab2de12d5f",
+  "pdf_bytes": 950869,
+  "source": "docs/reports/recruitment-delivery-report.md",
+  "source_sha256": "101dee7a837abc2af4615500096a2550b8ab0a6758e13589a2754f8f907baad7",
+  "renderer": "tools/render_recruitment_report.py",
   "renderer_sha256": "56a9267e839048e17823b0ae8a62b6914adf1356bc67af3e5e16ff68ad5be198",
   "page_count": 9,
-  "source_text_units_checked": 150,
+  "source_text_units_checked": 152,
   "missing_source_units": [],
   "references_checked": 6,
   "missing_reference_links": [],
@@ -33,26 +35,24 @@
     }
   ],
   "diagram_count": 4,
+  "numeric_content_unchanged": true,
   "rendered_pages": [
-    "/private/tmp/blade-pdf-review/final-1.png",
-    "/private/tmp/blade-pdf-review/final-2.png",
-    "/private/tmp/blade-pdf-review/final-3.png",
-    "/private/tmp/blade-pdf-review/final-4.png",
-    "/private/tmp/blade-pdf-review/final-5.png",
-    "/private/tmp/blade-pdf-review/final-6.png",
-    "/private/tmp/blade-pdf-review/final-7.png",
-    "/private/tmp/blade-pdf-review/final-8.png",
-    "/private/tmp/blade-pdf-review/final-9.png"
+    "/private/tmp/blade-observability-pdf/page-1.png",
+    "/private/tmp/blade-observability-pdf/page-2.png",
+    "/private/tmp/blade-observability-pdf/page-3.png",
+    "/private/tmp/blade-observability-pdf/page-4.png",
+    "/private/tmp/blade-observability-pdf/page-5.png",
+    "/private/tmp/blade-observability-pdf/page-6.png",
+    "/private/tmp/blade-observability-pdf/page-7.png",
+    "/private/tmp/blade-observability-pdf/page-8.png",
+    "/private/tmp/blade-observability-pdf/page-9.png"
   ],
-  "visual_review": "All nine rendered pages inspected at full-page resolution; no clipping, overlaps or orphan pages. Mermaid converted to equivalent vector boxes/arrows. Body 9.25pt, final-page body 8.95pt; original raster charts retained.",
-  "source": "docs/reports/recruitment-delivery-report.md",
-  "renderer": "tools/render_recruitment_report.py",
+  "visual_review": "All nine rendered pages inspected at full-page resolution: reviewer A pages 1-4, reviewer B pages 5-9, parent pages 2 and 8. No clipping, overlaps or pagination defects. Existing fonts, charts and vector diagrams preserved.",
   "independent_review": {
-    "reviewer_a": "APPROVE, pages1-4 and renderer; no findings",
-    "reviewer_b": "APPROVE, pages5-9; no findings",
+    "reviewer_a": "APPROVE exact Markdown/PDF and email paragraph; no findings; pages 1-4",
+    "reviewer_b": "APPROVE exact Markdown/PDF and email paragraph; no findings; pages 5-9",
     "parent_visual_sample": [
-      1,
-      6,
+      2,
       8
     ]
   }

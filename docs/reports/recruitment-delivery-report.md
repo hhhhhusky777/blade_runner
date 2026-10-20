@@ -53,6 +53,11 @@ flowchart LR
     E --> A
 ```
 
+**Observability was part of the design.** Search counters, timings, probe and
+pruning outcomes, failure reasons and saved cases made performance and errors
+inspectable. Building and checking that evidence took engineering time; it
+supported diagnosis and baseline comparisons before selecting improvements.
+
 ## Stage 1 — build a correct search, then remove repeated work
 
 **New problem.** Stone is both construction money and the goal. Roads enable
@@ -234,8 +239,10 @@ manufacturing; the submission/recovery script; and the portable regression and
 review package. The submission script is **non-product support**, separate from
 the solver. Beyond implementing these, the work deliberately
 included candidate comparisons, adversarial controls and retained negative
-results. Passing the observed game and establishing evidence for future changes
-are different scopes.
+results. This also included building observability: instrumentation, benchmark
+reporting and failure diagnostics that supplied evidence for solver improvements.
+Passing the observed game and establishing evidence for future changes are
+different scopes.
 
 ![Time by work area, with solver design and implementation combined and submission-script work shown separately as non-product](recruitment-work-purpose.png)
 
@@ -262,6 +269,10 @@ their main deliverable, with the original classification and uncertainty retaine
 in the audit. These are not exclusive coding or test-runtime totals. The script
 row includes operation and recovery, not just script coding. No time is counted
 twice.
+
+Observability work is included in these existing periods under their main
+deliverable, not added as another time category. The ledger does not isolate
+its hours, so no separate total is claimed.
 
 The displayed subtotal excludes **10:52.224** of environment/workflow handling
 and an interrupted period with no recorded work (**1:20.684**). Adding those to
