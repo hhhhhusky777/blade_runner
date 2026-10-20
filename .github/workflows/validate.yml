@@ -1,0 +1,48 @@
+name: Validate solver and delivery
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-validation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+      - name: Install locked dependencies
+        run: |
+          python -m pip install uv==0.11.17
+          uv sync --frozen --project game_solver
+      - name: Unit tests and strict types
+        working-directory: game_solver
+        run: |
+          .venv/bin/python -m unittest discover -s tests -t .
+          .venv/bin/python -m mypy solver api_client tests
+      - name: All retained cases, unchanged 30-second solve budgets
+        working-directory: game_solver
+        run: .venv/bin/python -m tests.run_regressions --suite all --seconds 30 | tail -n 1
+      - name: Verify the portable package without research
+        run: |
+          game_solver/.venv/bin/python tools/build_delivery.py --output "$RUNNER_TEMP/review.zip"
+          python -m zipfile -t "$RUNNER_TEMP/review.zip"
+          python -m zipfile -e "$RUNNER_TEMP/review.zip" "$RUNNER_TEMP/delivery"
+          uv sync --frozen --project "$RUNNER_TEMP/delivery/blade-runner-review/game_solver"
+          cd "$RUNNER_TEMP/delivery/blade-runner-review/game_solver"
+          .venv/bin/python -m unittest discover -s tests -t .
+          for stage in 1 2 3; do
+            .venv/bin/python -m solver.runner --stage "$stage" --offline-smoke
+          done
