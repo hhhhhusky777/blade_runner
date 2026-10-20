@@ -10,8 +10,8 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Any, cast
 
 from .capital import investment_thresholds
-from .stage1 import Model, ParentTree, RoadParameters, State, road_investment_upper, solve as search
-from .reference import _read_level
+from .stage1 import Model, ParentTree, RoadParameters, State, road_investment_upper, solve as search_core
+from .reference import _read_level, validate_plan
 
 if TYPE_CHECKING:
     from .stage1 import StateView
@@ -55,12 +55,29 @@ class InvestmentModel(Model):
         return self.goal - 1 if wealth < required else upper
 
 
+def search(
+    level: dict[str, Any], seconds: float = 24.0, max_states: float = float("inf")
+) -> dict[str, Any]:
+    """Run the preset; callers must replay any plan against their original task.
+
+    Stage 2 uses this for its stone-only projection and owns the original-task
+    replay. Keeping that path separate avoids an extra replay of the projection.
+    """
+    _read_level(level)
+    result = search_core(level, seconds, max_states, model_factory=InvestmentModel)
+    if result["reason"] == "road_bound":
+        result["reason"] = "combined_bound"
+    return result
+
+
 def solve(
     level: dict[str, Any], seconds: float = 24.0, max_states: float = float("inf")
 ) -> dict[str, Any]:
-    """Return the selected Stage1 verdict and optional JSON plan; no state cap."""
-    _read_level(level)
-    result = search(level, seconds, max_states, model_factory=InvestmentModel)
-    if result["reason"] == "road_bound":
-        result["reason"] = "combined_bound"
+    """Return the adopted Stage1 result after independently replaying any plan.
+
+    As before, search_seconds measures search and excludes this final replay.
+    """
+    result = search(level, seconds, max_states)
+    if result["plan"] is not None:
+        validate_plan(level, result["plan"])
     return result

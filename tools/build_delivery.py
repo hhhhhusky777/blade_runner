@@ -41,8 +41,14 @@ FILES = (
     "docs/reports/recruitment-quality.png",
     "docs/reports/evidence/stage-time-audit.json",
     "docs/reports/evidence/stage-turn-times.csv",
+    "docs/reports/evidence/work-purpose-time-audit.json",
+    "docs/reports/evidence/work-purpose-turn-times.csv",
+    "docs/reports/evidence/work-purpose-presentation.json",
+    "docs/reports/evidence/pdf-render-validation.json",
     "docs/reports/recruitment-delivery-report.md",
     "docs/reports/recruitment-work-time.png",
+    "docs/reports/recruitment-work-purpose.png",
+    "output/pdf/blade-runner-delivery-report.pdf",
     "game_solver/.env.example",
     "game_solver/api_client/__init__.py",
     "game_solver/api_client/client.py",
@@ -89,6 +95,7 @@ FILES = (
     "game_solver/uv.lock",
     "submit.sh",
     "tools/build_delivery.py",
+    "tools/render_recruitment_report.py",
 )
 # Final-gate output is included once it exists, never replaced with an invented pass.
 FINAL_EVIDENCE = (

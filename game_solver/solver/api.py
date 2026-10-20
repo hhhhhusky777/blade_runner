@@ -35,10 +35,7 @@ def solve(level: JsonObject, stage: int = 1, seconds: float = 24.0) -> JsonObjec
     No stage uses a search-state cap. The caller owns request-to-submit timing.
     """
     if stage == 1:
-        result = stage1_preset.solve(level, seconds)
-        if result["plan"] is not None:
-            validate_stone(level, result["plan"])
-        return result
+        return stage1_preset.solve(level, seconds=seconds)
     if stage == 2:
         return stage2.solve(
             level, seconds=seconds, relay_mode="matching", guidance="both", max_states=None

@@ -6,16 +6,23 @@ not Python code. The adopted solver completed 31 levels and 81 required series
 positions: 93 submitted plans passed, 88 on time and five late.
 
 **Validated for review:** all 658 retained task/control records preserve the prior
-delivery's verdicts and plans. The 115 portable tests and strict type checks pass,
+delivery's verdicts and plans. The original 115 portable tests and strict type checks passed,
 including in a fresh extracted package. Every named function has a purpose
 docstring and parameter/return annotations. Historical game results refer to the
 research versions that actually ran, not a new server run of the packaged code.
 
-Start with the [delivery report](docs/reports/recruitment-delivery-report.md) for
+Start with the delivery report ([PDF](output/pdf/blade-runner-delivery-report.pdf)
+or [Markdown](docs/reports/recruitment-delivery-report.md)) for
 the problem, solution, three-stage summary tables, measured improvements,
 work-time accounting and remaining issues. The
 [concluded whiteboard](.github/spec-driven-delivery/solution-whiteboard.md#final-adopted-solution)
 contains the detailed adopted design and retained research history.
+
+All stages are complete. Further performance and search-strategy work remains
+tracked in [GitHub issues](https://github.com/hhhhhusky777/blade_runner/issues),
+including [reusing partial probe results](https://github.com/hhhhhusky777/blade_runner/issues/5)
+and [comparing geometry reuse with the adopted policies](https://github.com/hhhhhusky777/blade_runner/issues/4).
+These are proposed improvements; any benefit still needs a baseline comparison.
 
 ## Code structure and reading order
 
@@ -43,44 +50,88 @@ blade-runner-review/
 └── tools/build_delivery.py          Allowlisted source ZIP and checksums
 ```
 
-Read in this order:
+Follow one request through [`api.py`](game_solver/solver/api.py), then open the
+linked implementation only when you need more detail. For a live task,
+[`runner.attempt()`](game_solver/solver/runner.py) extracts `task.level` and
+passes it, the stage and the remaining budget to the isolated
+[`child.main()`](game_solver/solver/child.py). The child calls `api.solve()`.
+The [offline command](game_solver/solver/__main__.py) reads JSON from a file or
+standard input and reaches the same API without creating a server task:
 
-1. **Public contract:** [`api.solve()` and `api.validate_plan()`](game_solver/solver/api.py)
-   show the inputs, stage dispatch and outcomes: FEASIBLE, INFEASIBLE or UNKNOWN.
-2. **Search:** start with [`stage1.Model` and `stage1.solve()`](game_solver/solver/stage1.py),
-   then the [adopted Stage 1 preset](game_solver/solver/stage1_preset.py).
-   [`stage2.Model` / `solve()`](game_solver/solver/stage2.py) add ore;
-   [`stage3.Model`, `Bounds`, `ProductionDP` and `solve()`](game_solver/solver/stage3.py)
-   add manufacturing. `Model.step()` advances a search state; `Model.plan()`
-   turns the chosen path into game actions.
-3. **Independent validation:** read `validate_plan()` in
-   [Stage 1](game_solver/solver/reference.py),
-   [Stage 2](game_solver/solver/stage2_reference.py) and
-   [Stage 3](game_solver/solver/stage3_reference.py).
-   These replay the actual actions against the original input.
-4. **Live boundary:** [`runner.attempt()`](game_solver/solver/runner.py)
-   coordinates one task; `request_task()` handles creation, `read_back()` verifies
-   the result, and `run_loop()` controls progression. [`child.main()`](game_solver/solver/child.py)
-   runs the solver separately with networking disabled.
-5. **Evidence:** [tests](game_solver/tests) cover rules and runner behavior;
-   [`run_regressions.py`](game_solver/tests/run_regressions.py) exercises fixed
-   server inputs and local controls. The commands below reproduce these checks.
+1. **Read the input and answer types.** `solve(level, stage=1, seconds=24.0)`
+   accepts a task dictionary: `board` describes terrain and resource nodes,
+   `structures` holds the initial base and inventory, `level_goal` names the
+   required base stock, and `max_turns` limits game turns. `stage` selects the
+   rules; `seconds` is the local solve budget. `JsonObject` means a JSON object;
+   the stage reader checks its contents. `Plan = list[list[JsonObject]]` means
+   an outer list of turns, each containing ordered action objects:
+   `[[action_1, action_2], [action_3]]` has two turns.
+
+2. **Follow the stage dispatch.** The API delegates to one selected engine.
+   [Stage 1's preset](game_solver/solver/stage1_preset.py) wraps the
+   [stone search](game_solver/solver/stage1.py) with the adopted connectivity
+   cache and investment DP; calling the bare search would omit those selected
+   improvements. [Stage 2](game_solver/solver/stage2.py) adds ore decisions;
+   [Stage 3](game_solver/solver/stage3.py) adds manufacturing, whole-project
+   ordering and on-demand production DP. The API keeps these choices stable.
+
+3. **Understand Stage 2's explicit options.** Its lower-level function also
+   supports research comparisons, so the API supplies the delivery settings:
+
+   | Argument | Meaning |
+   | --- | --- |
+   | `seconds=seconds` | Forward the caller's local budget. |
+   | `relay_mode="matching"` | Storage endpoints must accept the transferred resource; for example, a quarry cannot hold ore. |
+   | `guidance="both"` | Try relaxed-resource and saving-aware quick probes. The first ranks projects using a simplified resource model; the second can wait to fund a useful investment. A failed probe never proves impossibility. |
+   | `max_states=None` | Do not stop search at a fixed state count. |
+
+   Lower-level switches for bounds, memoization, ordering and probes support
+   local comparisons and forced-search tests; ordinary callers use `api.solve()`.
+
+4. **Separate finding a plan from proving it legal.** Each engine tries quick
+   probes, then memoized DFS. `Model.step()` advances a state; `Model.plan()`
+   emits actions. Safe optimistic bounds and DP can reject impossible branches;
+   ordering and failed probes cannot. Every successful engine path independently
+   replays the actions: Stage 1's preset owns its final replay, while Stages 2
+   and 3 replay internally. Reuse of an earlier-stage solver still requires
+   validation against the original task. Stage 2 calls `stage1_preset.search()`
+   for its stone-only projection, then replays the answer under Stage 2 rules;
+   this avoids an extra final replay of the temporary projection.
+   For example, nine stone cannot pay
+   for a ten-stone quarry before later mining income arrives, even within one
+   turn. The raw validators check that order, resource flow and the final claim.
+
+5. **Read the result and its limits.** FEASIBLE includes a validated plan;
+   INFEASIBLE means a safe bound or exhaustive failure under the supported
+   model; UNKNOWN means no conclusion within the budget. `api.validate_plan()`
+   also exposes replay directly: it returns final inventory/turn information
+   on success and raises `ValueError` for illegal actions.
+   The [runner](game_solver/solver/runner.py) separately rechecks a returned plan
+   before its single submission, then verifies progression. Validity alone does
+   not meet the server's creation-to-submission deadline. Stage 1's
+   `search_seconds` excludes final replay; Stage 2's `search_seconds` and Stage
+   3's outer `seconds` include internal replay, but not the runner's extra check
+   or network time.
 
 ```mermaid
 flowchart LR
     T[Task JSON] --> A[api.solve: choose stage]
-    A --> S[Quick probes, then memoized DFS]
-    S -->|Candidate plan| V[Independent raw-action replay]
+    A --> S[Engine: quick probes, then memoized DFS]
+    S -->|Candidate plan| V[Engine: independent raw-action replay]
     V --> P[Validated JSON plan]
     S -->|No validated plan| N[INFEASIBLE or UNKNOWN]
-    P -->|Explicit live command| R[Runner: submit once and verify credit]
+    P -->|Explicit live command| R[Runner: recheck, submit once, verify credit]
 ```
 
-Whole production projects order choices. Optimistic bounds and dynamic
-programming (DP) reject proven dead branches; failed greedy probes never reject a
-state. Time exhaustion returns UNKNOWN. Stage 3 uses 512 initial decisions per
-probe policy, a 512-state interval and 32 later decisions per policy. These limit
-optional rollouts, not the full search; earlier stages retain their own presets.
+For replay details, read `validate_plan()` in [Stage 1](game_solver/solver/reference.py),
+[Stage 2](game_solver/solver/stage2_reference.py) and
+[Stage 3](game_solver/solver/stage3_reference.py). Then inspect
+[`runner.attempt()` / `run_loop()`](game_solver/solver/runner.py) and
+[the regression runner](game_solver/tests/run_regressions.py).
+
+Stage 3 uses 512 initial decisions per probe policy, a 512-state interval and 32
+later decisions per policy. These limit optional rollouts, not the full search;
+earlier stages retain their own presets.
 
 ## What you are building
 

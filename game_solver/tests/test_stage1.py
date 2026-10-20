@@ -8,7 +8,9 @@ import subprocess
 import sys
 from typing import Any
 import unittest
+from unittest.mock import patch
 
+from solver.api import solve as solve_public
 from solver.capital import investment_thresholds
 from solver.reference import oracle, validate_plan
 from solver.stage1 import Model, State, road_parameters
@@ -50,6 +52,21 @@ def relaxed_maximum(cash: int, quarries: int, sites: int, remaining: int) -> int
 
 
 class Stage1Tests(unittest.TestCase):
+    def test_stage_entry_rejects_an_invalid_search_candidate(self) -> None:
+        """Reject an unearned win through both the preset and public entry points."""
+        invalid = {
+            "status": "FEASIBLE",
+            "reason": "one_quarry_completion",
+            "plan": [[{"action": "CLAIM_WIN", "args": {"x": 0, "y": 0}}]],
+        }
+        for entry in (solve, solve_public):
+            with self.subTest(entry=entry.__module__):
+                # Fault injection preserves real replay: the search falsely
+                # claims victory while BASE stock is still below the goal.
+                with patch("solver.stage1_preset.search_core", return_value=invalid):
+                    with self.assertRaisesRegex(ValueError, "BASE goal inventory"):
+                        entry(level())
+
     def test_thresholds_match_independent_forward_relaxation(self) -> None:
         """Check all 20,925 small economic decisions against a forward enumerator."""
         comparisons = 0

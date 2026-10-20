@@ -23,7 +23,7 @@ This reusable installation contract contains no feature-specific state.
 | Adoption owner | Project owner of [blade_runner](https://github.com/hhhhhusky777/blade_runner) |
 | Required review | Two independent read-only agent reviews, then explicit owner acceptance |
 | Owner acceptance | 2026-10-16; owner instructed "active" after both independent reviewers approved the adoption candidate |
-| Last verified | 2026-10-16; accepted installation activated at the same immutable pin; final runtime and scoped validation reported with activation |
+| Last verified | 2026-10-16; installed runtime and authorities reconciled; authorized initial local commit resolves the unborn-repository gap G04 |
 
 ## Adoption outcome and scope
 
@@ -69,7 +69,7 @@ This reusable installation contract contains no feature-specific state.
 | External mutation authority | Follow the owner's instruction for each work scope. This installation includes no game requests/submissions, email, push, or merge. |
 | Destructive-action authority | Installation does not authorize resetting or cleaning user work. Installer cleanup is limited to its verified owned runtime checkout. |
 | Machine-local material | Runtime, managed skills, and installer are locally excluded by the installer. Manifest, KB, entry point, whiteboard, and Experience are Git-tracked installation material; no commit or publication is implied. |
-| Known exceptions | No base commit exists, so no commit-based diff or PR candidate is claimed. No feature implementation plan is created. |
+| Known exceptions | Adoption discovery predates the first commit; Target base revision records that historical boundary. Current delivery baselines belong in their delivery context, not this manifest. |
 
 ## Validation and enforcement
 
@@ -91,7 +91,7 @@ These describe the installation check scope, not a new solver acceptance suite.
 | G01 | No test suite or CI exists for the starter | Disclose; nonblocking for installation. Define solver validation during future authorized design. |
 | G02 | No prior contributor, review, release, or general error-handling policy exists | Preserve absence; use owner instructions and existing authorities. No policy-file suite is required for this small project. |
 | G03 | Local simulation does not fully validate the server's rules | Already documented in README and Experience; no solver-equivalence claim. Does not block installing guidance. |
-| G04 | Repository is unborn; all existing project files are uncommitted | Preserve them and disclose that no base SHA, PR, or committed installation exists. An initial commit is a separate owner-authorized action. |
+| G04 | Adoption discovery found an unborn repository | Resolved 2026-10-16: owner authorized an initial local commit containing the existing project and approved installation. No remote publication or branch-protection claim follows. |
 
 No playbook deviations are proposed. Service operations, production rollout,
 database migration, and infrastructure policy are excluded because this is a

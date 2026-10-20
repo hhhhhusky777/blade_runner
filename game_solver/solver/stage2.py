@@ -47,7 +47,7 @@ else:
 
 from .stage1 import prefix_steps, connection_routes, route_cells
 from .capital import investment_thresholds
-from .stage1_preset import solve as stone_solve
+from .stage1_preset import search as stone_search
 from .stage2_reference import RESOURCES, read_level, validate_plan
 
 VARIANTS = ("baseline", "scalar", "typed", "both")
@@ -521,14 +521,15 @@ def solve(
         and memoize
     ):
         # Delegate only the proven stone-only projection; the preset owns
-        # per-solve cache/DP state and never patches process globals.
+        # per-solve cache/DP state. Replay once below against the original Stage 2
+        # task, rather than first replaying the temporary Stage 1 projection.
         base = dict(level["structures"][0], storage={"STONE": model.initial_cash})
         stone_level = dict(
             level,
             structures=[base],
             level_goal=dict(level["level_goal"], target_resources={"STONE": model.goals[0]}),
         )
-        answer = stone_solve(
+        answer = stone_search(
             stone_level,
             seconds=max(0, deadline - perf_counter()),
             max_states=inf if max_states is None else max_states,

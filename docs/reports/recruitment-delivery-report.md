@@ -7,8 +7,11 @@ requires the first submission within 30 seconds of task creation.
 
 **Quality advantage: validate locally before live acceptance.** Hard local cases,
 fixed-baseline comparisons and independent plan replay reduced delivery risk
-before submission. Real tasks served as acceptance runs. Any live gap was
-investigated locally and retained as a regression.
+before submission. The chosen delivery standard treated live tasks as customer
+acceptance runs: a missed deadline was a delivery failure, even if recovered
+later. Local cases were the main development laboratory. Any live gap was
+investigated locally, and every observed input became a regression. The aim was
+to handle each live input with the care expected for customer work.
 
 ![Quality before submission: local controls and replay, 93 of 93 valid first submitted plans, 88 of 93 timely passes, and two product issues that stopped the solver before submission](recruitment-quality.png)
 
@@ -95,7 +98,8 @@ producer can spend the stone needed for a better investment. The Stage 1 search
 is reused with separate stone and ore inventories and resource-aware routes.
 
 **Observation → decision.** A pruning/reuse candidate improved common wins by
-6.5%, yet still missed the same six known-solvable cases. That was insufficient.
+6.5%, yet still missed the same six known-solvable cases. Across all 111 inputs,
+the time reduction was only 0.2%; the bundle was not adopted.
 The comparison paired saving-aware policies, which can wait to fund a useful
 project, with relaxed-resource guidance, which uses an easier economic model
 to suggest quick plans. These policies guide search; their failure never proves
@@ -156,6 +160,11 @@ reduced mean winning time 5.7% versus always on. Instrumentation explains why:
 DP queries fell from 183,045 to 38,235 across the study; initial-probe queries
 fell from 144,399 to zero. Strong pruning remained available for fallback.
 
+Not every plausible policy helped. An earlier state-triggered probe experiment
+on eight controls reduced expansions 6.3% but increased CPU time 21.1%. The
+interval trigger stayed. Counting fewer states alone would have selected the
+wrong improvement.
+
 **Decision B: longer initial probes.** The live miss consumed 13.173 s acquiring
 the task, then exhausted its 11.302 s solver allowance. A local trace found a
 useful policy truncated at 192 decisions; allowing 256 finished it. A comparison
@@ -192,7 +201,7 @@ a separate full 30-second local run.
 | Correctness and requirements | Ordered-action replay; exact state identity; optional manufacturing; proven optimistic cuts. Full search is complete if exhausted under the declared model; deadline exhaustion returns UNKNOWN. |
 | Validation before acceptance | Tiny exhaustive oracles, known witnesses, impossible/random/adversarial cases, tight resources, shared roads and forced full-search controls. All 93 live records / 92 distinct inputs retained. |
 | Maintainable Python | One application for all stages; documented, typed functions. A public solve entry calls the stage engines; independent validators check plans; a separate runner handles requests, deadlines and submission. |
-| Delivery verification | Current revision: 658/658 regressions, 115 portable tests and strict type checks pass. Prior migration also matched the adopted code and passed 367 historical tests. A fresh package passes tests and all three offline smokes. |
+| Delivery verification | Delivery migration: 658/658 regressions, 115 portable tests and strict type checks passed; 367 historical tests also passed. A fresh package passed tests and all three offline smokes. The later API cleanup passed 116 tests and all 93 saved-task regressions with unchanged plans. |
 | Independent judgment | Retain negative results and regressions; compare combined candidates; distinguish solver time from acquisition and server task age. |
 
 **Why the search is correct within its model.** Collecting available free
@@ -218,24 +227,74 @@ greedy path can include it too. Server time runs from task creation to the valid
 submission. Different inputs and timer scopes prevent cross-stage speedup claims. Live inputs had no mixed
 resource goals; the local controls cover additional combinations.
 
-**Time accounting and scope choice**
+**Time accounting: development, comparison and validation**
 
-![Reconstructed recorded time by stage, with shared and mixed work shown separately](recruitment-stage-time.png)
+Work covered **five delivered areas**: the stone search; the ore extension;
+manufacturing; the submission/recovery script; and the portable regression and
+review package. The submission script is **non-product support**, separate from
+the solver. Beyond implementing these, the work deliberately
+included candidate comparisons, adversarial controls and retained negative
+results. Passing the observed game and establishing evidence for future changes
+are different scopes.
 
-The tracker total is known to be inaccurate. These estimates reconstruct this
-conversation's ended assistant turns: **Stage 1 ≈ 5 h 23 m; Stage 2 ≈ 6 h 58 m;
-Stage 3 ≈ 11 h 35 m**, plus shared work and an unsplit transition. They include
-tools, experiments and waits. They exclude gaps and report revisions after
-18 October 2026, 20:52 (UTC+8), and cannot establish human hours or replace TiMaS.
-The reconstruction sums 166 recorded assistant work periods, assigning each
-whole period to its main topic. Shared setup/delivery adds about 2 h 9 m and an
-unsplit Stage 1/2 transition adds 11 m: **about 26 h 17 m total**. Parallel
-agents' durations are not added again. Mixed activities make the stage split
-approximate; these are elapsed work periods, not a human timesheet.
+![Time by work area, with solver design and implementation combined and submission-script work shown separately as non-product](recruitment-work-purpose.png)
 
-Time grew with the model: investment tests in Stage 1; resource policies in
-Stage 2; manufacturing and repeated probe comparisons in Stage 3. This was
-the cost of building local evidence before acceptance runs.
+The table groups **159 whole assistant work periods** by their main deliverable.
+Design, implementation and diagnosis belong together. Dedicated reviews join
+coverage and validation as quality work. Submission-script development and live
+operation form one non-product category.
+
+| Primary purpose | Periods | Recorded elapsed (h:mm:ss) |
+| --- | ---: | ---: |
+| Solver design and implementation, including requirements and diagnosis | 84 | 6:53:39 |
+| Comparing candidates, including experimental code and repeated runs | 30 | 10:13:15 |
+| **Quality:** coverage, review and validation | 13 | 2:45:25 |
+| Submission script: development, execution and recovery **(non-product)** | 22 | 3:27:26 |
+| Documentation, packaging and delivery | 10 | 2:45:23 |
+| **Displayed subtotal** | **159** | **26:05:08** |
+
+**Comparisons and quality work account for 12 h 59 m.** The quality row includes
+**30 m 39 s of dedicated reviews** previously grouped with development. Reviews
+embedded in other implementation or comparison periods cannot be timed separately.
+Whole periods
+include related coding, tests and waits; combined activities are assigned to
+their main deliverable, with the original classification and uncertainty retained
+in the audit. These are not exclusive coding or test-runtime totals. The script
+row includes operation and recovery, not just script coding. No time is counted
+twice.
+
+The displayed subtotal excludes **10:52.224** of environment/workflow handling
+and an interrupted period with no recorded work (**1:20.684**). Adding those to
+**26:05:07.749** reconciles to the unchanged **26:17:20.657** original ledger.
+Displayed rows are rounded independently. The
+original stage totals remain approximately 5 h 23 m / 6 h 58 m / 11 h 35 m,
+plus shared and mixed-stage work.
+
+The game-completion turn ends after **24:15:44** recorded elapsed; later
+reporting and delivery add **2:01:37** through the frozen cutoff of
+18 October 2026, 20:52 (UTC+8). Tools, tests, waits and agent coordination are
+included. Gaps and later report revisions are excluded; parallel agents are not
+added again. This measures assistant-turn elapsed, not human labor or TiMaS time.
+
+**What the extra scope bought.** Baseline/candidate/combined comparisons exposed
+coverage gaps, measured speed gains and rejected misleading improvements. The
+Stage 3 initial-probe study alone used 1,842 runs; its adopted setting removed a
+known miss while recording the cases that slowed. Saved inputs, raw-action
+replay and reproducible checks now let future changes be evaluated before live
+acceptance. These are concrete quality assets; future maintenance savings have
+not been measured.
+
+**How to compare the time fairly.** Recruitment feedback on 20 October cites
+about 21 tracked hours against roughly 3 hours for internal developers and
+3–6 hours for candidates. That figure has not been reconciled with a TiMaS
+export and cannot be replaced by this differently measured ledger. The original
+brief described time as supplementary, but also set an expectation of a few
+hours. The broader comparison program was a deliberate scope choice, not an
+unstated requirement. The evidence supports its measured outcomes; it does not
+show that every experiment was necessary, that faster solutions had lower
+quality, or that skipping the work would have produced this solver in a few
+hours. Under a tighter budget, retain correctness checks and representative
+regressions, agree the reliability target, and timebox optional tuning.
 
 **Remaining solver work**
 

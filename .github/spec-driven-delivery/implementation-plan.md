@@ -9,9 +9,9 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 
 | Field | Value |
 | --- | --- |
-| State | `LOCAL_DELIVERY_READY` — solver-only report follow-ups reviewed |
-| Active tasks | None |
-| Next ready task | None; local delivery complete |
+| State | `FINALIZING` — owner-authorized publication to main |
+| Active tasks | Final candidate audit, full validation, delivery archive and publication |
+| Next ready task | Publish reviewed candidate through one closing PR to main; update unsent reply |
 | Active blocker | `None` |
 | Implementation mode | Human review before merge; Autopilot is not enabled |
 | Delivery branch | `codex/stage1-solver-design` in the existing managed worktree |
@@ -21,7 +21,7 @@ report is an implementation deliverable, not a prerequisite for concluding desig
 | Candidate and freeze | Reviewed candidate `cb929ff0a5ca0569069920890b181b469487ab64`; both retained reviewers approved the exact state-only freeze |
 | Required reviewers | Retained conclusion reviewers A and B through task, audit and final review |
 | Owner | Project owner; C1 explicitly accepted on 2026-10-18 |
-| Publication / merge authority | None. Prepare a local package; no push, remote PR creation, email, game requests or merge |
+| Publication / merge authority | Owner explicitly authorized finalizing and pushing to main on 2026-10-20; publish through the agreed single closing PR. Update the unsent recruiter reply with charts and GitHub links. Email sending and new game requests remain unauthorized. |
 
 No branch-protection policy is inferred. The manifest records no additional
 project branch policy. If remote delivery is later authorized, every task remains
@@ -127,9 +127,9 @@ check as passed.
 5. Complete the report with actual passed/failed/unrun migration evidence and
    time cutoff; final readability/number/link/graph review. Candidate-changing
    corrections return to the same reviewers and affected checks.
-6. Deliver the reviewed local package and report. Remote publication, a closing
-   PR, target merge/verification and post-merge cleanup remain unauthorized and
-   must not be reported complete. At an authorized normal-delivery close, create
+6. Deliver the reviewed package and report. The owner authorized publication,
+   a closing PR and main integration on 2026-10-20; verify the exact target before
+   reporting completion. At this normal-delivery close, create
    the combined complete whiteboard/plan archive before resetting live sources,
    following the installed workflow; preserve reusable authority and research.
 
@@ -563,3 +563,180 @@ report; no findings. No new material assumptions. Exact diff scope and refreshed
 archive/source/checksum/CRC checks pass; no code changes or test reruns.
 Report SHA256: `a378e44758e9b139ebdac2bd8d3b661044e78ec42f66b825588d54eda60ee5c0`.
 Current ZIP SHA256: `4007855ab7612625395f8b2cce7caa520764ba5dd1e907ecfd61baa0ab060a51`. Size:1,997,067bytes.
+
+## API alignment and README walkthrough
+
+T03/T04 continuation requested by the owner on 2026-10-20: make the three public
+solve branches consistent and retain the step-by-step code explanation in the
+README. This clarifies C1's stage entry points and independent replay ownership;
+the frozen design, search algorithms, adopted settings and historical evidence
+remain unchanged.
+
+Stage 1's preset now owns final replay, so `api.solve()` delegates for all three
+stages. The preset's `search()` retains the previous unchecked search body for
+Stage 2's stone-only projection; Stage 2 still validates the original task.
+This avoids adding a projection replay or changing public-path replay counts,
+deadline handling, emitted plans or timing definitions. Direct preset `solve()`
+now also rejects an invalid candidate, covered by one fault-injection test.
+The README explains input/plan types, dispatch, the cache/DP preset, Stage 2
+options, independent replay, outcomes and the separate server deadline.
+This is a bounded relocation of responsibility, consistent with the existing
+clarity guidance and [Move Statements into Function](https://refactoring.com/catalog/moveStatementsIntoFunction.html).
+
+Both retained reviewers: APPROVE the exact candidate; findings None. The final
+preset docstring clarification was checked by both. Focused checks: 28 passed;
+strict mypy: 31 source files passed. Final checks: all 116 portable tests passed;
+all 93 saved server-task regressions passed locally, with identical input hashes,
+verdicts, reasons, expansion counts and plan hashes against the retained migration
+record. Diagnostic replay counts also match the existing Stage 1/2/3 reuse paths.
+The full 658-record comparison remains the earlier delivery snapshot, not a new
+run. No live game requests, submissions or remote publication occurred.
+
+The local 74-file review ZIP was refreshed from the reviewed source. ZIP SHA256:
+`33221f8538353bb6e391ff4c06ec023dc98a15e62575358f5ab82631351c5180`;
+size: 1,998,633 bytes.
+
+| Finding | Concrete example | Solution | Disposition |
+| --- | --- | --- | --- |
+| None | — | — | NONE |
+
+| Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
+| --- | --- | --- | --- | --- |
+| None newly introduced | None | Existing conditional model and deadline limits remain explicit | None added | NONE |
+
+## Work-purpose accounting and quality explanation
+
+T04 continuation requested by the owner on 2026-10-20: review the recruitment
+feedback and explain development, comparison and validation time in the report.
+The feedback and original assignment were read in Gmail. No email was sent or
+draft saved there; no raw email or credentials were added to the delivery.
+
+The new purpose audit classifies all 166 frozen root work periods once, preserving
+26:17:20.657 total elapsed and every prior stage allocation. Comparison-led work
+is 9:11:55.430; standalone coverage/validation is 2:14:46.056. Together they are
+11:26:41.486 (43.5%). Coding and associated checks remain in their work packages;
+mixed periods remain unsplit. This is assistant-turn elapsed including tools and
+waits, not human effort or a correction to the recruiter's reported tracker time.
+The report makes no estimate of a pass-only alternative's development time.
+
+The report now identifies five delivered areas, explains the chosen live
+acceptance standard, and includes a purpose table/chart plus two rejected
+experiment examples. Existing stage results and limitations remain explicit.
+The broader comparison program is described as chosen scope; necessity, other
+candidates' quality and future maintenance savings are not inferred.
+
+Both retained reviewers independently APPROVE the exact report/evidence/figure
+and three packaging allowlist additions, with no findings. Both checked the
+audit bindings and sampled source requests/outcomes; no claim is made of two
+independent full semantic recodings. Root checks reconcile all ledger/CSV rows,
+category totals, figure/source hashes and report image links. The chart was
+visually inspected. Builder syntax and diff checks pass. Solver code was not
+changed in this continuation, so the prior 116-test/93-record API validation
+remains the latest code check; no solver tests or live tasks were repeated.
+
+The refreshed local ZIP contains 77 source files / 79 entries and passes CRC,
+current-source equality, manifest and checksum checks. Report SHA256:
+`8255eb41acb4bf50dc742b7fa7dad26e09948d70f1acb2f13be2f698a3314e16`.
+ZIP SHA256: `8dd1aa437a2c96c923d23cfdc7dc860194ae748b246da68b495745a208915ab4`;
+size: 2,219,324 bytes. No remote publication, submission or merge occurred.
+
+| Finding | Concrete example | Solution | Disposition |
+| --- | --- | --- | --- |
+| None | — | — | NONE |
+
+| Assumption | Dangerous-assumption category | Evidence / validation state | Impact if false | Handling |
+| --- | --- | --- | --- | --- |
+| Whole-period purpose reflects its main deliverable | Measurement allocation | Source-bound classifications reviewed; ambiguity retained | Category mix may differ from actual coding/test time | Do not interpret as exclusive activity timers |
+| Recruiter and conversation time are directly comparable | Measurement scope | Not established | Misleading claim about development speed | No reconciliation or counterfactual claimed |
+
+### Owner-requested time regrouping
+
+T04 refinement: COMPLETE. Solver requirements, design, implementation, review
+and diagnosis share one row (7:24:18.234). Dedicated submission-script design,
+implementation and checks are separated as non-product support (1:07:23.603),
+with live execution/recovery separate (2:20:02.032). Comparisons total
+10:13:15.183 and standalone validation 2:14:46.056. Documentation/delivery and
+environment work retain their own rows.
+
+The report/chart no longer contain an unattributed row. A derived presentation
+mapping assigns mixed periods wholly to their supported main deliverable while
+preserving original classifications and uncertainty. The original audit/CSV are
+unchanged. The 165 displayed periods total 26:15:59.973; excluded interruption40
+of 1:20.684 explicitly reconciles to the original 26:17:20.657. No within-period
+timing or exclusive coding time is invented.
+
+Both retained reviewers APPROVE the exact report, mapping and chart; no findings.
+Root checks verify every displayed ordinal once, arithmetic, original/derived
+source hashes, chart hashes, links and builder syntax. The chart was visually
+inspected. No solver changes or test reruns. The new mapping is allowlisted in
+the refreshed ZIP: 78 source files / 80 entries; CRC, current source bytes,
+manifest and checksums pass. No external action occurred.
+
+Report SHA256: `29aab88ea6fa2655bdd8c5258d3e93399da25e89a258d31188036163e08454c1`.
+ZIP SHA256: `2bb77ad951604b1551ceb1f6aa0d665034dc0ac2d5dd6830a810d1d3362b4ee0`;
+size: 2,221,219 bytes. Existing whole-period measurement limitations apply;
+reviewers found no new material assumptions.
+
+### Five-category time presentation
+
+T04 follow-up: COMPLETE. Per owner instruction, submission-script development,
+execution, verification and recovery share one non-product row (3:27:25.635).
+Standalone environment/workflow work is omitted from the displayed breakdown.
+Dedicated independent-review periods79/104 (30:39.140) move from development
+to quality, yielding solver design/implementation 6:53:39.094 and quality
+coverage/review/validation 2:45:25.196. Optimization planning78 stays design;
+reviews embedded in other work packages are not artificially split out.
+
+The five rows contain159 unique periods totaling26:05:07.749. The excluded
+environment/workflow652,224ms and interruption80,684ms reconcile to the original
+26:17:20.657. The original audit/CSV remain byte-identical. Both retained
+reviewers APPROVE the exact report, mapping and chart; no findings. Existing
+whole-period attribution limitations apply; no new material assumptions.
+
+Arithmetic, coverage of all166 original ordinals, source/figure hashes, image
+links and diff checks pass. Chart labels were visually inspected. Refreshed
+ZIP:78 source files/80 entries; current source, manifest, checksum and CRC checks
+pass. No solver changes, test reruns, server actions or external publication.
+Report SHA256: `6b4212c7f456e9e240e5806c725bc83d7f4e01de450e21e4bedcde9d34b05165`.
+ZIP SHA256: `4a741334afc7c3b4dfe61ddd8fc829ecc7495fe31545008eca574c5baa7b46ad`;
+size:2,204,264 bytes.
+
+### PDF report and recruiter reply draft
+
+T04 follow-up: COMPLETE. The report is now a nine-page PDF with five original
+charts and four vector diagrams. All 150 source prose/table units and six
+reference URLs are preserved. Every page was visually inspected; no clipped
+content or off-page characters were found. Retained reviewer A approved pages
+1–4 and the renderer; reviewer B approved pages 5–9. Both independently approved
+the reply text with no findings. Root additionally inspected pages 1, 6 and 8.
+The Markdown report and existing charts remain unchanged.
+
+An unsent Gmail reply was saved to the verified recruiter thread with the PDF
+attached and the performance comparison chart inline. Readback confirmed the
+recipient, reply threading, DRAFT label, reviewed HTML prefix and attachment
+names/sizes. The private draft receipt and reply sources remain in ignored
+`artifacts/`; they are excluded from the review ZIP. No email was sent.
+
+The report-specific renderer and PDF validation evidence are included in the
+allowlisted package. Refreshed ZIP: 81 source files / 83 entries, 2,932,396 bytes.
+CRC, source equality, manifest hashes and archive checksums pass. No solver
+behavior changed, so no solver tests or live tasks were repeated. No push,
+remote PR creation or merge occurred.
+
+Report SHA256: `6b4212c7f456e9e240e5806c725bc83d7f4e01de450e21e4bedcde9d34b05165`.
+PDF SHA256: `97ea0c7821c82e5599da4c8bbeae623a1a16431b57ea92d514b0002dc327b88c`.
+ZIP SHA256: `d7d61ff9465727b0b9a474d215679a60d3c46b4c1f0244c31c6167ff65f0ad25`.
+
+Existing measurement limits apply: assistant elapsed time is not human labor
+or a replacement for TiMaS, and measured candidate gains do not establish a
+globally optimal solver. No new material assumptions or review findings.
+
+Owner-requested email follow-up: COMPLETE. The existing unsent reply now embeds
+the quality chart and all three stage comparison charts, with the PDF retained.
+The headline states that 91/93 recorded tasks (97.8%) had no recorded product
+issue; it does not claim uptime or first-attempt success. The two product stops,
+93 valid submitted plans and 88 timely submissions remain distinct. Reviewer A
+approved the exact text/HTML and denominator; reviewer B approved the images
+at 900 px and factual framing. No required corrections. Gmail readback confirms
+the same recipient/thread, exact revised HTML, four inline images and original
+PDF, with DRAFT status. Private receipt updated; report, PDF and package unchanged.
