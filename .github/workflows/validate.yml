@@ -34,8 +34,9 @@ jobs:
           .venv/bin/python -m mypy solver api_client tests
       - name: All retained cases, unchanged 30-second solve budgets
         working-directory: game_solver
-        run: .venv/bin/python -m tests.run_regressions --suite all --seconds 30 | tail -n 1
+        run: .venv/bin/python -m tests.run_regressions --suite all --seconds 30
       - name: Verify the portable package without research
+        if: success() || failure()
         run: |
           game_solver/.venv/bin/python tools/build_delivery.py --output "$RUNNER_TEMP/review.zip"
           python -m zipfile -t "$RUNNER_TEMP/review.zip"
