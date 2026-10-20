@@ -1,0 +1,606 @@
+{
+  "schema_version": "2-compact-purpose-presentation",
+  "status": "Derived presentation view; original classification and recorded source data are unchanged.",
+  "input_audit": {
+    "path": "docs/reports/evidence/work-purpose-time-audit.json",
+    "sha256": "f8e241fe37a7f7d9379d740dc87c68a48a9348c246946ea1fa881b27e5aed01b"
+  },
+  "source_prefix": {
+    "complete_bytes": 113704356,
+    "sha256_complete_bytes": "071b781c93801df3c285c87f1a3804427894cb9733db59512a76163891576cb3",
+    "record_count": 30954,
+    "first_record_utc": "2026-10-12T14:47:35.113Z",
+    "last_record_utc": "2026-10-18T12:52:18.072Z",
+    "cutoff_turn_ordinal": 166,
+    "cutoff_turn_id": "01a14eff-786a-72c1-9f7e-6a6beec3d607",
+    "cutoff_event_line": 30954,
+    "cutoff_reason": "Latest completed whole-game README turn before the current report revision; current turn 167 and all later activity excluded.",
+    "previous_published_prefix_verified": {
+      "complete_bytes": 111127660,
+      "sha256_complete_bytes": "7a03abc0d038192a4d1ce69d4ef64672444e965bfdcbca0e31e97204ee4d1f2b",
+      "last_record_utc": "2026-10-18T11:47:18.978Z",
+      "ended_turns": 164,
+      "ended_duration_ms": 90459349
+    }
+  },
+  "measure": "Whole root-assistant turn elapsed, including tools/tests/waits. Not human labor, pure coding time, or pure test CPU time. Parallel child durations are not added.",
+  "method": [
+    "Preserve the original166-row audit, source intervals and durations unchanged.",
+    "Combine solver requirements/design, selected implementation and diagnosis; move dedicated review periods79 and104 into quality/coverage/validation.",
+    "Combine custom submission-script development/checks and live execution/recovery as one non-product support group; this is not pure coding time.",
+    "Assign mixed periods24,61,81,103,165 wholly by their main supported deliverable, retaining uncertainty and no within-period minute split.",
+    "Omit standalone environment/workflow periods8,22,23,35,36,37 and interrupted40 from the displayed subtotal; retain and reconcile every interval in the original ledger.",
+    "Reviews and checks embedded in other implementation/comparison/delivery periods cannot be separated and remain in those packages."
+  ],
+  "groups": {
+    "solver_design_implementation": {
+      "label": "Solver design and implementation, including requirements and diagnosis",
+      "scope": "solver_related",
+      "turn_ordinals": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        24,
+        25,
+        27,
+        28,
+        29,
+        30,
+        32,
+        33,
+        34,
+        42,
+        46,
+        51,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        71,
+        74,
+        75,
+        76,
+        77,
+        78,
+        80,
+        82,
+        83,
+        84,
+        85,
+        89,
+        98,
+        99,
+        102,
+        103,
+        105,
+        107,
+        108,
+        110,
+        111,
+        112,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        140,
+        141,
+        142,
+        143,
+        144,
+        151,
+        152,
+        154,
+        155,
+        156,
+        157,
+        164
+      ],
+      "turn_count": 84,
+      "duration_ms": 24819094,
+      "rationale": "Solver requirements, design, selected implementation and diagnosis. Dedicated independent reviews79 and104 move to quality; associated checks/reviews embedded in implementation are not separately timed.",
+      "duration_hms": "06:53:39.094",
+      "hours": 6.894192777777778,
+      "percent_of_displayed_subtotal": 26.429228965971703
+    },
+    "candidate_comparisons": {
+      "label": "Candidate comparisons",
+      "scope": "solver_related",
+      "turn_ordinals": [
+        26,
+        38,
+        39,
+        41,
+        43,
+        45,
+        81,
+        86,
+        87,
+        88,
+        106,
+        109,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        132,
+        133,
+        134,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        153,
+        158
+      ],
+      "turn_count": 30,
+      "duration_ms": 36795183,
+      "rationale": "Retain comparison-led turns and assign turn81 to its principal four-variant evaluation, with tracker work embedded. Includes experimental coding, fixture design, repeated runs, interpretation and reviews.",
+      "duration_hms": "10:13:15.183",
+      "hours": 10.220884166666666,
+      "percent_of_displayed_subtotal": 39.18226492682729
+    },
+    "quality_coverage_validation": {
+      "label": "Quality: coverage, review and validation",
+      "scope": "solver_related",
+      "turn_ordinals": [
+        31,
+        44,
+        72,
+        73,
+        79,
+        96,
+        97,
+        100,
+        101,
+        104,
+        135,
+        136,
+        137
+      ],
+      "turn_count": 13,
+      "duration_ms": 9925196,
+      "rationale": "Original standalone coverage/validation campaigns plus the two explicitly review-led periods79 and104. Associated reviews elsewhere remain with their whole work package.",
+      "duration_hms": "02:45:25.196",
+      "hours": 2.756998888888889,
+      "percent_of_displayed_subtotal": 10.569091587958306
+    },
+    "submission_support": {
+      "label": "Submission script: development, execution and recovery (non-product)",
+      "scope": "non_product_support_or_delivery",
+      "turn_ordinals": [
+        47,
+        48,
+        49,
+        50,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        69,
+        70,
+        90,
+        91,
+        92,
+        93,
+        94,
+        138,
+        139,
+        159
+      ],
+      "turn_count": 22,
+      "duration_ms": 12445635,
+      "rationale": "Combines dedicated script design/implementation/checks with actual live submission, verification, integration and recovery. This is elapsed support work, not pure script coding time.",
+      "duration_hms": "03:27:25.635",
+      "hours": 3.457120833333333,
+      "percent_of_displayed_subtotal": 13.253043686522611
+    },
+    "documentation_delivery": {
+      "label": "Documentation, packaging and delivery",
+      "scope": "non_product_support_or_delivery",
+      "turn_ordinals": [
+        12,
+        60,
+        61,
+        95,
+        160,
+        161,
+        162,
+        163,
+        165,
+        166
+      ],
+      "turn_count": 10,
+      "duration_ms": 9922641,
+      "rationale": "Retain reports and README, and assign combined report/rules turn61 plus release-package turn165 and delivery-task explanation turn163 to their shared delivery outcome. Includes associated validation/refactoring.",
+      "duration_hms": "02:45:22.641",
+      "hours": 2.7562891666666665,
+      "percent_of_displayed_subtotal": 10.566370832720098
+    }
+  },
+  "reconciliation": {
+    "original_recorded_turns": 166,
+    "original_recorded_duration_ms": 94640657,
+    "original_recorded_duration_hms": "26:17:20.657",
+    "displayed_turns": 159,
+    "displayed_subtotal_ms": 93907749,
+    "displayed_subtotal_hms": "26:05:07.749",
+    "excluded_from_displayed_subtotal": [
+      {
+        "ordinal": 8,
+        "duration_ms": 27678,
+        "duration_hms": "00:00:27.678",
+        "original_purpose": "environment_workflow_tracker",
+        "reason": "Outside the displayed work categories at the owner request; retained in the original ledger.",
+        "source_start_line": 151,
+        "source_end_line": 180
+      },
+      {
+        "ordinal": 22,
+        "duration_ms": 387020,
+        "duration_hms": "00:06:27.020",
+        "original_purpose": "environment_workflow_tracker",
+        "reason": "Outside the displayed work categories at the owner request; retained in the original ledger.",
+        "source_start_line": 444,
+        "source_end_line": 667
+      },
+      {
+        "ordinal": 23,
+        "duration_ms": 94158,
+        "duration_hms": "00:01:34.158",
+        "original_purpose": "environment_workflow_tracker",
+        "reason": "Outside the displayed work categories at the owner request; retained in the original ledger.",
+        "source_start_line": 669,
+        "source_end_line": 715
+      },
+      {
+        "ordinal": 35,
+        "duration_ms": 66853,
+        "duration_hms": "00:01:06.853",
+        "original_purpose": "environment_workflow_tracker",
+        "reason": "Outside the displayed work categories at the owner request; retained in the original ledger.",
+        "source_start_line": 2695,
+        "source_end_line": 2717
+      },
+      {
+        "ordinal": 36,
+        "duration_ms": 33433,
+        "duration_hms": "00:00:33.433",
+        "original_purpose": "environment_workflow_tracker",
+        "reason": "Outside the displayed work categories at the owner request; retained in the original ledger.",
+        "source_start_line": 2719,
+        "source_end_line": 2738
+      },
+      {
+        "ordinal": 37,
+        "duration_ms": 43082,
+        "duration_hms": "00:00:43.082",
+        "original_purpose": "environment_workflow_tracker",
+        "reason": "Outside the displayed work categories at the owner request; retained in the original ledger.",
+        "source_start_line": 2740,
+        "source_end_line": 2761
+      },
+      {
+        "ordinal": 40,
+        "duration_ms": 80684,
+        "duration_hms": "00:01:20.684",
+        "original_purpose": "mixed_or_unattributed",
+        "reason": "Interrupted before recorded work; retained in the original ledger.",
+        "source_start_line": 3608,
+        "source_end_line": 3614
+      }
+    ],
+    "excluded_total_ms": 732908,
+    "excluded_total_hms": "00:12:12.908",
+    "equation_ms": [
+      93907749,
+      732908,
+      94640657
+    ],
+    "environment_workflow_excluded_ms": 652224,
+    "interruption_excluded_ms": 80684,
+    "solver_related_subtotal_ms": 71539473,
+    "solver_related_subtotal_hms": "19:52:19.473",
+    "non_product_support_delivery_subtotal_ms": 22368276,
+    "non_product_support_delivery_subtotal_hms": "06:12:48.276"
+  },
+  "submission_automation_evidence": [
+    {
+      "ordinal": 48,
+      "duration_ms": 828460,
+      "duration_hms": "00:13:48.460",
+      "reason": "Implement the controlled submission and result-verification script with associated tests.",
+      "source_start_line": 5286,
+      "source_end_line": 5593
+    },
+    {
+      "ordinal": 52,
+      "duration_ms": 36860,
+      "duration_hms": "00:00:36.860",
+      "reason": "Explain saving task maps, retry identity and storage overhead.",
+      "source_start_line": 5672,
+      "source_end_line": 5691
+    },
+    {
+      "ordinal": 54,
+      "duration_ms": 584147,
+      "duration_hms": "00:09:44.147",
+      "reason": "Implement a verified multi-level submission loop and its stop conditions; no live loop this turn.",
+      "source_start_line": 5728,
+      "source_end_line": 5941
+    },
+    {
+      "ordinal": 55,
+      "duration_ms": 16919,
+      "duration_hms": "00:00:16.919",
+      "reason": "Explain how server progression determines loop length and termination.",
+      "source_start_line": 5943,
+      "source_end_line": 5953
+    },
+    {
+      "ordinal": 57,
+      "duration_ms": 15310,
+      "duration_hms": "00:00:15.310",
+      "reason": "Diagnose the task-creation read timeout versus the game deadline from saved evidence.",
+      "source_start_line": 6055,
+      "source_end_line": 6065
+    },
+    {
+      "ordinal": 58,
+      "duration_ms": 51368,
+      "duration_hms": "00:00:51.368",
+      "reason": "Analyze acquisition timestamps and propose a creation-specific timeout.",
+      "source_start_line": 6067,
+      "source_end_line": 6091
+    },
+    {
+      "ordinal": 92,
+      "duration_ms": 1421130,
+      "duration_hms": "00:23:41.130",
+      "reason": "Implement shared-deadline creation retries and duplicate-creation safeguards; no live retry this turn.",
+      "source_start_line": 13540,
+      "source_end_line": 13926
+    },
+    {
+      "ordinal": 94,
+      "duration_ms": 1089409,
+      "duration_hms": "00:18:09.409",
+      "reason": "Implement automatic pending-task recovery and verified reset/resume in the submission script.",
+      "source_start_line": 14259,
+      "source_end_line": 14529
+    }
+  ],
+  "mixed_turn_primary_deliverable_assignments": [
+    {
+      "ordinal": 24,
+      "assigned_wholly_to": "solver_design_implementation",
+      "reason": "The initiating deliverable and reported outcome are the Stage1 solver whiteboard/design; initial commit/worktree setup is embedded.",
+      "caveat": "Whole-turn presentation attribution; does not assert all 6:39.598 was solver design.",
+      "duration_ms": 399598,
+      "duration_hms": "00:06:39.598",
+      "original_purpose": "mixed_or_unattributed"
+    },
+    {
+      "ordinal": 61,
+      "assigned_wholly_to": "documentation_delivery",
+      "reason": "The turn creates the Stage1 client report and records its metrics; the later Stage2 rule introduction is an embedded secondary purpose.",
+      "caveat": "Whole-turn presentation attribution; no minute split between reporting and Stage2 capability review.",
+      "duration_ms": 673550,
+      "duration_hms": "00:11:13.550",
+      "original_purpose": "mixed_or_unattributed"
+    },
+    {
+      "ordinal": 81,
+      "assigned_wholly_to": "candidate_comparisons",
+      "reason": "The requested/resulting deliverable is the four-variant Stage2 evaluation; tracker idle-review/stop is a secondary support action.",
+      "caveat": "Includes tracker interaction and waiting; no claim of pure comparison CPU time.",
+      "duration_ms": 3679753,
+      "duration_hms": "01:01:19.753",
+      "original_purpose": "mixed_or_unattributed"
+    },
+    {
+      "ordinal": 103,
+      "assigned_wholly_to": "solver_design_implementation",
+      "reason": "The request addresses the diagnosed Stage3 solver gap and the outcome implements new probes, costed schedules and distance reuse; ablation/research and tracker coordination validate/support those changes.",
+      "caveat": "Substantial comparison and tracker work is embedded; assigning the whole turn to implementation is an explicit primary-deliverable estimate, not a measured component split.",
+      "duration_ms": 4066759,
+      "duration_hms": "01:07:46.759",
+      "original_purpose": "mixed_or_unattributed"
+    },
+    {
+      "ordinal": 165,
+      "assigned_wholly_to": "documentation_delivery",
+      "reason": "The outcome is a human-review-ready source package, report and running guide; portable-code extraction/refactoring and tests are part of that delivery package.",
+      "caveat": "Includes production-code work and validation; the label is documentation, packaging and delivery, not pure writing.",
+      "duration_ms": 2971033,
+      "duration_hms": "00:49:31.033",
+      "original_purpose": "mixed_or_unattributed"
+    }
+  ],
+  "boundary_decisions": [
+    {
+      "ordinal": 7,
+      "display_group": "solver_design_implementation",
+      "reason": "Predates the custom submitter; general starter-package and solver/debug/submission-contract guidance, not custom-script development."
+    },
+    {
+      "ordinal": 9,
+      "display_group": "solver_design_implementation",
+      "reason": "The task-creation clock is an inherent game/solver deadline requirement, not merely a script feature."
+    },
+    {
+      "ordinal": 13,
+      "display_group": "solver_design_implementation",
+      "reason": "JSON action-plan format is the product solver output contract."
+    },
+    {
+      "ordinal": 50,
+      "display_group": "submission_support",
+      "reason": "Interprets a just-submitted task clock; operational result clarification, not script implementation."
+    },
+    {
+      "ordinal": 51,
+      "display_group": "solver_design_implementation",
+      "reason": "Explains hidden-map and level/task input requirements; does not design or change the script."
+    },
+    {
+      "ordinal": 91,
+      "display_group": "submission_support",
+      "reason": "Read-only reconciliation of the real stopped run and pending server task remains operations, even though it diagnoses the creation timeout."
+    },
+    {
+      "ordinal": 95,
+      "display_group": "documentation_delivery",
+      "reason": "Primary outcome is the Stage2 report. Its acquisition-delay and solver-profile analysis are not artificially split into automation/solver minutes."
+    },
+    {
+      "ordinal": 144,
+      "display_group": "solver_design_implementation",
+      "reason": "The discrepancy is an experimental recommendation versus the solver default; checking that the runner has no override is supporting evidence, not custom-script implementation."
+    },
+    {
+      "ordinal": 163,
+      "display_group": "documentation_delivery",
+      "reason": "Lists the delivery/package implementation plan; it is delivery planning rather than a new solver-design decision."
+    },
+    {
+      "ordinal": 78,
+      "display_group": "solver_design_implementation",
+      "reason": "Proposes and prioritizes optimization candidates; future measurement is pending. This is design rather than a dedicated review campaign."
+    },
+    {
+      "ordinal": 79,
+      "display_group": "quality_coverage_validation",
+      "reason": "Independently review pruning soundness and identify stronger safe bounds before implementation."
+    },
+    {
+      "ordinal": 104,
+      "display_group": "quality_coverage_validation",
+      "reason": "Review search ordering, memoization, greedy policies and pruning; identify two small probe defects."
+    }
+  ],
+  "embedded_automation_caveat": "The combined submission row includes script design, development, checks, live operations and recovery. Some operational periods also include solver configuration adoption; some automation packaging remains in delivery165. No within-period split or double counting is introduced.",
+  "period_presentation": {
+    "through_game_completion": {
+      "displayed_duration_ms": 86610795,
+      "groups": {
+        "solver_design_implementation": {
+          "turn_count": 83,
+          "duration_ms": 24810986,
+          "duration_hms": "06:53:30.986"
+        },
+        "candidate_comparisons": {
+          "turn_count": 30,
+          "duration_ms": 36795183,
+          "duration_hms": "10:13:15.183"
+        },
+        "quality_coverage_validation": {
+          "turn_count": 13,
+          "duration_ms": 9925196,
+          "duration_hms": "02:45:25.196"
+        },
+        "submission_support": {
+          "turn_count": 22,
+          "duration_ms": 12445635,
+          "duration_hms": "03:27:25.635"
+        },
+        "documentation_delivery": {
+          "turn_count": 4,
+          "duration_ms": 2633795,
+          "duration_hms": "00:43:53.795"
+        }
+      }
+    },
+    "post_game_delivery": {
+      "displayed_duration_ms": 7296954,
+      "groups": {
+        "solver_design_implementation": {
+          "turn_count": 1,
+          "duration_ms": 8108,
+          "duration_hms": "00:00:08.108"
+        },
+        "candidate_comparisons": {
+          "turn_count": 0,
+          "duration_ms": 0,
+          "duration_hms": "00:00:00.000"
+        },
+        "quality_coverage_validation": {
+          "turn_count": 0,
+          "duration_ms": 0,
+          "duration_hms": "00:00:00.000"
+        },
+        "submission_support": {
+          "turn_count": 0,
+          "duration_ms": 0,
+          "duration_hms": "00:00:00.000"
+        },
+        "documentation_delivery": {
+          "turn_count": 6,
+          "duration_ms": 7288846,
+          "duration_hms": "02:01:28.846"
+        }
+      }
+    }
+  },
+  "integrity": {
+    "all166_original_ordinals_accounted_for_once": true,
+    "no_original_data_edited": true,
+    "source_cutoff_unchanged": true,
+    "original_stage_totals_preserved": true,
+    "raw_conversation_or_secrets_in_output": false,
+    "displayed_plus_excluded_equals_original": true
+  },
+  "review_reassignment": [
+    {
+      "ordinal": 79,
+      "duration_ms": 1221445,
+      "duration_hms": "00:20:21.445",
+      "reason": "Independently review pruning soundness and identify stronger safe bounds before implementation.",
+      "source_start_line": 9378,
+      "source_end_line": 9869
+    },
+    {
+      "ordinal": 104,
+      "duration_ms": 617695,
+      "duration_hms": "00:10:17.695",
+      "reason": "Review search ordering, memoization, greedy policies and pruning; identify two small probe defects.",
+      "source_start_line": 18315,
+      "source_end_line": 18574
+    }
+  ]
+}

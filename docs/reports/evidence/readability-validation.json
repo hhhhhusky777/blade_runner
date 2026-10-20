@@ -1,0 +1,262 @@
+{
+  "schema": 1,
+  "scope": "Client-readable source refinement; no new game tasks, submissions or solver tuning. Historical measurements remain separate.",
+  "baseline_commit": "12f4bc4973940134d61839756cb7e2757911fb84",
+  "reviewed_implementation_digest": "a93aebfd1a947e62c2a324b2c0fd5bf6b2597f64b8b86bc7c61eafbb7d97be1f",
+  "source_files": {
+    "game_solver/api_client/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "game_solver/api_client/client.py": "732f865c22a9be4176b4e36dcfc9e3e2544368f86a799716c2dbed3bcff31d16",
+    "game_solver/api_client/models.py": "bdd23e920817393391c1c9ee0616d4b1957cc80e59b1fd6eda3af54d38a25d77",
+    "game_solver/solver/__init__.py": "0dcfadee5a9256879b55ba8629530b731c359b4cfa62b7b8a7e478f7b017dee3",
+    "game_solver/solver/__main__.py": "6a72d0c0eee636f5f89c258d0d7cdfe829e2be9d5cbd73cad74b1cf1b7ae5082",
+    "game_solver/solver/api.py": "17464b2470f6088ca7b98c5ba18887e7040b600388ccd27e0a7fd1bcc7ee483d",
+    "game_solver/solver/capital.py": "16c8c39f1cf60519a5ffefc7bad4e4819e2530c416b3f56a1befb8c63d1b821a",
+    "game_solver/solver/child.py": "c19bb3cdbbfc5a5a04ea6a838f051e4aa97818398478d0c680715d687a2b9cde",
+    "game_solver/solver/reference.py": "705f9ee0377b64b4c06aab43ff19239a480980bb580e3a9149237e167042a037",
+    "game_solver/solver/resource_guidance.py": "073fa0553d49448cf37aa410e77b154f1da296dbdc85e4b4d9130fbb45cf64be",
+    "game_solver/solver/runner.py": "605b36c9652659c884a3304102705c963c7c5ace9e4b8d745cd24e4a6d24faa1",
+    "game_solver/solver/stage1.py": "54f67c13c76a179487f222140091210c3f1ff4dbf67cdecf8d399688a5c46371",
+    "game_solver/solver/stage1_preset.py": "0cd21e4541812838d6b2fbae2fd75b01d696307d27f528a9bba2dfa1c5d8e495",
+    "game_solver/solver/stage2.py": "9579142faf9e6e6e826481bb4c76202622c32a90105f7fd68d8b17a6b45d36d9",
+    "game_solver/solver/stage2_reference.py": "aadb902ee26f0ab250078b77c4f993dd2ee0101ebb7bdcbaf849eb95cee8c42e",
+    "game_solver/solver/stage3.py": "c52d33aa1a6f2fc07346b96bcbaf3dfa97340d29237d0b416ff1d369ead6a31d",
+    "game_solver/solver/stage3_reference.py": "564fa657d9054566765c285a38c14e388c1a3400a47e181a5827ba92a9b41c8c",
+    "game_solver/tests/__init__.py": "1a314902c64064dca95a63cc5e44262b9906b64bf1cebeda376f48697169ad7a",
+    "game_solver/tests/run_regressions.py": "33d89a00a26ecd412ca706977e1c0ca9e6cddbd2ff8484e58122a7cb3ee719f7",
+    "game_solver/tests/test_package_boundaries.py": "3c1a721c5d0cdab8f31e2b0da0ea9783d2621b0a77e4ad8e3d5da042554da155",
+    "game_solver/tests/test_runner_attempt.py": "c313c3bf6db1ef076f87821bf36bc5fb7cdb8fd18dce27043a7f7dbcb7091d10",
+    "game_solver/tests/test_runner_creation_retries.py": "570ab94e8fed7d332fead26c2b9b3360491671e82a4e47ecd45a65fcdaac534f",
+    "game_solver/tests/test_runner_creation_timeout.py": "4d9f3d5c8dc60881f7a6c36c31f8a5c965fc630b96ea2c53e9a4b32015f08307",
+    "game_solver/tests/test_runner_loop.py": "6ac01cd15e975f59efbbba99cef9caa9296c2df37e3a03a12b83017217be1d2b",
+    "game_solver/tests/test_runner_recovery.py": "29c53b52bdea4cd20bb9d248aada2973c49dbbbe0a9d1fb3bdd536f16b1986f1",
+    "game_solver/tests/test_runner_stage2.py": "f6baff3bfca7788500044b93ff57c7890ad0136243ee8e8e2e685b1838515b88",
+    "game_solver/tests/test_runner_stage3.py": "5e1f73b6a22ff874be6a4b3768725bddf049aafd491655630e4f750ee81d9b2e",
+    "game_solver/tests/test_runner_verification.py": "bbe448c1d366ecc7d4f6c6d736931816edee068a62c759707bfb6bd02f2447fe",
+    "game_solver/tests/test_stage1.py": "46e8ad8e722ee765cefb16aaec6adc5651b3318549c1c8efb665dec2fb518040",
+    "game_solver/tests/test_stage2.py": "747f79136a75992db5b5bc21f706e92e10a88a8b080a01614aaf89bc3a1e72fd",
+    "game_solver/tests/test_stage3.py": "f1ec1619802086f0c139617cbac9720d67ecb7b3d1ab0cfc779d9d5ed865bbf6",
+    "tools/build_delivery.py": "58bd5dd0a7cd58650c57ae197dc4066ed94a0b12f6e3dce99be52929e520a6be"
+  },
+  "function_contracts": {
+    "files": 32,
+    "function_declarations": 396,
+    "additional_embedded_test_functions": 2,
+    "missing_docstrings": 0,
+    "missing_parameter_or_return_annotations": 0,
+    "implicit_parameters": [
+      "self",
+      "cls"
+    ],
+    "coverage": [
+      {
+        "path": "game_solver/api_client/__init__.py",
+        "functions": 0
+      },
+      {
+        "path": "game_solver/api_client/client.py",
+        "functions": 17
+      },
+      {
+        "path": "game_solver/api_client/models.py",
+        "functions": 2
+      },
+      {
+        "path": "game_solver/solver/__init__.py",
+        "functions": 0
+      },
+      {
+        "path": "game_solver/solver/__main__.py",
+        "functions": 1
+      },
+      {
+        "path": "game_solver/solver/api.py",
+        "functions": 2
+      },
+      {
+        "path": "game_solver/solver/capital.py",
+        "functions": 1
+      },
+      {
+        "path": "game_solver/solver/child.py",
+        "functions": 2
+      },
+      {
+        "path": "game_solver/solver/reference.py",
+        "functions": 16
+      },
+      {
+        "path": "game_solver/solver/resource_guidance.py",
+        "functions": 5
+      },
+      {
+        "path": "game_solver/solver/runner.py",
+        "functions": 21
+      },
+      {
+        "path": "game_solver/solver/stage1.py",
+        "functions": 30
+      },
+      {
+        "path": "game_solver/solver/stage1_preset.py",
+        "functions": 4
+      },
+      {
+        "path": "game_solver/solver/stage2.py",
+        "functions": 28
+      },
+      {
+        "path": "game_solver/solver/stage2_reference.py",
+        "functions": 13
+      },
+      {
+        "path": "game_solver/solver/stage3.py",
+        "functions": 42
+      },
+      {
+        "path": "game_solver/solver/stage3_reference.py",
+        "functions": 10
+      },
+      {
+        "path": "game_solver/tests/__init__.py",
+        "functions": 0
+      },
+      {
+        "path": "game_solver/tests/run_regressions.py",
+        "functions": 7
+      },
+      {
+        "path": "game_solver/tests/test_package_boundaries.py",
+        "functions": 4
+      },
+      {
+        "path": "game_solver/tests/test_runner_attempt.py",
+        "functions": 18
+      },
+      {
+        "path": "game_solver/tests/test_runner_creation_retries.py",
+        "functions": 30
+      },
+      {
+        "path": "game_solver/tests/test_runner_creation_timeout.py",
+        "functions": 6
+      },
+      {
+        "path": "game_solver/tests/test_runner_loop.py",
+        "functions": 29
+      },
+      {
+        "path": "game_solver/tests/test_runner_recovery.py",
+        "functions": 20
+      },
+      {
+        "path": "game_solver/tests/test_runner_stage2.py",
+        "functions": 17
+      },
+      {
+        "path": "game_solver/tests/test_runner_stage3.py",
+        "functions": 13
+      },
+      {
+        "path": "game_solver/tests/test_runner_verification.py",
+        "functions": 25
+      },
+      {
+        "path": "game_solver/tests/test_stage1.py",
+        "functions": 9
+      },
+      {
+        "path": "game_solver/tests/test_stage2.py",
+        "functions": 8
+      },
+      {
+        "path": "game_solver/tests/test_stage3.py",
+        "functions": 13
+      },
+      {
+        "path": "tools/build_delivery.py",
+        "functions": 3
+      }
+    ]
+  },
+  "static_validation": {
+    "compile": "32 files passed",
+    "strict_mypy": "31 solver/client/test modules passed; packaging helper passed separately",
+    "clean_import": "solver import leaves socket and environment unchanged",
+    "locked_dependencies": "uv lock --check --offline passed"
+  },
+  "regressions": {
+    "passed": 658,
+    "total": 658,
+    "outcomes": {
+      "FEASIBLE": 558,
+      "INFEASIBLE": 100
+    },
+    "previous_delivery_comparison": {
+      "matched": 658,
+      "compared_fields": [
+        "input_sha256",
+        "status",
+        "reason",
+        "expected_status",
+        "expanded",
+        "plan_sha256",
+        "replayed_modes"
+      ],
+      "mismatches": 0
+    },
+    "current_result_sha256": "b554e10507b714f61775aae0e5605916ac9db9ea7d080d7c68f054ca1237b0e7",
+    "prior_evidence": "migration-full.json",
+    "fixture_hashes": {
+      "game_solver/tests/fixtures/stage3-capabilities.json": "381cf011569c4a9d0d90f372c329f30d60273f0604434cd9e0029f8e402bc6b3",
+      "game_solver/tests/fixtures/stage2-controls.json": "298ab22092551f91f41d6177ebb268cd6955582abfa8c11a8fe77cd05267126d",
+      "game_solver/tests/fixtures/stage3-fixtures.json": "f8ad0bd7f267b313ed12f3fabc2a422e4b378d197c9a9e3f2d5372bf46601e1a",
+      "game_solver/tests/fixtures/server-regressions.json": "b7f2e0e16e59dbad291b3d1f534d43237329d79f6223ce80dd08d8581e00cfc0",
+      "game_solver/tests/fixtures/stage1-controls.json": "82ff53da525293867aeb1b2d6a0db12a59e72f9d72969e478da0ddde6ac1403a",
+      "game_solver/tests/fixtures/stage2-capabilities.json": "6394e33a93641caaa47a190370c77b9761bfcfa0685c35b8e125a547dae0d08e",
+      "game_solver/tests/fixtures/stage1-basic.json": "2730e0dba31b43dee6eb557e02cd48b19ddfc6fac1ca70bb60391560f3656aee",
+      "game_solver/tests/fixtures/stage2-fixtures.json": "614ff5feea26b94498fbaf248153c5084fb4bb53f165c92bff50612d7ca44fae",
+      "game_solver/tests/fixtures/stage3-controls.json": "b5b0df068567cd81e942ceaf698f7f84bf5d0902169a1c35afa8bf7ba13d9f96"
+    },
+    "command": "cd game_solver && uv run --frozen python -m tests.run_regressions --suite all --seconds 30 --output regression-results.json",
+    "note": "Current rows compare with the retained previous delivery snapshot; historical source implementations were not rerun. Per-case timings are not presented as a new performance study."
+  },
+  "portable_tests": {
+    "passed": 115,
+    "command": "cd game_solver && uv run --frozen python -m unittest discover -s tests -t ."
+  },
+  "extracted_package": {
+    "locked_offline_install": "passed; Python 3.13, 23 locked packages",
+    "portable_tests_passed": 115,
+    "strict_mypy": "31 modules passed",
+    "offline_smokes": {
+      "stage1": "OFFLINE_OK",
+      "stage2": "OFFLINE_OK",
+      "stage3": "OFFLINE_OK"
+    },
+    "research_and_credentials_absent": true,
+    "source_identity": "All 32 reviewed Python files equal the extracted and tested bytes. Final outcome-only README/report/evidence additions checked separately in archive verification."
+  },
+  "reviews": {
+    "A": "APPROVE final implementation candidate; Findings None",
+    "B": "APPROVE pre-final implementation audit; Findings None"
+  },
+  "authorized_removals": [
+    "docs/reports/stage-1-report.md",
+    "docs/reports/stage-2-report.md",
+    "docs/reports/stage-3-report.md",
+    "docs/reports/stage-2-timing.png",
+    "docs/reports/stage-3-timing.png"
+  ],
+  "provenance": "Compact stage metrics retained unchanged. Removed report hashes resolve at baseline Git revision in visual-report.json. Frozen whiteboard remains unchanged; owner explicitly replaced standalone appendices with consolidated summaries.",
+  "behavior_review": "Existing function bodies preserve algorithms and defaults after removing docs/type aids and equivalent local aliases, cursor/assignment split and lambda-to-named-predicate conversion. Builder intentionally removes obsolete chapter-link export logic. No tests or runtime rules were weakened.",
+  "delivery_inputs": {
+    "game_solver/pyproject.toml": "39fb99aa88250ddfe71e51f4aa57c0fd9e6e6e4910612e772358370394c29814",
+    "game_solver/uv.lock": "fd9a2de9041ac4b3825da0208c2978f4f02977217de17af531da59a295b4b37b",
+    "submit.sh": "5a142757a1762abd501bc4fd2982fe0918ad8f61d934d745c65a1b81a955fb14"
+  },
+  "historical_source_inventory": {
+    "path": "migration-sources.json",
+    "meaning": "Prior migration source hashes remain preserved and explicitly labeled; source_files and delivery_inputs bind the current delivery.",
+    "sha256": "34bcfb4f607654aa3f1ead11ea454d878b04082364dd92751759203a5b051a23"
+  }
+}

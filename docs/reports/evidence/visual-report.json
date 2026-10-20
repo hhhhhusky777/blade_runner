@@ -1,0 +1,499 @@
+{
+  "schema": 1,
+  "purpose": "Visual presentation of existing experiments, not new performance measurements.",
+  "source": {
+    "path": "delivery-evidence.json",
+    "sha256": "bc68c939fd36962b0a4ba55cdcba97cf2bc1507942a5be046a7c6bfbce895ad6"
+  },
+  "comparisons": {
+    "stage1": {
+      "source": "experiments/stage1_poc/probe-results.json",
+      "boundary": "Median of31aligned warm rounds; each round sums106commoncase solve times, excludes startup and2slowcoldcontrols. All108coldcases have66F/42I/0UNKNOWN for allfourarms.",
+      "rows": [
+        {
+          "variant": "baseline",
+          "warm_suite_median_ms": 262.1785349911079
+        },
+        {
+          "variant": "cache",
+          "warm_suite_median_ms": 231.2779175117612
+        },
+        {
+          "variant": "dp",
+          "warm_suite_median_ms": 67.87070468999445
+        },
+        {
+          "variant": "both",
+          "warm_suite_median_ms": 63.41766600962728
+        }
+      ]
+    },
+    "stage2": {
+      "source": "experiments/stage2_research/economic-analysis.json",
+      "boundary": "One cold observation per150maps; total observed full-pipeline time includes actual deadlineUNKNOWNs.912runstudy includes additionalpreselected repeats. Samecorpusfourarms; notmeanwinninglatency.",
+      "rows": [
+        {
+          "variant": "baseline",
+          "wins": 120,
+          "proofs": 24,
+          "unknowns": 6,
+          "pipeline_sum_seconds": 216.8539026688086
+        },
+        {
+          "variant": "saving",
+          "wins": 126,
+          "proofs": 24,
+          "unknowns": 0,
+          "pipeline_sum_seconds": 39.22764495923184
+        },
+        {
+          "variant": "relaxed",
+          "wins": 120,
+          "proofs": 24,
+          "unknowns": 6,
+          "pipeline_sum_seconds": 202.8662756989943
+        },
+        {
+          "variant": "both",
+          "wins": 126,
+          "proofs": 24,
+          "unknowns": 0,
+          "pipeline_sum_seconds": 25.48264691478107
+        }
+      ]
+    },
+    "stage3_dp": {
+      "source": "experiments/stage3_research/production-activation-analysis.json",
+      "boundary": "227configurations/225maps,3coldrounds; compare same205positiveconfigurations. Interval512/root192/later32fixed. OneDP-offnegativeUNKNOWNretained.",
+      "rows": [
+        {
+          "variant": "project_order",
+          "reliable": 226,
+          "mean_win_ms": 47.07107299397419
+        },
+        {
+          "variant": "project_both",
+          "reliable": 227,
+          "mean_win_ms": 50.56341150775552
+        },
+        {
+          "variant": "project_adaptive",
+          "reliable": 227,
+          "mean_win_ms": 47.67717676941396
+        }
+      ]
+    },
+    "stage3_root": {
+      "source": "experiments/stage3_research/root512-analysis.json",
+      "boundary": "307configurations/293maps,3coldroundsperarm; interval512/later32fixed; same272positiveconfigurationsforwinmeans.1842actualruns.",
+      "rows": [
+        {
+          "variant": "root192-interval512-later32",
+          "reliable": 306,
+          "mean_win_ms": 84.27194256364601,
+          "peak_rss_mib": 54.6875
+        },
+        {
+          "variant": "root512-interval512-later32",
+          "reliable": 307,
+          "mean_win_ms": 57.184551842938696,
+          "peak_rss_mib": 52.6875
+        }
+      ]
+    }
+  },
+  "assignment_brief": {
+    "date": "2026-10-10",
+    "subject": "Application assignment for Senior Python Backend Engineer",
+    "skills": [
+      "understanding requirements",
+      "effective complex-problem solving",
+      "non-trivial coding",
+      "accurate time tracking including setup and documentation",
+      "independent judgment under incomplete requirements",
+      "working in the remote environment"
+    ],
+    "delivery": "Code ZIP by email within 14 days. This artifact does not send email.",
+    "time_requirement": "TiMaS project time required; owner reports tracker inaccurate. Reconstructed assistant-turn elapsed is labeled separately."
+  },
+  "presentation_method": {
+    "axes": "Time bars begin at zero; direct labels; separate panels for different timing boundaries.",
+    "references": [
+      "https://service-manual.ons.gov.uk/data-visualisation/chart-types/bar-charts",
+      "https://matplotlib.org/stable/gallery/lines_bars_and_markers/bar_label_demo.html"
+    ]
+  },
+  "executed_figure_source": "\"\"\"Re-render recruiter comparison figures from preserved observations; no new benchmark.\"\"\"\nimport json, hashlib\nfrom pathlib import Path\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nROOT=Path('/Users/hhhhhusky/.codex/worktrees/stage1-solver-design/blade_runner')\nOUT=ROOT/'docs/reports'\nSOURCE=OUT/'evidence/delivery-evidence.json'\ne=json.loads(SOURCE.read_text()); c=e['comparisons']\nNAVY='#18354A'; TEAL='#087F7A'; BLUE='#4D7EA8'; GRAY='#A4B1BD'; AMBER='#BF741B'; LIGHT='#EDF4F5'\nplt.rcParams.update({'font.family':'DejaVu Sans','font.size':12,'text.color':NAVY,'axes.labelcolor':NAVY,'xtick.color':NAVY,'ytick.color':NAVY,'axes.titleweight':'bold','axes.titlesize':14,'axes.spines.top':False,'axes.spines.right':False,'axes.spines.left':False,'axes.spines.bottom':False,'figure.facecolor':'white','savefig.facecolor':'white'})\ndef frame(title, subtitle, size=(12,6.8)):\n f=plt.figure(figsize=size)\n f.text(.035,.94,title,fontsize=23,weight='bold')\n f.text(.035,.895,subtitle,fontsize=11.5,color='#526778')\n return f\ndef bar(ax,labels,values,chosen,xmax,xlabel):\n y=list(range(len(labels)))\n ax.barh(y,values,color=[TEAL if i==chosen else BLUE for i in y],height=.55,zorder=3)\n ax.set_yticks(y,labels);ax.invert_yaxis();ax.set_xlim(0,xmax);ax.set_xlabel(xlabel,labelpad=10)\n ax.tick_params(axis='y',length=0,pad=12);ax.grid(axis='x',alpha=.22,zorder=0)\n for i,v in enumerate(values):ax.text(v+xmax*.018,i,f'{v:.2f}',va='center',fontsize=12,weight='bold' if i==chosen else 'normal')\ndef save(f,name):\n f.savefig(OUT/name,dpi=170);plt.close(f)\n\nr=c['stage1']['rows'];f=frame('Stage 1 | Reuse geometry. Reject bad investments.','Decision: retain cache + investment DP after equal-outcome comparison.')\nax=f.add_axes([.20,.29,.67,.51]);bar(ax,['Baseline','Cache','Investment DP','Cache + DP  \u2713'],[v['warm_suite_median_ms'] for v in r],3,310,'Warm suite time (ms) \u2014 lower is better')\nf.text(.035,.18,'75.8% less time',fontsize=21,weight='bold',color=TEAL)\nf.text(.38,.18,'All four variants: 66 wins + 42 impossibility proofs',fontsize=13)\nf.text(.035,.10,'31 aligned warm rounds \u2022 106 common cases \u2022 median of per-round solve-time sums \u2022 startup excluded',fontsize=10.5)\nf.text(.035,.055,'Two slow controls excluded equally from warm comparisons; all 108 retained in cold validation. No UNKNOWNs.',fontsize=10.5)\nsave(f,'recruitment-stage1-decisions.png')\n\nr=c['stage2']['rows'];f=frame('Stage 2 | Close the six gaps before optimizing speed.','Decision: saving-aware guidance closes the gaps; relaxed guidance makes the combination faster.',size=(12,7.5))\nlabels=['Baseline','Saving-aware','Relaxed','Both  \u2713'];y=list(range(4))\nax=f.add_axes([.17,.32,.36,.47]);left=[0]*4\nfor key,color,label in [('wins',TEAL,'Winning plan'),('proofs',GRAY,'Impossible proof'),('unknowns',AMBER,'UNKNOWN')]:\n vals=[v[key] for v in r];ax.barh(y,vals,left=left,height=.55,color=color,label=label)\n for i,(v,l) in enumerate(zip(vals,left)):\n  if v:ax.text(l+v/2,i,str(v),ha='center',va='center',color='white' if key!='proofs' else NAVY,fontsize=10)\n left=[l+v for l,v in zip(left,vals)]\nax.set_xlim(0,150);ax.set_xticks([0,50,100,150]);ax.set_yticks(y,labels);ax.invert_yaxis();ax.tick_params(axis='y',length=0,pad=10);ax.set_title('Coverage first',loc='left',pad=16);ax.set_xlabel('Outcomes across 150 maps',labelpad=10)\nax.legend(loc='upper left',bbox_to_anchor=(-.35,-.20),ncol=3,frameon=False,fontsize=10,handlelength=1.2,columnspacing=1.2)\nax2=f.add_axes([.65,.32,.29,.47]);bar(ax2,['']*4,[v['pipeline_sum_seconds'] for v in r],3,260,'Observed suite time (s)')\nax2.set_title('Then compare time',loc='left',pad=16)\nf.text(.035,.135,'6 UNKNOWNs \u2192 0',fontsize=20,weight='bold',color=TEAL)\nf.text(.36,.135,'Both: 25.48 s vs baseline 216.85 s',fontsize=14)\nf.text(.035,.085,'One cold observation per map per variant; total pipeline time includes actual timeouts. Same 150-map corpus.',fontsize=10.5)\nf.text(.035,.04,'Repeated economic challenges separately supported relaxed guidance: 5/7 selected challenges met the 2\u00d7 rule.',fontsize=10.5)\nsave(f,'recruitment-stage2-decisions.png')\n\nf=frame('Stage 3 | Pay for stronger search where it helps.','Two separate experiments: compare within each panel. Green marks the adopted option.',size=(12,8))\nr=c['stage3_dp']['rows'];ax=f.add_axes([.20,.38,.28,.39]);bar(ax,['DP off\\n226/227 reliable','Always on\\n227/227 reliable','On demand  \u2713\\n227/227 reliable'],[v['mean_win_ms'] for v in r],2,65,'Mean validated win (ms)')\nax.set_title('A. When to pay for DP?',loc='left',pad=20)\nr=c['stage3_root']['rows'];ax=f.add_axes([.69,.38,.25,.39]);bar(ax,['192 decisions\\n306/307 reliable','512 decisions  \u2713\\n307/307 reliable'],[v['mean_win_ms'] for v in r],1,105,'Mean validated win (ms)')\nax.set_title('B. How long to probe?',loc='left',pad=20)\nf.text(.035,.26,'5.7% less time vs always on',fontsize=17,weight='bold',color=TEAL)\nf.text(.55,.26,'32.1% less time vs 192',fontsize=17,weight='bold',color=TEAL)\nf.text(.035,.19,'205 common positive configurations; 227 total.\\nThree cold rounds. DP-off miss was an impossible case.\\nInitial 192 / interval 512 / later 32 held fixed.',fontsize=10.5,linespacing=1.6,va='top')\nf.text(.55,.19,'272 common positive configurations; 307 total.\\nThree cold rounds per arm = 1,842 runs.\\nInterval 512 / later 32 held fixed.',fontsize=10.5,linespacing=1.6,va='top')\nf.text(.035,.055,'Reliable = correct in every round. Failed map: three 30 s UNKNOWNs \u2192 three wins in 0.457\u20130.486 s.',fontsize=11)\nsave(f,'recruitment-stage3-decisions.png')\n\nsha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()\nrecord={'schema':1,'purpose':'Visual presentation of existing experiments, not new performance measurements.','source':{'path':'delivery-evidence.json','sha256':sha(SOURCE)},'comparisons':c,'assignment_brief':{'date':'2026-10-10','subject':'Application assignment for Senior Python Backend Engineer','skills':['understanding requirements','effective complex-problem solving','non-trivial coding','accurate time tracking including setup and documentation','independent judgment under incomplete requirements','working in the remote environment'],'delivery':'Code ZIP by email within 14 days. This artifact does not send email.','time_requirement':'TiMaS project time required; owner reports tracker inaccurate. Reconstructed assistant-turn elapsed is labeled separately.'},'presentation_method':{'axes':'Time bars begin at zero; direct labels; separate panels for different timing boundaries.','references':['https://service-manual.ons.gov.uk/data-visualisation/chart-types/bar-charts','https://matplotlib.org/stable/gallery/lines_bars_and_markers/bar_label_demo.html']},'executed_figure_source':Path(__file__).read_text(),'assets':{name:sha(OUT/name) for name in ['recruitment-stage1-decisions.png','recruitment-stage2-decisions.png','recruitment-stage3-decisions.png']}}\n(OUT/'evidence/visual-report.json').write_text(json.dumps(record,indent=2)+'\\n')\nprint(json.dumps({'assets':record['assets']}))\n",
+  "assets": {
+    "recruitment-stage1-decisions.png": "e3c704dda51435b17d8209de943830345283acea35eb75465583c7297346ba7b",
+    "recruitment-stage2-decisions.png": "72cb9d0c6b7b1c14e240ac5e796733f8d9a61ec383495abfc98da2ecb84244c5",
+    "recruitment-stage3-decisions.png": "9eaf47a06717416f7aefd827a821b9a7641af2a4cbc0edc7396267dfb0f4a8f1",
+    "recruitment-stage-time.png": "b042ea562314b8d10206dcd2e563eecb36bfcf12e1310a455f479bb32b2ccfc6",
+    "recruitment-quality.png": "2fa3860f76f40185892c03d334922203b58cbecbe2dd51547e023df4ca93e5f5",
+    "recruitment-work-purpose.png": "cf2a50f225912e699e1ad826b8673cc7bb58e37e00b35fd232a9a86e56fb439a"
+  },
+  "stage_time": {
+    "audit_path": "stage-time-audit.json",
+    "audit_sha256": "98066505a02f2444af6c25e8ac3fb879135ed359df9f7d49a5b55068969a5e64",
+    "csv_path": "stage-turn-times.csv",
+    "csv_sha256": "3b8a0ecd6d6c8f151ddace1c4ffdd470e3b6420650e8c5a6fdcc633cfdf08603",
+    "figure_source": "from pathlib import Path\nimport json,hashlib\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nr=Path('/Users/hhhhhusky/.codex/worktrees/stage1-solver-design/blade_runner'); out=r/'docs/reports'; p=out/'evidence/stage-time-audit.json'; a=json.loads(p.read_text()); e=a['recommended_primary_context_estimates']\nkeys=['stage_1','stage_2','stage_3','shared_setup_delivery','mixed_stage_1_stage_2']; names=['Stage 1','Stage 2','Stage 3','Shared setup + delivery','Mixed Stage 1 / 2']\nplt.rcParams.update({'font.family':'DejaVu Sans','font.size':12,'text.color':'#18354A','axes.labelcolor':'#18354A','xtick.color':'#18354A','ytick.color':'#18354A'})\nf,ax=plt.subplots(figsize=(12,5.5));f.subplots_adjust(left=.24,right=.9,bottom=.24,top=.73)\nf.text(.035,.92,'Reconstructed stage time | 26 h 17 m recorded elapsed',fontsize=21,weight='bold')\nf.text(.035,.85,'166 completed or interrupted assistant turns, through 18 October 2026, 20:52 (UTC+8)',fontsize=11.5)\nvals=[e[k]['duration_ms']/3600000 for k in keys]\nax.barh(names,vals,color=['#4D7EA8']*3+['#A4B1BD','#BF741B'],height=.6,zorder=3);ax.invert_yaxis();ax.set_xlim(0,13);ax.set_xticks([0,3,6,9,12]);ax.grid(axis='x',alpha=.2,zorder=0);ax.set_xlabel('Recorded elapsed hours, allocated by the turn\u2019s main work context',labelpad=10);ax.tick_params(axis='y',length=0,pad=10)\nfor s in ax.spines.values():s.set_visible(False)\nfor i,k in enumerate(keys):\n minutes=round(e[k]['duration_ms']/60000);label=f'{minutes//60} h {minutes%60:02d} m';ax.text(vals[i]+.15,i,label,va='center',weight='bold')\nf.text(.035,.105,'Stage allocation is an estimate; shared work and the mixed transition stay visible. Tools, tests and waits are included.',fontsize=10.5)\nf.text(.035,.055,'Not verified human labor or corrected TiMaS time. Gaps, double-counted child time and this report revision are excluded.',fontsize=10.5)\nf.savefig(out/'recruitment-stage-time.png',dpi=170)\nsha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()\nv=out/'evidence/visual-report.json';d=json.loads(v.read_text());d['stage_time']={'audit_path':'stage-time-audit.json','audit_sha256':sha(p),'csv_path':'stage-turn-times.csv','csv_sha256':sha(out/'evidence/stage-turn-times.csv'),'figure_source':Path(__file__).read_text(),'allocation':'Whole-turn primary-context estimate; raw conversation excluded.'};d['assets']['recruitment-stage-time.png']=sha(out/'recruitment-stage-time.png');v.write_text(json.dumps(d,indent=2)+'\\n')\n",
+    "allocation": "Whole-turn primary-context estimate; raw conversation excluded."
+  },
+  "dp_observability": {
+    "historical_source": "experiments/stage3_research/production-activation-analysis.json",
+    "sha256": "b48b22b89fbbc6cd8253b1f5ea3fd84212773fe1ac216e86cca6266d731b3243",
+    "activation_counts": {
+      "project_order": {
+        "actual": 679,
+        "native": 676,
+        "delegated": 3,
+        "activations": 0,
+        "queries": 0,
+        "root_probe_queries": 0,
+        "zero_query_native_wins": 612,
+        "native_wins": 612,
+        "reasons": {
+          "null": 676
+        },
+        "root_miss_case_ids": []
+      },
+      "project_both": {
+        "actual": 681,
+        "native": 678,
+        "delegated": 3,
+        "activations": 678,
+        "queries": 183045,
+        "root_probe_queries": 144399,
+        "zero_query_native_wins": 0,
+        "native_wins": 612,
+        "reasons": {
+          "initial": 678
+        },
+        "root_miss_case_ids": []
+      },
+      "project_adaptive": {
+        "actual": 681,
+        "native": 678,
+        "delegated": 3,
+        "activations": 135,
+        "queries": 38235,
+        "root_probe_queries": 0,
+        "zero_query_native_wins": 507,
+        "native_wins": 612,
+        "reasons": {
+          "null": 543,
+          "root_probe_miss": 129,
+          "exact_search_entry": 6
+        },
+        "root_miss_case_ids": [
+          "broad-development-capital-first-040-cash-minus1",
+          "broad-development-long-130",
+          "broad-development-negative-road-fee",
+          "broad-heldout-capital-first-040-cash-minus1",
+          "broad-heldout-long-130",
+          "broad-heldout-negative-road-fee-r90",
+          "discovery-fallback-027",
+          "not-enough-capital",
+          "probe-coverage-development-cash-lock-00",
+          "probe-coverage-development-cash-lock-01",
+          "probe-coverage-development-parallel-budget-00",
+          "probe-coverage-development-parallel-budget-01",
+          "probe-coverage-development-parallel-budget-02",
+          "probe-coverage-development-parallel-budget-03",
+          "probe-coverage-development-shared-production-00",
+          "probe-coverage-development-shared-production-01",
+          "probe-coverage-development-shared-production-02",
+          "probe-coverage-development-shared-production-03",
+          "probe-coverage-development-typed-detour-01",
+          "probe-coverage-development-typed-detour-03",
+          "probe-coverage-development-wait-build-01",
+          "probe-coverage-development-wait-build-03",
+          "probe-coverage-reserved-cash-lock-00",
+          "probe-coverage-reserved-cash-lock-01",
+          "probe-coverage-reserved-parallel-budget-00",
+          "probe-coverage-reserved-parallel-budget-01",
+          "probe-coverage-reserved-shared-production-00",
+          "probe-coverage-reserved-shared-production-01",
+          "probe-coverage-reserved-typed-detour-01",
+          "probe-coverage-reserved-wait-build-01",
+          "probe-fixed-production-096-r90",
+          "probe-fixed-production-129",
+          "probe-fixed-production-180-r90",
+          "probe-fixed-production-200",
+          "probe-fixed-production-260-r90",
+          "probe-fixed-production-300",
+          "probe-fixed-production-360-r90",
+          "probe-fork-development-t4-s33-growth1",
+          "probe-fork-development-t4-s36-growth1",
+          "probe-fork-development-t4-s39-growth1",
+          "probe-fork-development-t4-s42-growth1",
+          "production-activation-negative29",
+          "project-shared-two-factories-r90"
+        ]
+      }
+    }
+  },
+  "incident_summary": {
+    "total_submitted_plans": 93,
+    "timely_tasks": 88,
+    "late_tasks": 5,
+    "solver_related_stops_before_submission": 2,
+    "other_acquisition_or_recovery_late_tasks": 3,
+    "note": "Stage 3 solver miss also had slow acquisition. Upstream delay causes are not established. Plan validity is distinct from the server accepted/progression flag; a late valid plan can have accepted=false.",
+    "late_task_ids": [
+      "8596b928",
+      "ac29c919",
+      "8086d0d8",
+      "fc441739",
+      "3f0d26c4"
+    ],
+    "passed_submitted_plans": 93,
+    "historical_report_sources": {
+      "stage-1-report.md": "dfc55b6758af87d54bc6f7468124959f4d57aab3d76302f647abcfea397475d6",
+      "stage-2-report.md": "86ca56aec4f3e660e1f325f688b67546a2317fc38a4ba772637eb7f09b6b0cc1",
+      "stage-3-report.md": "fb4b2da39fa81d678935d3832c37750afd57bcfb57de65d03429a98f5c18a6d1"
+    },
+    "historical_report_revision": "12f4bc4",
+    "sources": {
+      "evidence/historical/stage1-task-metrics.json": "2c0ddbd48e08732c07279e80a5e790073099c8e8cca328214dc36d91c407b751",
+      "evidence/historical/stage2-task-metrics.json": "e05825d8a6c4997929127112da0e37124263f23d9357a9f7f735ebb1423a0847",
+      "evidence/historical/stage3-task-metrics.json": "b5d9e6ef4623e416e389c932fa0bc2213e54bd77d087fb2fa25fbe1b29f2bfb1"
+    },
+    "source_note": "Standalone stage reports removed at the owner request. Their historical hashes/revision remain provenance; delivered task metric JSON supplies the summary evidence."
+  },
+  "quality_graph": {
+    "figure_source": "\"\"\"Show pre-submission controls and historical first-submission outcomes.\"\"\"\nfrom pathlib import Path\nimport hashlib,json\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom matplotlib.patches import FancyBboxPatch\nr=Path('/Users/hhhhhusky/.codex/worktrees/stage1-solver-design/blade_runner');out=r/'docs/reports';vpath=out/'evidence/visual-report.json';v=json.loads(vpath.read_text());s=v['incident_summary']\nnavy='#18354A';teal='#087F7A';blue='#4D7EA8';amber='#BF741B';gray='#A4B1BD'\nplt.rcParams.update({'font.family':'DejaVu Sans','font.size':12,'text.color':navy,'axes.labelcolor':navy,'xtick.color':navy,'ytick.color':navy})\nfig=plt.figure(figsize=(12,9.2));fig.text(.035,.95,'Quality before submission. Evidence from real use.',fontsize=23,weight='bold')\nfig.text(.035,.907,'Develop and challenge locally; use timed server tasks as acceptance runs.',fontsize=12)\nsteps=[('1  Design local cases','Hard, random, impossible\\nand forced-search controls'),('2  Compare candidates','Fixed inputs + baseline\\nCoverage before speed'),('3  Validate each plan','Independent raw replay\\nNo valid plan \u2192 no submission'),('4  Verify real results','Submit once; check credit\\nRetain every input')]\nfor i,(title,desc) in enumerate(steps):\n x=.035+i*.24\n fig.patches.append(FancyBboxPatch((x,.752),.215,.115,boxstyle='round,pad=0.008',facecolor='#EDF4F5',edgecolor='none',transform=fig.transFigure))\n fig.text(x+.012,.833,title,fontsize=11.5,weight='bold')\n fig.text(x+.012,.785,desc,fontsize=10.2,linespacing=1.6)\n if i<3:fig.text(x+.222,.807,'\u2192',fontsize=18,color=teal)\nfig.text(.06,.655,'100%',fontsize=32,weight='bold',color=teal)\nfig.text(.06,.59,'93 / 93 first submitted plans valid\\nNo invalid answer reached the server',fontsize=12,linespacing=1.5)\nfig.text(.41,.655,f\"{s['timely_tasks']/s['total_submitted_plans']*100:.1f}%\",fontsize=32,weight='bold',color=teal)\nfig.text(.41,.59,'88 / 93 first submissions on time\\nWithin the 30-second task clock',fontsize=12,linespacing=1.5)\nfig.text(.76,.655,'2',fontsize=32,weight='bold',color=blue)\nfig.text(.76,.59,'Product issues (solver gaps)\\nBoth stopped before submission',fontsize=12,linespacing=1.5)\nax=fig.add_axes([.17,.205,.65,.285]);tot=[19,36,38];timely=[17,34,37];solver=[0,1,1];runner=[2,1,0];y=list(range(3));left=[0,0,0]\nfor values,color,label in [(timely,teal,'Timely pass'),(solver,blue,'Late: product issue'),(runner,amber,'Late: non-product issue')]:\n pct=[n/t*100 for n,t in zip(values,tot)];ax.barh(y,pct,left=left,height=.48,color=color,label=label)\n left=[a+b for a,b in zip(left,pct)]\nax.set_yticks(y,['Stage 1','Stage 2','Stage 3']);ax.invert_yaxis();ax.set_xlim(0,100);ax.set_xticks([0,25,50,75,100]);ax.set_xlabel('Share of task records (%)',labelpad=8);ax.tick_params(axis='y',length=0,pad=12)\nfor sp in ax.spines.values():sp.set_visible(False)\nfor i,(n,t) in enumerate(zip(timely,tot)):\n ax.text(2,i,f'{n}/{t} timely',va='center',color='white',weight='bold',fontsize=12)\n ax.text(102,i,f'{n/t*100:.1f}%',va='center',weight='bold',color=teal,fontsize=14,clip_on=False)\nax.legend(loc='upper left',bbox_to_anchor=(-.20,-.20),ncol=3,frameon=False,fontsize=10.5,handlelength=1.2,columnspacing=1.6)\nfig.text(.035,.075,'Five late completions: 2 product issues (solver gaps) + 3 non-product issues (task acquisition/recovery).',fontsize=10.5)\nfig.text(.035,.045,'Stage 3 also had slow acquisition. Categories distinguish solver quality from operations, not server responsibility.',fontsize=10.5)\nfig.text(.035,.015,'Valid first submission does not mean an immediate solve: stopped attempts were corrected locally before late completion.',fontsize=10.5)\np=out/'recruitment-quality.png';fig.savefig(p,dpi=170);plt.close(fig)\nsha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()\nv['assets'][p.name]=sha(p)\nv['quality_graph']={'figure_source':Path(__file__).read_text(),'stage_rows':[{'stage':i+1,'tasks':tot[i],'valid_first_submitted_plans':tot[i],'timely_first_submissions':timely[i],'product_issue_late_tasks':solver[i],'non_product_issue_late_tasks':runner[i]} for i in range(3)],'total_valid_first_submission_rate':93/93,'total_timely_first_submission_rate':88/93,'not_claimed':'No solver-first-attempt rate91/93; some initial acquisition failures never ran a solver. Solver stops preceded eventual valid late submissions.','classification':{'product_issues':'Solver gaps: 2 tasks stopped before submission.','non_product_issues':'Task acquisition/recovery incidents: 3 other late tasks.','boundary':'Report categories separate solver quality from submission operations, not ownership or server responsibility. Stage 3 had slow acquisition contributing to a product issue.'},'source':'Retained per-task metrics bound by incident_summary.sources; historical prose provenance remains separately labeled. No fresh server calls.'}\nvpath.write_text(json.dumps(v,indent=2)+'\\n')\nprint('Wrote',p.name,sha(p))\n",
+    "stage_rows": [
+      {
+        "stage": 1,
+        "tasks": 19,
+        "valid_first_submitted_plans": 19,
+        "timely_first_submissions": 17,
+        "product_issue_late_tasks": 0,
+        "non_product_issue_late_tasks": 2
+      },
+      {
+        "stage": 2,
+        "tasks": 36,
+        "valid_first_submitted_plans": 36,
+        "timely_first_submissions": 34,
+        "product_issue_late_tasks": 1,
+        "non_product_issue_late_tasks": 1
+      },
+      {
+        "stage": 3,
+        "tasks": 38,
+        "valid_first_submitted_plans": 38,
+        "timely_first_submissions": 37,
+        "product_issue_late_tasks": 1,
+        "non_product_issue_late_tasks": 0
+      }
+    ],
+    "total_valid_first_submission_rate": 1.0,
+    "total_timely_first_submission_rate": 0.946236559139785,
+    "not_claimed": "No solver-first-attempt rate91/93; some initial acquisition failures never ran a solver. Solver stops preceded eventual valid late submissions.",
+    "classification": {
+      "product_issues": "Solver gaps: 2 tasks stopped before submission.",
+      "non_product_issues": "Task acquisition/recovery incidents: 3 other late tasks.",
+      "boundary": "Report categories separate solver quality from submission operations, not ownership or server responsibility. Stage 3 had slow acquisition contributing to a product issue."
+    },
+    "source": "Retained per-task metrics bound by incident_summary.sources; historical prose provenance remains separately labeled. No fresh server calls."
+  },
+  "work_purpose": {
+    "audit_path": "work-purpose-time-audit.json",
+    "audit_sha256": "f8e241fe37a7f7d9379d740dc87c68a48a9348c246946ea1fa881b27e5aed01b",
+    "csv_path": "work-purpose-turn-times.csv",
+    "csv_sha256": "2ab5fc112db01abfbff199f9204f86dc10882cbf1cdc40ffc9bb9b7eb70a9f50",
+    "presentation_path": "work-purpose-presentation.json",
+    "presentation_sha256": "e4f72ee643de8e2760de78c072b5069838322f2c7d9985e2fd716d8228dd160f",
+    "figure_source": "\"\"\"Render the reviewed presentation grouping without modifying the frozen audit.\"\"\"\nfrom pathlib import Path\nimport hashlib\nimport json\nimport sys\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nroot=Path(sys.argv[1]);out=root/'docs/reports';ep=out/'evidence'\npresentation=json.loads((ep/'work-purpose-presentation.json').read_text())\n# Populated from the reviewed grouping; no durations are estimated by the chart.\nrows=list(presentation['groups'].values())\nlabels=['Solver design + implementation', 'Candidate comparisons', 'Coverage, review + validation', 'Submission script (non-product)', 'Documentation + delivery']\nvalues=[row['duration_ms'] for row in rows]\ncounts=[row['turn_count'] for row in rows]\nassert sum(values)==93907749 and sum(counts)==159\ncolors=['#254B6B','#3C7FA6','#388B84','#B28343','#7B7195']\nplt.rcParams.update({'font.family':'DejaVu Sans','font.size':11.5,'text.color':'#18354A','axes.labelcolor':'#18354A','xtick.color':'#18354A','ytick.color':'#18354A'})\nfig,ax=plt.subplots(figsize=(14.4,6.8));fig.subplots_adjust(left=.32,right=.80,top=.75,bottom=.26)\nfig.text(.035,.93,'Time by work area',fontsize=23,weight='bold')\nfig.text(.035,.875,'26 h 05 m displayed assistant elapsed | 159 periods | through 18 October 2026, 20:52 (UTC+8)',fontsize=11.5)\nfig.text(.035,.82,'Review is quality work; submission-script development and operation form one non-product category',fontsize=12.5,weight='bold',color='#256C82')\nax.barh(labels,[v/3600000 for v in values],color=colors,height=.62,zorder=3)\nax.invert_yaxis();ax.set_xlim(0,max(values)/3600000+.6);ax.grid(axis='x',alpha=.18,zorder=0)\nax.set_xlabel('Elapsed hours by the main purpose of each whole work period',labelpad=10)\nax.tick_params(axis='y',length=0,pad=10)\nfor spine in ax.spines.values():spine.set_visible(False)\nfor i,(ms,count) in enumerate(zip(values,counts)):\n minutes=round(ms/60000)\n ax.text(ms/3600000+.1,i,f'{minutes//60} h {minutes%60:02d} m | {count} periods',va='center',fontsize=11,clip_on=False)\nfig.text(.035,.135,'Whole-period assignments include associated coding, checks and waits; labels are rounded.',fontsize=11)\nfig.text(.035,.083,'Displayed 26:05:07.749 + excluded setup / interruption 00:12:12.908 = original ledger 26:17:20.657.',fontsize=11)\nfig.text(.035,.035,'Non-product means submission support outside the solver. These are not human-labor or TiMaS hours.',fontsize=11)\nfigure=out/'recruitment-work-purpose.png';fig.savefig(figure,dpi=170)\nevidence_path=ep/'visual-report.json';evidence=json.loads(evidence_path.read_text())\nevidence['work_purpose']={\n 'audit_path':'work-purpose-time-audit.json','audit_sha256':hashlib.sha256((ep/'work-purpose-time-audit.json').read_bytes()).hexdigest(),\n 'csv_path':'work-purpose-turn-times.csv','csv_sha256':hashlib.sha256((ep/'work-purpose-turn-times.csv').read_bytes()).hexdigest(),\n 'presentation_path':'work-purpose-presentation.json','presentation_sha256':hashlib.sha256((ep/'work-purpose-presentation.json').read_bytes()).hexdigest(),\n 'figure_source':Path(__file__).read_text(),'grouping':[{'label':r['label'],'ordinals':r['turn_ordinals']} for r in rows],\n 'allocation':'Whole periods grouped by dominant supported purpose; original classifications and uncertainty retained in the source audit. Dedicated reviews belong to quality; non-product script development and live operation are combined. Setup periods and interruption40 are excluded from display and reconciled.'}\nevidence['assets'][figure.name]=hashlib.sha256(figure.read_bytes()).hexdigest()\nevidence_path.write_text(json.dumps(evidence,indent=2)+'\\n')\nprint(json.dumps({'figure':str(figure),'classified_ms':sum(values),'periods':sum(counts)}))\n",
+    "grouping": [
+      {
+        "label": "Solver design and implementation, including requirements and diagnosis",
+        "ordinals": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9,
+          10,
+          11,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          24,
+          25,
+          27,
+          28,
+          29,
+          30,
+          32,
+          33,
+          34,
+          42,
+          46,
+          51,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          71,
+          74,
+          75,
+          76,
+          77,
+          78,
+          80,
+          82,
+          83,
+          84,
+          85,
+          89,
+          98,
+          99,
+          102,
+          103,
+          105,
+          107,
+          108,
+          110,
+          111,
+          112,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          140,
+          141,
+          142,
+          143,
+          144,
+          151,
+          152,
+          154,
+          155,
+          156,
+          157,
+          164
+        ]
+      },
+      {
+        "label": "Candidate comparisons",
+        "ordinals": [
+          26,
+          38,
+          39,
+          41,
+          43,
+          45,
+          81,
+          86,
+          87,
+          88,
+          106,
+          109,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          132,
+          133,
+          134,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          153,
+          158
+        ]
+      },
+      {
+        "label": "Quality: coverage, review and validation",
+        "ordinals": [
+          31,
+          44,
+          72,
+          73,
+          79,
+          96,
+          97,
+          100,
+          101,
+          104,
+          135,
+          136,
+          137
+        ]
+      },
+      {
+        "label": "Submission script: development, execution and recovery (non-product)",
+        "ordinals": [
+          47,
+          48,
+          49,
+          50,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          69,
+          70,
+          90,
+          91,
+          92,
+          93,
+          94,
+          138,
+          139,
+          159
+        ]
+      },
+      {
+        "label": "Documentation, packaging and delivery",
+        "ordinals": [
+          12,
+          60,
+          61,
+          95,
+          160,
+          161,
+          162,
+          163,
+          165,
+          166
+        ]
+      }
+    ],
+    "allocation": "Whole periods grouped by dominant supported purpose; original classifications and uncertainty retained in the source audit. Dedicated reviews belong to quality; non-product script development and live operation are combined. Setup periods and interruption40 are excluded from display and reconciled."
+  }
+}

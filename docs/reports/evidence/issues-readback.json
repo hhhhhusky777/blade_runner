@@ -1,0 +1,35 @@
+{
+  "checked_utc": "2026-10-18T10:03:41.819210+00:00",
+  "issues": [
+    {
+      "number": 5,
+      "state": "OPEN",
+      "title": "Reuse incomplete probe progress for search guidance and reduced duplicate work",
+      "url": "https://github.com/hhhhhusky777/blade_runner/issues/5"
+    },
+    {
+      "number": 4,
+      "state": "OPEN",
+      "title": "Stage 2: benchmark existing geometry reuse together with adopted guidance",
+      "url": "https://github.com/hhhhhusky777/blade_runner/issues/4"
+    },
+    {
+      "number": 3,
+      "state": "OPEN",
+      "title": "Stage 1/2 runner: record comparable acquisition and submission phase timings",
+      "url": "https://github.com/hhhhhusky777/blade_runner/issues/3"
+    },
+    {
+      "number": 2,
+      "state": "OPEN",
+      "title": "Stage 1/2 carryover: reconcile rule assumptions before the Stage 3 model",
+      "url": "https://github.com/hhhhhusky777/blade_runner/issues/2"
+    },
+    {
+      "number": 1,
+      "state": "OPEN",
+      "title": "Stage 1/2: validate deadline allocation after slow task acquisition",
+      "url": "https://github.com/hhhhhusky777/blade_runner/issues/1"
+    }
+  ]
+}

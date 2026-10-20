@@ -1,0 +1,113 @@
+{
+  "note": "Historical chapters retain their original measurements. In the ZIP only, lab links are rebound to these compact metrics or this source-hash index. Full trial logs remain owner-held; no missing raw artifact is presented as bundled.",
+  "sources": {
+    "experiments/stage1_poc/stage1-task-metrics.json": {
+      "sha256": "2c0ddbd48e08732c07279e80a5e790073099c8e8cca328214dc36d91c407b751",
+      "bytes": 14260,
+      "availability": "Byte-identical compact metrics copy included.",
+      "bundled_copy": "docs/reports/evidence/historical/stage1-task-metrics.json"
+    },
+    "experiments/stage1_poc/stage1-completion-results.json": {
+      "sha256": "b4532b9d93c10e61f2bfc61da4cecbe27a59b3fcfa03ea16b6e1b1e8f1c9f44f",
+      "bytes": 879859,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage2_research/latency_budget_diagnostic.json": {
+      "sha256": "0f786f970f04296a0e3f0a98955463f76302427d0e4edd8e849c284d8044f7f4",
+      "bytes": 8004,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage2_research/profile_stage2_fallback.json": {
+      "sha256": "3f04adcf404ba2a5fc4a756f16998c9e9ea8e985d7aded4542e13c7698c4b442",
+      "bytes": 8833,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage1_poc/stage2-live-regressions.json": {
+      "sha256": "8c519245c7e3988105a9a48c76a489af0a0af4fbecdba91cf853aad7af927093",
+      "bytes": 17225,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage2_research/live-map-regression-results.json": {
+      "sha256": "7565915ed6a291ef02e7be64867b14180199d1d9ae9fe0ff57b4164ae3c1fa0a",
+      "bytes": 52768,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage2_research/live-map-regression-validation.json": {
+      "sha256": "009e0bd5920bc191b08f8069b688fc8ca38538a0c3ded7a17630a3a9897236b7",
+      "bytes": 41837,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage2_research/stage2-task-metrics.json": {
+      "sha256": "e05825d8a6c4997929127112da0e37124263f23d9357a9f7f735ebb1423a0847",
+      "bytes": 105490,
+      "availability": "Byte-identical compact metrics copy included.",
+      "bundled_copy": "docs/reports/evidence/historical/stage2-task-metrics.json"
+    },
+    "experiments/stage2_research/first-submit.json": {
+      "sha256": "528f29c6833f9faed196e1c433c68820c4883dec84a5803da8a74b9cab29562d",
+      "bytes": 25931,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage2_research/loop-results.json": {
+      "sha256": "78b3123d7e7b6100ffecbee061268fbed0aa0d401fab000772ca5aabdb19929b",
+      "bytes": 342979,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage2_research/guidance-live-results.json": {
+      "sha256": "b93a57bec6b83bd5e449c8222afb0115053f1705e96b443c5752b24952a24ea6",
+      "bytes": 1188731,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage2_research/creation-retry-live-results.json": {
+      "sha256": "1844c2b253ef674e5e61b4d76d7362faf5c7838c771de03d02360ae14d3df7b7",
+      "bytes": 1892637,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage2_research/state-cap-and-routing-triage.json": {
+      "sha256": "5cba2478148918cf8f1dbc1065cd8bb7cb0523fa4ec68153ee12362907a7f0a6",
+      "bytes": 1004044,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage2_research/economic-analysis.json": {
+      "sha256": "37e0823d13d1dd9056cb3894cdc8985330a620243b764db9df35650ab9ff4582",
+      "bytes": 521928,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage2_research/startup-recovery-validation.json": {
+      "sha256": "06a4b9144e0b3f09e07fc3d53a3170ef596d789e164a53f8d3981d1acf0eff77",
+      "bytes": 37788,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage3_research/stage3-task-metrics.json": {
+      "sha256": "b5d9e6ef4623e416e389c932fa0bc2213e54bd77d087fb2fa25fbe1b29f2bfb1",
+      "bytes": 379391,
+      "availability": "Byte-identical compact metrics copy included.",
+      "bundled_copy": "docs/reports/evidence/historical/stage3-task-metrics.json"
+    },
+    "experiments/stage3_research/remaining-loop-results.json": {
+      "sha256": "40b1dc11295103ce41fd93d9dac74e5aff32539cff6110dbf97c34bc353b3ee3",
+      "bytes": 15331,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage3_research/probe512-resume-results.json": {
+      "sha256": "9bfc644067348700ef3407c43fe23a40f16d9d0509ca79cfd11889cbfd4bb10a",
+      "bytes": 72851,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage3_research/probe512-final-verification.json": {
+      "sha256": "6d8083408960854ba62f77454a227a18ff38517f72e50b98dd1d1ce18931d0e0",
+      "bytes": 17980,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage3_research/root512-analysis.json": {
+      "sha256": "a0aee4021301d9c95b2d8cc36dec99aca696d4dae7af0c2d31c02099e53a9b44",
+      "bytes": 222337,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    },
+    "experiments/stage3_research/root512-adoption-validation.json": {
+      "sha256": "7e292a8fef4505e3d524b15eff05470e3b1e4c33ee7a3a9bd60a211d0781bf30",
+      "bytes": 66522872,
+      "availability": "Owner-held historical research; not included in source ZIP."
+    }
+  }
+}

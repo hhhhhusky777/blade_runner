@@ -1,0 +1,59 @@
+{
+  "pdf": "output/pdf/blade-runner-delivery-report.pdf",
+  "pdf_sha256": "97ea0c7821c82e5599da4c8bbeae623a1a16431b57ea92d514b0002dc327b88c",
+  "pdf_bytes": 950406,
+  "source_sha256": "6b4212c7f456e9e240e5806c725bc83d7f4e01de450e21e4bedcde9d34b05165",
+  "renderer_sha256": "56a9267e839048e17823b0ae8a62b6914adf1356bc67af3e5e16ff68ad5be198",
+  "page_count": 9,
+  "source_text_units_checked": 150,
+  "missing_source_units": [],
+  "references_checked": 6,
+  "missing_reference_links": [],
+  "off_page_characters": [],
+  "charts": [
+    {
+      "file": "recruitment-quality.png",
+      "sha256": "2fa3860f76f40185892c03d334922203b58cbecbe2dd51547e023df4ca93e5f5"
+    },
+    {
+      "file": "recruitment-stage1-decisions.png",
+      "sha256": "e3c704dda51435b17d8209de943830345283acea35eb75465583c7297346ba7b"
+    },
+    {
+      "file": "recruitment-stage2-decisions.png",
+      "sha256": "72cb9d0c6b7b1c14e240ac5e796733f8d9a61ec383495abfc98da2ecb84244c5"
+    },
+    {
+      "file": "recruitment-stage3-decisions.png",
+      "sha256": "9eaf47a06717416f7aefd827a821b9a7641af2a4cbc0edc7396267dfb0f4a8f1"
+    },
+    {
+      "file": "recruitment-work-purpose.png",
+      "sha256": "cf2a50f225912e699e1ad826b8673cc7bb58e37e00b35fd232a9a86e56fb439a"
+    }
+  ],
+  "diagram_count": 4,
+  "rendered_pages": [
+    "/private/tmp/blade-pdf-review/final-1.png",
+    "/private/tmp/blade-pdf-review/final-2.png",
+    "/private/tmp/blade-pdf-review/final-3.png",
+    "/private/tmp/blade-pdf-review/final-4.png",
+    "/private/tmp/blade-pdf-review/final-5.png",
+    "/private/tmp/blade-pdf-review/final-6.png",
+    "/private/tmp/blade-pdf-review/final-7.png",
+    "/private/tmp/blade-pdf-review/final-8.png",
+    "/private/tmp/blade-pdf-review/final-9.png"
+  ],
+  "visual_review": "All nine rendered pages inspected at full-page resolution; no clipping, overlaps or orphan pages. Mermaid converted to equivalent vector boxes/arrows. Body 9.25pt, final-page body 8.95pt; original raster charts retained.",
+  "source": "docs/reports/recruitment-delivery-report.md",
+  "renderer": "tools/render_recruitment_report.py",
+  "independent_review": {
+    "reviewer_a": "APPROVE, pages1-4 and renderer; no findings",
+    "reviewer_b": "APPROVE, pages5-9; no findings",
+    "parent_visual_sample": [
+      1,
+      6,
+      8
+    ]
+  }
+}

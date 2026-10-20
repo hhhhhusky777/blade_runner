@@ -1,0 +1,1400 @@
+{
+  "1": {
+    "level": {
+      "board": {
+        "width": 25,
+        "height": 25,
+        "grid": [
+          [
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD"
+          ],
+          [
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD"
+          ],
+          [
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD"
+          ],
+          [
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD"
+          ],
+          [
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD"
+          ],
+          [
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS"
+          ],
+          [
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS"
+          ],
+          [
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD"
+          ],
+          [
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD"
+          ],
+          [
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS"
+          ],
+          [
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS"
+          ],
+          [
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD"
+          ],
+          [
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS"
+          ],
+          [
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD"
+          ],
+          [
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD"
+          ],
+          [
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS"
+          ],
+          [
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS"
+          ],
+          [
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS"
+          ],
+          [
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD"
+          ],
+          [
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS"
+          ],
+          [
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS"
+          ],
+          [
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD"
+          ],
+          [
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD"
+          ],
+          [
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD"
+          ],
+          [
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "GRASS",
+            "GRASS",
+            "GRASS"
+          ]
+        ],
+        "resource_nodes": [
+          {
+            "x": 2,
+            "y": 0,
+            "resource": "STONE"
+          }
+        ]
+      },
+      "structures": [
+        {
+          "type": "BASE",
+          "x": 0,
+          "y": 0,
+          "storage": {
+            "STONE": 11
+          }
+        }
+      ],
+      "level_goal": {
+        "target_structure_type": "BASE",
+        "target_resources": {
+          "STONE": 45
+        }
+      },
+      "max_turns": 9
+    },
+    "witness": [
+      [
+        {
+          "action": "BUILD",
+          "args": {
+            "type": "ROAD",
+            "x": 1,
+            "y": 0
+          }
+        },
+        {
+          "action": "BUILD",
+          "args": {
+            "type": "STONE_QUARRY",
+            "x": 2,
+            "y": 0
+          }
+        },
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 0
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "STONE",
+            "amount": 5
+          }
+        }
+      ],
+      [
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 0
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "STONE",
+            "amount": 5
+          }
+        }
+      ],
+      [
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 0
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "STONE",
+            "amount": 5
+          }
+        }
+      ],
+      [
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 0
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "STONE",
+            "amount": 5
+          }
+        }
+      ],
+      [
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 0
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "STONE",
+            "amount": 5
+          }
+        }
+      ],
+      [
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 0
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "STONE",
+            "amount": 5
+          }
+        }
+      ],
+      [
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 0
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "STONE",
+            "amount": 5
+          }
+        }
+      ],
+      [
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 0
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "STONE",
+            "amount": 5
+          }
+        }
+      ],
+      [
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 0
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "STONE",
+            "amount": 5
+          }
+        },
+        {
+          "action": "CLAIM_WIN",
+          "args": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      ]
+    ]
+  },
+  "2": {
+    "level": {
+      "spec_number": 2,
+      "max_turns": 1,
+      "board": {
+        "width": 3,
+        "height": 1,
+        "grid": [
+          [
+            "GRASS",
+            "GRASS",
+            "GRASS"
+          ]
+        ],
+        "resource_nodes": [
+          {
+            "x": 2,
+            "y": 0,
+            "resource": "IRON_ORE"
+          }
+        ]
+      },
+      "structures": [
+        {
+          "type": "BASE",
+          "x": 0,
+          "y": 0,
+          "storage": {
+            "STONE": 16
+          }
+        }
+      ],
+      "level_goal": {
+        "target_structure_type": "BASE",
+        "target_resources": {
+          "IRON_ORE": 5
+        }
+      }
+    },
+    "witness": [
+      [
+        {
+          "action": "BUILD",
+          "args": {
+            "x": 1,
+            "y": 0,
+            "type": "ROAD"
+          }
+        },
+        {
+          "action": "BUILD",
+          "args": {
+            "x": 2,
+            "y": 0,
+            "type": "IRON_MINE"
+          }
+        },
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 0
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "IRON_ORE",
+            "amount": 5
+          }
+        },
+        {
+          "action": "CLAIM_WIN",
+          "args": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      ]
+    ]
+  },
+  "3": {
+    "level": {
+      "spec_number": 3,
+      "max_turns": 2,
+      "board": {
+        "width": 5,
+        "height": 3,
+        "grid": [
+          [
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS"
+          ],
+          [
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD",
+            "PLANNED_ROAD"
+          ],
+          [
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS",
+            "GRASS"
+          ]
+        ],
+        "resource_nodes": [
+          {
+            "x": 2,
+            "y": 2,
+            "resource": "IRON_ORE"
+          }
+        ]
+      },
+      "structures": [
+        {
+          "type": "BASE",
+          "x": 0,
+          "y": 0,
+          "storage": {
+            "STONE": 40,
+            "IRON_ORE": 0,
+            "IRON": 0
+          }
+        }
+      ],
+      "level_goal": {
+        "target_structure_type": "BASE",
+        "target_resources": {
+          "STONE": 0,
+          "IRON_ORE": 0,
+          "IRON": 4
+        }
+      }
+    },
+    "witness": [
+      [
+        {
+          "action": "BUILD",
+          "args": {
+            "x": 0,
+            "y": 1,
+            "type": "ROAD"
+          }
+        },
+        {
+          "action": "BUILD",
+          "args": {
+            "x": 1,
+            "y": 1,
+            "type": "ROAD"
+          }
+        },
+        {
+          "action": "BUILD",
+          "args": {
+            "x": 2,
+            "y": 1,
+            "type": "ROAD"
+          }
+        },
+        {
+          "action": "BUILD",
+          "args": {
+            "x": 2,
+            "y": 2,
+            "type": "IRON_MINE"
+          }
+        },
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 2
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                2
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "IRON_ORE",
+            "amount": 5
+          }
+        },
+        {
+          "action": "BUILD",
+          "args": {
+            "x": 1,
+            "y": 2,
+            "type": "SMELTER"
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "resource": "IRON_ORE",
+            "amount": 2
+          }
+        },
+        {
+          "action": "PRODUCE",
+          "args": {
+            "x": 1,
+            "y": 2
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                1,
+                2
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "IRON",
+            "amount": 2
+          }
+        }
+      ],
+      [
+        {
+          "action": "MINE",
+          "args": {
+            "x": 2,
+            "y": 2
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                2,
+                2
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "IRON_ORE",
+            "amount": 5
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "resource": "IRON_ORE",
+            "amount": 2
+          }
+        },
+        {
+          "action": "PRODUCE",
+          "args": {
+            "x": 1,
+            "y": 2
+          }
+        },
+        {
+          "action": "TRANSFER",
+          "args": {
+            "path": [
+              [
+                1,
+                2
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "resource": "IRON",
+            "amount": 2
+          }
+        },
+        {
+          "action": "CLAIM_WIN",
+          "args": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      ]
+    ]
+  }
+}

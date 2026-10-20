@@ -1,0 +1,628 @@
+{
+  "checked_at": "2026-10-16T15:21:16.171353+00:00",
+  "scope": "GET-only capability and progress research; no task creation or submission",
+  "endpoints": {
+    "stage1_capabilities": "/api/stage/1/capabilities",
+    "stage2_capabilities": "/api/stage/2/capabilities",
+    "stages": "/api/stages",
+    "stage2_progress": "/api/stage/2/progress",
+    "stage2_tasks": "/api/stage/2/tasks"
+  },
+  "stage1_capabilities": {
+    "ok": true,
+    "stage": 1,
+    "new": {
+      "resources": [
+        "STONE"
+      ],
+      "structures": [
+        "ROAD",
+        "STONE_QUARRY",
+        "BASE"
+      ],
+      "structures_details": {
+        "ROAD": {
+          "build_cost": {
+            "STONE": 1
+          },
+          "interfaces": [
+            "Buildable",
+            "Transport"
+          ]
+        },
+        "STONE_QUARRY": {
+          "build_cost": {
+            "STONE": 10
+          },
+          "rate": 5,
+          "resource_allow": [
+            "STONE"
+          ],
+          "interfaces": [
+            "Buildable",
+            "Storage",
+            "Extraction"
+          ]
+        },
+        "BASE": {
+          "interfaces": [
+            "BaseOnly",
+            "Storage"
+          ]
+        }
+      },
+      "terrains": [
+        "GRASS",
+        "PLANNED_ROAD"
+      ],
+      "actions": {
+        "BUILD": {
+          "description": "BUILD action: Build a structure at specified coordinates.",
+          "fields": {
+            "x": {
+              "type": "integer",
+              "description": "X coordinate",
+              "required": true,
+              "default": null
+            },
+            "y": {
+              "type": "integer",
+              "description": "Y coordinate",
+              "required": true,
+              "default": null
+            },
+            "type": {
+              "type": "string",
+              "description": "Structure type to build",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "x",
+            "y",
+            "type"
+          ],
+          "model_class": "BUILD"
+        },
+        "CLAIM_WIN": {
+          "description": "CLAIM_WIN action: Claim victory at specified coordinates.",
+          "fields": {
+            "x": {
+              "type": "integer",
+              "description": "X coordinate",
+              "required": true,
+              "default": null
+            },
+            "y": {
+              "type": "integer",
+              "description": "Y coordinate",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "x",
+            "y"
+          ],
+          "model_class": "CLAIM_WIN"
+        },
+        "MINE": {
+          "description": "MINE action: Extract resources at the structure's rate.\n\n    Extracts up to the structure's rate per activation.\n    Output is stored in the mining structure; transfer to a BaseOnly structure to spend on BUILD.\n    Each structure can be activated at most once per turn.",
+          "fields": {
+            "x": {
+              "type": "integer",
+              "description": "X coordinate",
+              "required": true,
+              "default": null
+            },
+            "y": {
+              "type": "integer",
+              "description": "Y coordinate",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "x",
+            "y"
+          ],
+          "model_class": "MINE"
+        },
+        "TRANSFER": {
+          "description": "TRANSFER action: Move resources along a path.\n\n    Path as list of [x, y] coordinates.\n    First and last must be Storage structures.\n    Intermediates must be Transport-only (e.g., ROAD).\n    Path length must be at least 3 (source -> at least one transport -> destination).",
+          "fields": {
+            "path": {
+              "type": "array",
+              "description": "Path as list of [x, y] coordinates. First and last must be Storage structures; intermediates must be Transport structures; path length must be at least 3.",
+              "required": true,
+              "default": null
+            },
+            "resource": {
+              "type": "string",
+              "description": "Resource type to transfer",
+              "required": true,
+              "default": null
+            },
+            "amount": {
+              "type": "integer",
+              "description": "Amount to transfer (must be positive)",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "path",
+            "resource",
+            "amount"
+          ],
+          "model_class": "TRANSFER"
+        }
+      }
+    },
+    "available": {
+      "resources": [
+        "STONE"
+      ],
+      "structures": [
+        "BASE",
+        "ROAD",
+        "STONE_QUARRY"
+      ],
+      "structures_details": {
+        "BASE": {
+          "interfaces": [
+            "BaseOnly",
+            "Storage"
+          ]
+        },
+        "ROAD": {
+          "build_cost": {
+            "STONE": 1
+          },
+          "interfaces": [
+            "Buildable",
+            "Transport"
+          ]
+        },
+        "STONE_QUARRY": {
+          "build_cost": {
+            "STONE": 10
+          },
+          "rate": 5,
+          "resource_allow": [
+            "STONE"
+          ],
+          "interfaces": [
+            "Buildable",
+            "Storage",
+            "Extraction"
+          ]
+        }
+      },
+      "terrains": [
+        "GRASS",
+        "PLANNED_ROAD"
+      ],
+      "actions": {
+        "BUILD": {
+          "description": "BUILD action: Build a structure at specified coordinates.",
+          "fields": {
+            "x": {
+              "type": "integer",
+              "description": "X coordinate",
+              "required": true,
+              "default": null
+            },
+            "y": {
+              "type": "integer",
+              "description": "Y coordinate",
+              "required": true,
+              "default": null
+            },
+            "type": {
+              "type": "string",
+              "description": "Structure type to build",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "x",
+            "y",
+            "type"
+          ],
+          "model_class": "BUILD"
+        },
+        "CLAIM_WIN": {
+          "description": "CLAIM_WIN action: Claim victory at specified coordinates.",
+          "fields": {
+            "x": {
+              "type": "integer",
+              "description": "X coordinate",
+              "required": true,
+              "default": null
+            },
+            "y": {
+              "type": "integer",
+              "description": "Y coordinate",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "x",
+            "y"
+          ],
+          "model_class": "CLAIM_WIN"
+        },
+        "MINE": {
+          "description": "MINE action: Extract resources at the structure's rate.\n\n    Extracts up to the structure's rate per activation.\n    Output is stored in the mining structure; transfer to a BaseOnly structure to spend on BUILD.\n    Each structure can be activated at most once per turn.",
+          "fields": {
+            "x": {
+              "type": "integer",
+              "description": "X coordinate",
+              "required": true,
+              "default": null
+            },
+            "y": {
+              "type": "integer",
+              "description": "Y coordinate",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "x",
+            "y"
+          ],
+          "model_class": "MINE"
+        },
+        "TRANSFER": {
+          "description": "TRANSFER action: Move resources along a path.\n\n    Path as list of [x, y] coordinates.\n    First and last must be Storage structures.\n    Intermediates must be Transport-only (e.g., ROAD).\n    Path length must be at least 3 (source -> at least one transport -> destination).",
+          "fields": {
+            "path": {
+              "type": "array",
+              "description": "Path as list of [x, y] coordinates. First and last must be Storage structures; intermediates must be Transport structures; path length must be at least 3.",
+              "required": true,
+              "default": null
+            },
+            "resource": {
+              "type": "string",
+              "description": "Resource type to transfer",
+              "required": true,
+              "default": null
+            },
+            "amount": {
+              "type": "integer",
+              "description": "Amount to transfer (must be positive)",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "path",
+            "resource",
+            "amount"
+          ],
+          "model_class": "TRANSFER"
+        }
+      }
+    }
+  },
+  "stage2_capabilities": {
+    "ok": true,
+    "stage": 2,
+    "new": {
+      "resources": [
+        "IRON_ORE"
+      ],
+      "structures": [
+        "IRON_MINE"
+      ],
+      "structures_details": {
+        "IRON_MINE": {
+          "build_cost": {
+            "STONE": 15
+          },
+          "rate": 5,
+          "resource_allow": [
+            "IRON_ORE"
+          ],
+          "interfaces": [
+            "Buildable",
+            "Storage",
+            "Extraction"
+          ]
+        }
+      },
+      "terrains": [],
+      "actions": {}
+    },
+    "available": {
+      "resources": [
+        "STONE",
+        "IRON_ORE"
+      ],
+      "structures": [
+        "BASE",
+        "IRON_MINE",
+        "ROAD",
+        "STONE_QUARRY"
+      ],
+      "structures_details": {
+        "BASE": {
+          "interfaces": [
+            "BaseOnly",
+            "Storage"
+          ]
+        },
+        "IRON_MINE": {
+          "build_cost": {
+            "STONE": 15
+          },
+          "rate": 5,
+          "resource_allow": [
+            "IRON_ORE"
+          ],
+          "interfaces": [
+            "Buildable",
+            "Storage",
+            "Extraction"
+          ]
+        },
+        "ROAD": {
+          "build_cost": {
+            "STONE": 1
+          },
+          "interfaces": [
+            "Buildable",
+            "Transport"
+          ]
+        },
+        "STONE_QUARRY": {
+          "build_cost": {
+            "STONE": 10
+          },
+          "rate": 5,
+          "resource_allow": [
+            "STONE"
+          ],
+          "interfaces": [
+            "Buildable",
+            "Storage",
+            "Extraction"
+          ]
+        }
+      },
+      "terrains": [
+        "GRASS",
+        "PLANNED_ROAD"
+      ],
+      "actions": {
+        "BUILD": {
+          "description": "BUILD action: Build a structure at specified coordinates.",
+          "fields": {
+            "x": {
+              "type": "integer",
+              "description": "X coordinate",
+              "required": true,
+              "default": null
+            },
+            "y": {
+              "type": "integer",
+              "description": "Y coordinate",
+              "required": true,
+              "default": null
+            },
+            "type": {
+              "type": "string",
+              "description": "Structure type to build",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "x",
+            "y",
+            "type"
+          ],
+          "model_class": "BUILD"
+        },
+        "CLAIM_WIN": {
+          "description": "CLAIM_WIN action: Claim victory at specified coordinates.",
+          "fields": {
+            "x": {
+              "type": "integer",
+              "description": "X coordinate",
+              "required": true,
+              "default": null
+            },
+            "y": {
+              "type": "integer",
+              "description": "Y coordinate",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "x",
+            "y"
+          ],
+          "model_class": "CLAIM_WIN"
+        },
+        "MINE": {
+          "description": "MINE action: Extract resources at the structure's rate.\n\n    Extracts up to the structure's rate per activation.\n    Output is stored in the mining structure; transfer to a BaseOnly structure to spend on BUILD.\n    Each structure can be activated at most once per turn.",
+          "fields": {
+            "x": {
+              "type": "integer",
+              "description": "X coordinate",
+              "required": true,
+              "default": null
+            },
+            "y": {
+              "type": "integer",
+              "description": "Y coordinate",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "x",
+            "y"
+          ],
+          "model_class": "MINE"
+        },
+        "TRANSFER": {
+          "description": "TRANSFER action: Move resources along a path.\n\n    Path as list of [x, y] coordinates.\n    First and last must be Storage structures.\n    Intermediates must be Transport-only (e.g., ROAD).\n    Path length must be at least 3 (source -> at least one transport -> destination).",
+          "fields": {
+            "path": {
+              "type": "array",
+              "description": "Path as list of [x, y] coordinates. First and last must be Storage structures; intermediates must be Transport structures; path length must be at least 3.",
+              "required": true,
+              "default": null
+            },
+            "resource": {
+              "type": "string",
+              "description": "Resource type to transfer",
+              "required": true,
+              "default": null
+            },
+            "amount": {
+              "type": "integer",
+              "description": "Amount to transfer (must be positive)",
+              "required": true,
+              "default": null
+            }
+          },
+          "required_fields": [
+            "path",
+            "resource",
+            "amount"
+          ],
+          "model_class": "TRANSFER"
+        }
+      }
+    }
+  },
+  "stages": {
+    "ok": true,
+    "stages": [
+      {
+        "stage": 1,
+        "name": "Stage 1",
+        "urls": {
+          "capabilities": "/api/stage/1/capabilities",
+          "progress": "/api/stage/1/progress",
+          "tasks_list": "/api/stage/1/tasks",
+          "request_task": "/api/stage/1/tasks/request"
+        }
+      },
+      {
+        "stage": 2,
+        "name": "Stage 2",
+        "urls": {
+          "capabilities": "/api/stage/2/capabilities",
+          "progress": "/api/stage/2/progress",
+          "tasks_list": "/api/stage/2/tasks",
+          "request_task": "/api/stage/2/tasks/request"
+        }
+      }
+    ]
+  },
+  "stage2_progress": {
+    "is_superuser": false,
+    "stage": 2,
+    "current_index": 0,
+    "current_series_index": 0,
+    "current_series_total": 1,
+    "order": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "items": [
+      {
+        "type": "1",
+        "index": 0,
+        "practice_solved": false,
+        "gate_passed": false,
+        "status": "current",
+        "series_index": 0,
+        "series_total": 1,
+        "is_current": true
+      },
+      {
+        "type": "2",
+        "index": 1,
+        "practice_solved": false,
+        "gate_passed": false,
+        "status": "locked",
+        "series_index": 0,
+        "series_total": 3,
+        "is_current": false
+      },
+      {
+        "type": "3",
+        "index": 2,
+        "practice_solved": false,
+        "gate_passed": false,
+        "status": "locked",
+        "series_index": 0,
+        "series_total": 3,
+        "is_current": false
+      },
+      {
+        "type": "4",
+        "index": 3,
+        "practice_solved": false,
+        "gate_passed": false,
+        "status": "locked",
+        "series_index": 0,
+        "series_total": 6,
+        "is_current": false
+      },
+      {
+        "type": "5",
+        "index": 4,
+        "practice_solved": false,
+        "gate_passed": false,
+        "status": "locked",
+        "series_index": 0,
+        "series_total": 3,
+        "is_current": false
+      },
+      {
+        "type": "6",
+        "index": 5,
+        "practice_solved": false,
+        "gate_passed": false,
+        "status": "locked",
+        "series_index": 0,
+        "series_total": 6,
+        "is_current": false
+      },
+      {
+        "type": "7",
+        "index": 6,
+        "practice_solved": false,
+        "gate_passed": false,
+        "status": "locked",
+        "series_index": 0,
+        "series_total": 8,
+        "is_current": false
+      }
+    ]
+  },
+  "stage2_tasks": {
+    "ok": true,
+    "tasks": []
+  },
+  "omitted_fields": [
+    "candidate identity from progress/task-list responses"
+  ]
+}

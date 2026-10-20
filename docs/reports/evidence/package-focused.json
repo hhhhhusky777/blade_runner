@@ -1,0 +1,12 @@
+{
+  "scope": "T04 preliminary extracted-copy smoke only; full dependency install and final corpus validation pending.",
+  "files": 69,
+  "archive_sha256": "a1332df137c0ca15d132bcf2c2e06f24d1f3f4d374e7966ad1e47416b58b1667",
+  "hashes_valid": true,
+  "no_research_directory": true,
+  "no_env_file": true,
+  "executable_helper": true,
+  "frozen_whiteboard_identical": true,
+  "stage3_offline_smoke": "PASS",
+  "working_directory": "/private/tmp/blade-review-focused-y14qaa6k/blade-runner-review/game_solver"
+}
